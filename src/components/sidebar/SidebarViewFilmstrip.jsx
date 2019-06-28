@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
  * Hovering over a thumbnail also displays relevant viewshed on the map
  * and displays data probe tooltip.
  * Clicking toggle button expands or collapses filmstrip.
+ * Displays number of rasters in filmstrip.
  * Component depends on the loaded raster view data for the selected year
  * and the currently selected viewshed.
  *
@@ -72,6 +73,15 @@ class SidebarViewFilmstrip extends React.PureComponent {
     });
   }
 
+  getCountDisplay() {
+    const { views } = this.props;
+    return (
+      <div className="filmstrip__count">
+        {views.length}
+      </div>
+    );
+  }
+
   render() {
     const { expanded } = this.state;
     let containerClass = 'sidebar__filmstrip';
@@ -82,6 +92,7 @@ class SidebarViewFilmstrip extends React.PureComponent {
       <div className={containerClass}>
         {this.getViewThumbs()}
         {this.getMoreButton()}
+        {this.getCountDisplay()}
       </div>
     );
   }
@@ -96,7 +107,9 @@ SidebarViewFilmstrip.propTypes = {
   /** Available view rasters */
   views: PropTypes.arrayOf(PropTypes.object),
   /** Selected views */
-  currentView: PropTypes.object,
+  currentView: PropTypes.shape({
+    name: PropTypes.string,
+  }),
   /**
    * Set app `currentView` state.
    * @param {Object} view A viewshed object
