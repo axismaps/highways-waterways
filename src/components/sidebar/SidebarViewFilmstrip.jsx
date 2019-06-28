@@ -2,7 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
- * Sidebar viewshed filmstrip component
+ * Sidebar viewshed filmstrip component.
+ *
+ * This component displays thumbnails of viewshed rasters.
+ * Clicking a thumbnail causes the map to pan to and
+ * display the corresponding viewshed.
+ * Hovering over a thumbnail also displays relevant viewshed on the map
+ * and displays data probe tooltip.
+ * Clicking toggle button expands or collapses filmstrip.
+ * Component depends on the loaded raster view data for the selected year
+ * and the currently selected viewshed.
+ *
+ * App -> Sidebar -> SidebarBlock -> SidebarViewFilmstrip
  */
 
 class SidebarViewFilmstrip extends React.PureComponent {
