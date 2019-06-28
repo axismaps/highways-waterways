@@ -12,15 +12,43 @@ class App extends React.Component {
       rasterProbe: null,
       overlay: null,
       availableLayers: [],
+      views: [],
+      overlays: [],
       currentLayers: [],
       currentFilters: [],
+      currentView: null,
+      currentOverlay: null,
     };
+
+    this.setView = this.setView.bind(this);
+  }
+
+  setView(newView) {
+    const { currentView } = this.state;
+
+    if (currentView === newView) {
+      this.setState({
+        currentView: null,
+      });
+    } else {
+      this.setState({
+        currentView: newView,
+      });
+    }
   }
 
   render() {
+    const {
+      views,
+      currentView,
+    } = this.state;
     return (
       <div className="App">
-        <Sidebar />
+        <Sidebar
+          setView={this.setView}
+          views={views}
+          currentView={currentView}
+        />
       </div>
     );
   }
