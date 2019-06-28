@@ -2,7 +2,7 @@ import React from 'react';
 import Sidebar from '../sidebar/Sidebar';
 import './App.css';
 
-class App extends React.Component() {
+class App extends React.Component {
   constructor(props) {
     super(props);
 
