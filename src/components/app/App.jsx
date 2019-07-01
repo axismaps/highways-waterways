@@ -1,6 +1,15 @@
 import React from 'react';
 import Sidebar from '../sidebar/Sidebar';
+import Atlas from '../atlas/Atlas';
+import Header from '../header/Header';
 import './App.css';
+/**
+ * Main application layout and state component
+ *
+ * This component initializes and passes props/callbacks
+ * to all of the main application components--Sidebar, Atlas,
+ * etc., and initializes the top-level application state.
+ */
 
 class App extends React.Component {
   constructor(props) {
@@ -10,14 +19,22 @@ class App extends React.Component {
       year: 1950,
       sidebarOpen: true,
       rasterProbe: null,
-      overlay: null,
-      availableLayers: [],
-      views: [],
-      overlays: [],
+      /** List of available base layers */
+      availableBaseLayers: [],
+      availableViews: [],
+      availableOverlays: [],
+      availableHydroRasters: [],
+      availableChoropleth: [],
+      /** List of layer ids for layers to be displayed */
       currentLayers: [],
       currentFilters: [],
       currentView: null,
       currentOverlay: null,
+      currentHydroRaster: null,
+      hydroRasterValues: [],
+      choroplethValues: [],
+      highlightedFeatures: [],
+      highlightedLayer: [],
     };
 
     this.setView = this.setView.bind(this);
@@ -41,13 +58,26 @@ class App extends React.Component {
     const {
       views,
       currentView,
+      sidebarOpen,
+      currentLayers,
+      currentFilters,
+      currentOverlay,
     } = this.state;
     return (
       <div className="App">
+        <Header />
         <Sidebar
+          sidebarOpen={sidebarOpen}
           setView={this.setView}
           views={views}
           currentView={currentView}
+        />
+        <Atlas
+          views={views}
+          currentView={currentView}
+          currentLayers={currentLayers}
+          currentFilters={currentFilters}
+          currentOverlay={currentOverlay}
         />
       </div>
     );

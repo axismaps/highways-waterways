@@ -50,14 +50,14 @@ class SidebarViewFilmstrip extends React.PureComponent {
   */
   getViewThumbs() {
     const {
-      views,
+      availableViews,
       currentView,
       setView,
     } = this.props;
 
     const isCurrentView = view => view === currentView;
 
-    return views.map((view) => {
+    return availableViews.map((view) => {
       let thumbClass = 'filmstrip__thumbnail';
       if (isCurrentView(view)) {
         thumbClass += ` ${thumbClass}--selected`;
@@ -74,10 +74,10 @@ class SidebarViewFilmstrip extends React.PureComponent {
   }
 
   getCountDisplay() {
-    const { views } = this.props;
+    const { availableViews } = this.props;
     return (
       <div className="filmstrip__count">
-        {views.length}
+        {availableViews.length}
       </div>
     );
   }
@@ -99,13 +99,13 @@ class SidebarViewFilmstrip extends React.PureComponent {
 }
 
 SidebarViewFilmstrip.defaultProps = {
-  views: [],
+  availableViews: [],
   currentView: null,
 };
 
 SidebarViewFilmstrip.propTypes = {
   /** Available view rasters */
-  views: PropTypes.arrayOf(PropTypes.object),
+  availableViews: PropTypes.arrayOf(PropTypes.object),
   /** Selected views */
   currentView: PropTypes.shape({
     name: PropTypes.string,
