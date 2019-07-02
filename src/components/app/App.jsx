@@ -2,6 +2,7 @@ import React from 'react';
 import Sidebar from '../sidebar/Sidebar';
 import Atlas from '../atlas/Atlas';
 import Header from '../header/Header';
+import exportMethods from './appExport';
 import './App.css';
 /**
  * Main application layout and state component
@@ -55,11 +56,32 @@ class App extends React.Component {
       });
     }
   }
+  /**
+   * Sets application `searchFeatures`
+   * @param {array} newFeatures
+   * @public
+   */
 
   setSearchFeatures(newFeatures) {
     this.setState({
       searchFeatures: newFeatures,
     });
+  }
+
+  /**
+   * @public
+   */
+
+  rasterize() {
+    exportMethods.rasterize(this);
+  }
+
+  /**
+   * @public
+   */
+
+  download() {
+    exportMethods.download(this);
   }
 
   render() {
