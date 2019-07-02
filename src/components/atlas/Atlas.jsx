@@ -16,6 +16,8 @@ import './Atlas.scss';
  * depend on the year selected from the timeline. Clicking on a map view
  * icon selects that view, displaying the viewshed polygon
  * on the map and opening the view image in the raster probe.
+ * Clicking on map or using the area drag feature
+ * searches the map and brings up search results in Sidebar.
  */
 
 class Atlas extends React.PureComponent {
@@ -38,6 +40,8 @@ Atlas.propTypes = {
   views: PropTypes.arrayOf(PropTypes.object),
   /** All map layers to display (layer ids) */
   currentLayers: PropTypes.arrayOf(PropTypes.string),
+  /** Callback to set application search feature results */
+  setSearchFeatures: PropTypes.func.isRequired,
 };
 
 export default Atlas;

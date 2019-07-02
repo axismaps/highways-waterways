@@ -37,6 +37,7 @@ class Sidebar extends React.PureComponent {
 Sidebar.defaultProps = {
   availableViews: [],
   currentView: null,
+  searchFeatures: [],
 };
 
 Sidebar.propTypes = {
@@ -77,6 +78,14 @@ Sidebar.propTypes = {
   highlightedLayer: PropTypes.object,
   /** callback to set highlightedLayer */
   highlightLayer: PropTypes.func,
+  /** callback to highlight feature */
+  highlightFeature: PropTypes.func,
+  /** Results from Atlas search */
+  searchFeatures: PropTypes.arrayOf(PropTypes.object),
+  /** callback to set application text search value */
+  setTextSearch: PropTypes.func,
+  /** callback to clear application search features */
+  clearSearch: PropTypes.func,
 };
 
 export default Sidebar;

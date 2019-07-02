@@ -35,9 +35,11 @@ class App extends React.Component {
       choroplethValues: [],
       highlightedFeatures: [],
       highlightedLayer: [],
+      searchFeatures: [],
     };
 
     this.setView = this.setView.bind(this);
+    this.setSearchFeatures = this.setSearchFeatures.bind(this);
   }
 
   setView(newView) {
@@ -54,6 +56,12 @@ class App extends React.Component {
     }
   }
 
+  setSearchFeatures(newFeatures) {
+    this.setState({
+      searchFeatures: newFeatures,
+    });
+  }
+
   render() {
     const {
       views,
@@ -62,6 +70,7 @@ class App extends React.Component {
       currentLayers,
       currentFilters,
       currentOverlay,
+      searchFeatures,
     } = this.state;
     return (
       <div className="App">
@@ -71,6 +80,7 @@ class App extends React.Component {
           setView={this.setView}
           views={views}
           currentView={currentView}
+          searchFeatures={searchFeatures}
         />
         <Atlas
           views={views}
@@ -78,6 +88,7 @@ class App extends React.Component {
           currentLayers={currentLayers}
           currentFilters={currentFilters}
           currentOverlay={currentOverlay}
+          setSearchFeatures={this.setSearchFeatures}
         />
       </div>
     );
