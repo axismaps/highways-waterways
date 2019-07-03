@@ -3,7 +3,7 @@ import Sidebar from '../sidebar/Sidebar';
 import Atlas from '../atlas/Atlas';
 import Header from '../header/Header';
 import exportMethods from './appExport';
-import './App.css';
+import './App.scss';
 /**
  * Main application layout and state component
  *
@@ -95,23 +95,26 @@ class App extends React.Component {
       searchFeatures,
     } = this.state;
     return (
-      <div className="App">
+      <div className="app">
         <Header />
-        <Sidebar
-          sidebarOpen={sidebarOpen}
-          setView={this.setView}
-          views={views}
-          currentView={currentView}
-          searchFeatures={searchFeatures}
-        />
-        <Atlas
-          views={views}
-          currentView={currentView}
-          currentLayers={currentLayers}
-          currentFilters={currentFilters}
-          currentOverlay={currentOverlay}
-          setSearchFeatures={this.setSearchFeatures}
-        />
+        <div className="app__body">
+          <Sidebar
+            sidebarOpen={sidebarOpen}
+            setView={this.setView}
+            views={views}
+            currentView={currentView}
+            searchFeatures={searchFeatures}
+          />
+          <Atlas
+            views={views}
+            currentView={currentView}
+            currentLayers={currentLayers}
+            currentFilters={currentFilters}
+            currentOverlay={currentOverlay}
+            setSearchFeatures={this.setSearchFeatures}
+          />
+        </div>
+        
       </div>
     );
   }

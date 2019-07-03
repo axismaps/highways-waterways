@@ -22,6 +22,7 @@ class Sidebar extends React.PureComponent {
     if (!sidebarOpen) return null;
     return (
       <div className="sidebar">
+        SIDEBAR
         <SidebarBlock>
           <SidebarViewFilmstrip
             setView={setView}
