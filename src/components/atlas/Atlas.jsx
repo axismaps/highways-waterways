@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import * as mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import './Atlas.scss';
+console.log('mapbox', mapboxgl);
 
 /**
  * Map component
