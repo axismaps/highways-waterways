@@ -13,7 +13,9 @@ class Header extends React.PureComponent {
   render() {
     return (
       <div className="header">
-        Header
+        <div className="header__inner">
+          Header
+        </div>
       </div>
     );
   }

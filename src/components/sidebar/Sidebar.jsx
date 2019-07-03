@@ -22,14 +22,16 @@ class Sidebar extends React.PureComponent {
     if (!sidebarOpen) return null;
     return (
       <div className="sidebar">
-        SIDEBAR
-        <SidebarBlock>
-          <SidebarViewFilmstrip
-            setView={setView}
-            currentView={currentView}
-            availableViews={availableViews}
-          />
-        </SidebarBlock>
+        <div className="sidebar__inner">
+          SIDEBAR
+          <SidebarBlock>
+            <SidebarViewFilmstrip
+              setView={setView}
+              currentView={currentView}
+              availableViews={availableViews}
+            />
+          </SidebarBlock>
+        </div>
       </div>
     );
   }

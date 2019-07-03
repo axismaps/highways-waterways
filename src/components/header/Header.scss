@@ -1,5 +1,13 @@
+@import '../../config';
+
 .header {
   width: 100%;
-  height: 200px;
-  background: lightgrey;
+  height: 108px;
+  background: white;
+  box-shadow: $main-shadow;
+  z-index: 500;
+}
+
+.header__inner {
+  padding: 20px;
 }

@@ -1,6 +1,14 @@
+@import '../../config';
+
 .sidebar {
-  background: grey;
+  background: white;
   display: flex;
-  width: 300px;
+  width: 310px;
   flex-direction: column;
+  box-shadow: $main-shadow;
+
+}
+
+.sidebar__inner {
+  padding: 20px;
 }
