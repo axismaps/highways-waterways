@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import * as d3 from 'd3';
+import D3Slider from '../d3slider/D3Slider';
 
 /**
  * This is the timeline slider component.
@@ -15,48 +17,70 @@ import PropTypes from 'prop-types';
 class HeaderTimeline extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.timelineRef = React.createRef();
+    this.sliderRef = React.createRef();
     this.state = {
       containerWidth: null,
+      containerHeight: null,
+    };
+    this.logged = {
+      containerWidth: null,
+      containerHeight: null,
+    };
+    this.sliderComponents = {
+      svg: null,
+      track: null,
     };
   }
 
   componentDidMount() {
-    const timelineNode = this.timelineRef.current;
-    console.log('timelinenode', timelineNode);
-    if (timelineNode !== undefined) {
+    this.timelineNode = this.sliderRef.current;
+
+    if (this.timelineNode !== undefined) {
+      const bounds = this.timelineNode.getBoundingClientRect();
+      console.log('bounds.width', bounds.width);
       this.setState({
-        containerWidth: timelineNode.getBoundingClientRect().width,
+        containerWidth: bounds.width,
+        containerHeight: bounds.height,
       });
     }
   }
 
-  getTimeline() {
-    const { containerWidth } = this.state;
-    if (containerWidth === null) return null;
-    const padding = {
-      left: 20,
-      right: 20,
-      top: 20,
-      bottom: 20,
-    };
-    const height = 20;
-    return (
-      <div className="timeline__slider">
-        slider
-      </div>
-    );
+  componentDidUpdate() {
+    console.log('UPDATE');
+    const {
+      containerWidth,
+      containerHeight,
+    } = this.state;
+    if (this.sliderComponents.svg === null) {
+      this.d3Slider = new D3Slider({
+        width: containerWidth,
+        height: containerHeight,
+        padding: {
+          left: 10,
+          right: 10,
+          top: 0,
+          bottom: 0,
+        },
+        handleHeight: containerHeight + 4,
+        handleWidth: 16,
+        timelineNode: this.sliderRef.current,
+        yearRange: [1800, 1910],
+      });
+      this.d3Slider.init();
+    }
   }
 
   render() {
     return (
-      <div className="header__timeline" ref={this.timelineRef}>
-        <div className="timeline__slider">
-          timeline slider
-        </div>
+      <div className="header__timeline">
+        <div className="timeline__slider" ref={this.sliderRef} />
       </div>
     );
   }
+}
+
+HeaderTimeline.defaultProps = {
+
 }
 
 export default HeaderTimeline;

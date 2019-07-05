@@ -38,5 +38,12 @@ $stepper-width: 375px;
   flex-grow: 1;
   margin-right: 20px;
   margin-left: 20px;
-  background: grey;
+}
+
+.timeline__track {
+  fill: lightgrey;
+}
+
+.timeline__slider-svg {
+  // background: lightgrey;
 }
