@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import HeaderStepper from './HeaderStepper';
+import HeaderTimeline from './HeaderTimeline';
 import './Header.scss';
 
 /**
@@ -14,7 +16,8 @@ class Header extends React.PureComponent {
     return (
       <div className="header">
         <div className="header__inner">
-          Header
+          <HeaderStepper />
+          <HeaderTimeline />
         </div>
       </div>
     );

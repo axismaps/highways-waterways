@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 class HeaderTimeline extends React.PureComponent {
   render() {
     return (
-      <div className="header__timeliner">
+      <div className="header__timeline">
         Timeline
       </div>
     );
