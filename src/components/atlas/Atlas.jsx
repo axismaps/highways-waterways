@@ -36,6 +36,8 @@ class Atlas extends React.PureComponent {
       container: this.atlasRef.current,
       style,
     });
+
+    this.mbMap = mbMap;
   }
 
   render() {
@@ -57,6 +59,8 @@ Atlas.defaultProps = {
 };
 
 Atlas.propTypes = {
+  /** mapbox-gl style object */
+  style: PropTypes.object.isRequired,
   /** Available view rasters */
   views: PropTypes.arrayOf(PropTypes.object),
   /** All map layers to display (layer ids) */

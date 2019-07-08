@@ -46,7 +46,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    d3.json('http://highways.axismaps.io/api/v1/getStyle')
+    const { year } = this.state;
+    d3.json(`http://highways.axismaps.io/api/v1/getStyle?start=${year}&end=${year}`)
       .then((data) => {
         this.setState({
           style: data,
