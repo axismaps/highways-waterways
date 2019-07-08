@@ -46,6 +46,7 @@ $stepper-width: 375px;
 
 .timeline__handle {
   fill: grey;
+  pointer-events: none;
 }
 
 .timeline__slider-svg {

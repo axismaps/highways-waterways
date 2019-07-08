@@ -19,6 +19,7 @@ class App extends React.Component {
     const year = 1950;
     this.state = {
       year,
+      tileIncrement: [1950, 1960],
       sidebarOpen: true,
       rasterProbe: null,
       /** List of available base layers */

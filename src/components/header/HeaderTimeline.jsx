@@ -25,11 +25,9 @@ class HeaderTimeline extends React.PureComponent {
     this.logged = {
       containerWidth: null,
       containerHeight: null,
+      year: null,
     };
-    this.sliderComponents = {
-      svg: null,
-      track: null,
-    };
+    this.d3Slider = null;
   }
 
   componentDidMount() {
@@ -42,20 +40,24 @@ class HeaderTimeline extends React.PureComponent {
         containerHeight: bounds.height,
       });
     }
+
+    this.logYear();
   }
 
   componentDidUpdate() {
-    console.log('update timeline');
     const {
       containerWidth,
       containerHeight,
     } = this.state;
 
-    const { year } = this.props;
+    const {
+      year,
+      setYear,
+    } = this.props;
 
     const trackHeight = containerHeight - 10;
     const handleHeight = trackHeight + 4;
-    if (this.sliderComponents.svg === null) {
+    if (this.d3Slider === null) {
       this.d3Slider = new D3Slider({
         trackHeight,
         width: containerWidth,
@@ -70,8 +72,20 @@ class HeaderTimeline extends React.PureComponent {
         // value range, current value
         currentValue: year,
         valueRange: [1800, 2010],
+        setYear,
       });
       this.d3Slider.init();
+    }
+    if (this.logged.year !== year) {
+      this.d3Slider.updateValue(year);
+      this.logYear();
+    }
+  }
+
+  logYear() {
+    const { year } = this.props;
+    if (year !== this.logged.year) {
+      this.logged.year = year;
     }
   }
 
@@ -87,6 +101,8 @@ class HeaderTimeline extends React.PureComponent {
 HeaderTimeline.propTypes = {
   /** Current year */
   year: PropTypes.number.isRequired,
+  /** Sets current year */
+  setYear: PropTypes.func.isRequired,
 };
 
 export default HeaderTimeline;
