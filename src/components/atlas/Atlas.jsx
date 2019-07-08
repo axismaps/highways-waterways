@@ -24,9 +24,26 @@ import './Atlas.scss';
  */
 
 class Atlas extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.atlasRef = React.createRef();
+  }
+
+  componentDidMount() {
+    const { style } = this.props;
+    const mbMap = new mapboxgl.Map({
+      container: this.atlasRef.current,
+      style,
+    });
+  }
+
   render() {
+    const {
+      style,
+    } = this.props;
+    console.log('style', style);
     return (
-      <div className="atlas">
+      <div className="atlas" ref={this.atlasRef}>
         Atlas
       </div>
     );

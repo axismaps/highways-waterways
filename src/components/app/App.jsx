@@ -3,6 +3,7 @@ import Sidebar from '../sidebar/Sidebar';
 import Atlas from '../atlas/Atlas';
 import Header from '../header/Header';
 import exportMethods from './appExport';
+import * as d3 from 'd3';
 import './App.scss';
 /**
  * Main application layout and state component
@@ -37,10 +38,43 @@ class App extends React.Component {
       highlightedFeatures: [],
       highlightedLayer: [],
       searchFeatures: [],
+      style: null,
     };
 
     this.setView = this.setView.bind(this);
     this.setSearchFeatures = this.setSearchFeatures.bind(this);
+  }
+
+  componentDidMount() {
+    d3.json('http://highways.axismaps.io/api/v1/getStyle')
+      .then((data) => {
+        this.setState({
+          style: data,
+        });
+      });
+  }
+
+  getAtlas() {
+    const {
+      style,
+      currentLayers,
+      currentFilters,
+      currentOverlay,
+      views,
+      currentView,
+    } = this.state;
+    if (style === null) return null;
+    return (
+      <Atlas
+        style={style}
+        views={views}
+        currentView={currentView}
+        currentLayers={currentLayers}
+        currentFilters={currentFilters}
+        currentOverlay={currentOverlay}
+        setSearchFeatures={this.setSearchFeatures}
+      />
+    );
   }
 
   setView(newView) {
@@ -89,9 +123,6 @@ class App extends React.Component {
       views,
       currentView,
       sidebarOpen,
-      currentLayers,
-      currentFilters,
-      currentOverlay,
       searchFeatures,
     } = this.state;
     return (
@@ -105,14 +136,7 @@ class App extends React.Component {
             currentView={currentView}
             searchFeatures={searchFeatures}
           />
-          <Atlas
-            views={views}
-            currentView={currentView}
-            currentLayers={currentLayers}
-            currentFilters={currentFilters}
-            currentOverlay={currentOverlay}
-            setSearchFeatures={this.setSearchFeatures}
-          />
+          {this.getAtlas()}
         </div>
         
       </div>
