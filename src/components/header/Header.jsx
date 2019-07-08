@@ -13,11 +13,22 @@ import './Header.scss';
 
 class Header extends React.PureComponent {
   render() {
+    const {
+      year,
+      setYear,
+    } = this.props;
+
     return (
       <div className="header">
         <div className="header__inner">
-          <HeaderStepper />
-          <HeaderTimeline />
+          <HeaderStepper
+            year={year}
+            setYear={setYear}
+          />
+          <HeaderTimeline
+            year={year}
+            setYear={setYear}
+          />
         </div>
       </div>
     );
@@ -26,9 +37,9 @@ class Header extends React.PureComponent {
 
 Header.propTypes = {
   /** Current year */
-  year: PropTypes.number,
+  year: PropTypes.number.isRequired,
   /** Sets application year */
-  setYear: PropTypes.func,
+  setYear: PropTypes.func.isRequired,
 };
 
 export default Header;

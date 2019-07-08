@@ -13,29 +13,41 @@ class D3Slider {
   }
 
   draw() {
+    this.drawSVG();
+    this.drawTrack();
+    this.drawHandle();
+    this.setScales();
+    this.setHandlePosition();
+  }
+
+  drawSVG() {
     const {
-      padding,
+      timelineNode,
       width,
       height,
-      timelineNode,
     } = this.props;
-    const svg = d3.select(timelineNode)
+    this.svg = d3.select(timelineNode)
       .append('svg')
       .attr('class', 'timeline__slider-svg')
       .style('width', `${width}px`)
       .style('height', `${height}px`);
-    const track = svg.append('rect')
+  }
+
+  drawTrack() {
+    const {
+      padding,
+      width,
+      height,
+      trackHeight,
+    } = this.props;
+
+    this.track = this.svg.append('rect')
       .attr('class', 'timeline__track')
       .attr('x', padding.left)
-      .attr('y', padding.top)
+      .attr('y', (height / 2) - (trackHeight / 2))
       .attr('rx', 10)
       .attr('width', width - padding.left - padding.right)
-      .attr('height', height - padding.top - padding.bottom);
-    Object.assign(this.components,
-      {
-        svg,
-        track,
-      });
+      .attr('height', trackHeight);
   }
 
   setScales() {
@@ -43,15 +55,39 @@ class D3Slider {
       padding,
       width,
       handleWidth,
-      yearRange,
+      valueRange,
     } = this.props;
-    const xScale = d3.scaleLinear()
+    this.xScale = d3.scaleLinear()
       .domain([
         padding.left + (handleWidth / 2),
         width - padding.right - (handleWidth / 2),
       ])
-      .range(yearRange);
-    Object.assign(this.components, { xScale });
+      .range(valueRange)
+      .clamp(true);
+  }
+
+  drawHandle() {
+    const {
+      handleWidth,
+      handleHeight,
+      height,
+    } = this.props;
+    this.handle = this.svg.append('rect')
+      .attr('class', 'timeline__handle')
+      .attr('width', handleWidth)
+      .attr('height', handleHeight)
+      .attr('x', 0)
+      .attr('y', (height / 2) - (handleHeight / 2));
+  }
+
+  setHandlePosition() {
+    const {
+      currentValue,
+      handleWidth,
+    } = this.props;
+
+    this.handle
+      .attr('x', this.xScale.invert(currentValue) - (handleWidth / 2));
   }
 }
 

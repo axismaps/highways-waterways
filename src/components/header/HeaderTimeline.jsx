@@ -37,7 +37,6 @@ class HeaderTimeline extends React.PureComponent {
 
     if (this.timelineNode !== undefined) {
       const bounds = this.timelineNode.getBoundingClientRect();
-      console.log('bounds.width', bounds.width);
       this.setState({
         containerWidth: bounds.width,
         containerHeight: bounds.height,
@@ -46,25 +45,31 @@ class HeaderTimeline extends React.PureComponent {
   }
 
   componentDidUpdate() {
-    console.log('UPDATE');
+    console.log('update timeline');
     const {
       containerWidth,
       containerHeight,
     } = this.state;
+
+    const { year } = this.props;
+
+    const trackHeight = containerHeight - 10;
+    const handleHeight = trackHeight + 4;
     if (this.sliderComponents.svg === null) {
       this.d3Slider = new D3Slider({
+        trackHeight,
         width: containerWidth,
         height: containerHeight,
         padding: {
           left: 10,
           right: 10,
-          top: 0,
-          bottom: 0,
         },
-        handleHeight: containerHeight + 4,
+        handleHeight,
         handleWidth: 16,
         timelineNode: this.sliderRef.current,
-        yearRange: [1800, 1910],
+        // value range, current value
+        currentValue: year,
+        valueRange: [1800, 2010],
       });
       this.d3Slider.init();
     }
@@ -79,8 +84,9 @@ class HeaderTimeline extends React.PureComponent {
   }
 }
 
-HeaderTimeline.defaultProps = {
-
-}
+HeaderTimeline.propTypes = {
+  /** Current year */
+  year: PropTypes.number.isRequired,
+};
 
 export default HeaderTimeline;

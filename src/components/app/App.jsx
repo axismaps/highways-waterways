@@ -16,9 +16,9 @@ import './App.scss';
 class App extends React.Component {
   constructor(props) {
     super(props);
-
+    const year = 1950;
     this.state = {
-      year: 1950,
+      year,
       sidebarOpen: true,
       rasterProbe: null,
       /** List of available base layers */
@@ -42,11 +42,13 @@ class App extends React.Component {
     };
 
     this.setView = this.setView.bind(this);
+    this.setYear = this.setYear.bind(this);
     this.setSearchFeatures = this.setSearchFeatures.bind(this);
   }
 
   componentDidMount() {
     const { year } = this.state;
+    // debounce this
     d3.json(`http://highways.axismaps.io/api/v1/getStyle?start=${year}&end=${year}`)
       .then((data) => {
         this.setState({
@@ -91,6 +93,13 @@ class App extends React.Component {
       });
     }
   }
+
+  setYear(newYear) {
+    this.setState({
+      year: newYear,
+    });
+  }
+
   /**
    * Sets application `searchFeatures`
    * @param {array} newFeatures
@@ -125,10 +134,14 @@ class App extends React.Component {
       currentView,
       sidebarOpen,
       searchFeatures,
+      year,
     } = this.state;
     return (
       <div className="app">
-        <Header />
+        <Header
+          year={year}
+          setYear={this.setYear}
+        />
         <div className="app__body">
           <Sidebar
             sidebarOpen={sidebarOpen}
