@@ -94,31 +94,8 @@ class D3Slider {
   setDrag() {
     const { setYear } = this.props;
     this.track.call(d3.drag()
-      .on('start.interrupt', () => {
-        this.track.interrupt();
-      })
       .on('start drag', () => {
         setYear(this.xScale(d3.event.x));
-        // const { valueRange, svgPosition } = props;
-        // const sliderValue = scale.invert(d3.event.x);
-        // if (tooltip && !mobile) {
-        //   setTooltipPosition.call(this, { x: d3.event.x + svgPosition.left });
-        // }
-        // let newValue;
-        // if (sliderValue >= valueRange[0] && sliderValue <= valueRange[1]) {
-        //   newValue = sliderValue;
-        // } else if (sliderValue < valueRange[0]) {
-        //   /* eslint-disable prefer-destructuring */
-        //   newValue = valueRange[0];
-        // } else if (sliderValue > valueRange[1]) {
-        //   newValue = valueRange[1];
-        //   /* eslint-enable prefer-destructuring */
-        // }
-        // if (opacitySlider) {
-        //   onDragEnd(newValue);
-        // } else {
-        //   onDragEnd(Timeline.getUniqueYear(newValue, uniqueYears));
-        // }
       }));
   }
 

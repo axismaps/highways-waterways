@@ -1,5 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import {
+//   faChevronCircleLeft,
+// } from '@fortawesome/pro-solid-svg-icons';
+import {
+  faChevronCircleLeft,
+  faChevronCircleRight,
+} from '@fortawesome/pro-regular-svg-icons';
 
 /**
  * This is the year stepper component.
@@ -23,24 +31,20 @@ class HeaderStepper extends React.PureComponent {
     };
     const stepForward = () => {
       setYear(roundYear + 1);
-    }
+    };
     return (
       <div className="header__stepper">
-        <div
-          className="header__stepper-left header__stepper-button"
+        <FontAwesomeIcon
+          icon={faChevronCircleLeft}
           onClick={stepBack}
-        >
-          prev
-        </div>
+        />
         <div className="header__stepper-year">
           {roundYear}
         </div>
-        <div
-          className="header__stepper-next header__stepper-button"
+        <FontAwesomeIcon
+          icon={faChevronCircleRight}
           onClick={stepForward}
-        >
-          next
-        </div>
+        />
       </div>
     );
   }
