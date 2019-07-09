@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 //   faChevronCircleLeft,
 // } from '@fortawesome/pro-solid-svg-icons';
 import {
-  faChevronCircleLeft,
-  faChevronCircleRight,
+  faChevronLeft,
+  faChevronRight,
 } from '@fortawesome/pro-regular-svg-icons';
 
 /**
@@ -34,17 +34,26 @@ class HeaderStepper extends React.PureComponent {
     };
     return (
       <div className="header__stepper">
-        <FontAwesomeIcon
-          icon={faChevronCircleLeft}
+        <div
+          className="header__stepper-button"
           onClick={stepBack}
-        />
+        >
+          <FontAwesomeIcon
+            icon={faChevronLeft}
+          />
+        </div>
         <div className="header__stepper-year">
           {roundYear}
         </div>
-        <FontAwesomeIcon
-          icon={faChevronCircleRight}
+        <div
+          className="header__stepper-button"
           onClick={stepForward}
-        />
+        >
+          <FontAwesomeIcon
+            icon={faChevronRight}
+            
+          />
+        </div>
       </div>
     );
   }
