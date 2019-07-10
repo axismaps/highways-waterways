@@ -19,7 +19,6 @@ class App extends React.Component {
     const year = 1950;
     this.state = {
       year,
-      tileIncrement: [1950, 1960],
       sidebarOpen: true,
       rasterProbe: null,
       /** List of available base layers */
@@ -40,22 +39,28 @@ class App extends React.Component {
       highlightedLayer: [],
       searchFeatures: [],
       style: null,
+      yearRange: null,
+      tileRanges: null,
+      // currentTileRange: null,
     };
 
     this.setView = this.setView.bind(this);
     this.setYear = this.setYear.bind(this);
     this.setSearchFeatures = this.setSearchFeatures.bind(this);
+    this.currentTileRange = null;
   }
 
   componentDidMount() {
-    const { year } = this.state;
-    // debounce this
-    d3.json(`http://highways.axismaps.io/api/v1/getStyle?start=${year}&end=${year}`)
-      .then((data) => {
-        this.setState({
-          style: data,
-        });
-      });
+    this.loadData();
+  }
+
+  static getCurrentTileRange({ tileRanges, year }) {
+    const roundYear = Math.round(year);
+    // const {
+    //   tileRanges,
+    //   year,
+    // } = this.state;
+    return tileRanges.find(d => roundYear >= d[0] && roundYear <= d[1]);
   }
 
   getAtlas() {
@@ -66,8 +71,15 @@ class App extends React.Component {
       currentOverlay,
       views,
       currentView,
+      // tileRanges,
+      // year,
     } = this.state;
     if (style === null) return null;
+    // this.currentTileRange = App.getCurrentTileRange({
+    //   tileRanges,
+    //   year,
+    // });
+    // console.log('currenttilerange', this.currentTileRange);
     return (
       <Atlas
         style={style}
@@ -77,6 +89,7 @@ class App extends React.Component {
         currentFilters={currentFilters}
         currentOverlay={currentOverlay}
         setSearchFeatures={this.setSearchFeatures}
+        // currentTileRange={this.currentTileRange}
       />
     );
   }
@@ -96,9 +109,11 @@ class App extends React.Component {
   }
 
   setYear(newYear) {
+    // add async update style object / tiles here
     this.setState({
       year: newYear,
     });
+    this.updateStyle(newYear);
   }
 
   /**
@@ -110,6 +125,59 @@ class App extends React.Component {
   setSearchFeatures(newFeatures) {
     this.setState({
       searchFeatures: newFeatures,
+    });
+  }
+
+
+
+  getStylePromise() {
+    const { year } = this.state;
+    return d3.json(`http://highways.axismaps.io/api/v1/getStyle?start=${year}&end=${year}`);
+  }
+
+  updateStyle(newYear) {
+    if (this.currentTileRange === null) return;
+    const { tileRanges } = this.state;
+    const newTileRange = App.getCurrentTileRange({
+      year: newYear,
+      tileRanges,
+    });
+
+    if (this.currentTileRange[0] !== newTileRange[0]) {
+      this.currentTileRange = newTileRange;
+      console.log('new range', newTileRange);
+      // need to cancel previous promise if scrubbing too fast
+      this.getStylePromise()
+        .then((style) => {
+          this.setState({
+            style,
+          });
+        });
+    }
+  }
+
+  async loadData() {
+    const { year } = this.state;
+    console.log('load data');
+    const [style, tileRangesData] = await Promise.all([
+      this.getStylePromise(),
+      d3.json('http://highways.axismaps.io/api/v1/getTimeline'),
+    ]);
+
+    const tileRanges = tileRangesData.response;
+
+    const yearRange = d3.extent(tileRanges
+      .reduce((accumulator, d) => [...accumulator, ...d], []));
+    this.currentTileRange = App.getCurrentTileRange({
+      tileRanges,
+      year,
+    });
+    // console.log('currentTile', this.currentTileRange);
+
+    this.setState({
+      style,
+      tileRanges,
+      yearRange,
     });
   }
 
@@ -136,12 +204,16 @@ class App extends React.Component {
       sidebarOpen,
       searchFeatures,
       year,
+      tileRanges,
+      // currentTileRange,
     } = this.state;
     return (
       <div className="app">
         <Header
           year={year}
           setYear={this.setYear}
+          tileRanges={tileRanges}
+          // currentTileRange={currentTileRange}
         />
         <div className="app__body">
           <Sidebar

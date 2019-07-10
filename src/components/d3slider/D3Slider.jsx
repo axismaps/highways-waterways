@@ -71,12 +71,14 @@ class D3Slider {
     const {
       handleWidth,
       handleHeight,
+      handleCornerRadius,
       height,
     } = this.props;
     this.handle = this.svg.append('rect')
       .attr('class', 'timeline__handle')
       .attr('width', handleWidth)
       .attr('height', handleHeight)
+      .attr('rx', handleCornerRadius)
       .attr('x', 0)
       .attr('y', (height / 2) - (handleHeight / 2));
   }

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as d3 from 'd3';
+// import * as d3 from 'd3';
 import D3Slider from '../d3slider/D3Slider';
 
 /**
@@ -55,8 +55,10 @@ class HeaderTimeline extends React.PureComponent {
       setYear,
     } = this.props;
 
-    const trackHeight = containerHeight - 10;
-    const handleHeight = trackHeight + 4;
+    // const trackHeight = containerHeight - 10;
+    const trackHeight = 36;
+    // const handleHeight = trackHeight + 4;
+    const handleHeight = containerHeight;
     if (this.d3Slider === null) {
       this.d3Slider = new D3Slider({
         trackHeight,
@@ -66,8 +68,9 @@ class HeaderTimeline extends React.PureComponent {
           left: 10,
           right: 10,
         },
+        handleCornerRadius: 5,
         handleHeight,
-        handleWidth: 16,
+        handleWidth: 20,
         timelineNode: this.sliderRef.current,
         // value range, current value
         currentValue: year,
