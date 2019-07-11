@@ -27,6 +27,9 @@ class Atlas extends React.PureComponent {
   constructor(props) {
     super(props);
     this.atlasRef = React.createRef();
+    this.logged = {
+      style: null,
+    };
   }
 
   componentDidMount() {
@@ -38,13 +41,27 @@ class Atlas extends React.PureComponent {
     });
 
     this.mbMap = mbMap;
+    this.logStyle();
+  }
+
+  componentDidUpdate() {
+    const { style } = this.props;
+    if (style.sources.composite.url !== this.logged.style.sources.composite.url) {
+      this.logStyle();
+      this.mbMap.setStyle(style);
+    }
+  }
+
+  logStyle() {
+    const { style } = this.props;
+    this.logged.style = style;
   }
 
   render() {
-    const {
-      style,
-    } = this.props;
-    console.log('style', style);
+    // const {
+    //   style,
+    // } = this.props;
+
     return (
       <div className="atlas" ref={this.atlasRef}>
         Atlas

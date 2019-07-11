@@ -1,9 +1,10 @@
 import React from 'react';
+import * as d3 from 'd3';
 import Sidebar from '../sidebar/Sidebar';
 import Atlas from '../atlas/Atlas';
 import Header from '../header/Header';
 import exportMethods from './appExport';
-import * as d3 from 'd3';
+
 import './App.scss';
 /**
  * Main application layout and state component
@@ -14,6 +15,25 @@ import './App.scss';
  */
 
 class App extends React.Component {
+  static formatStyle({ currentTileRange, style }) {
+    const oldSource = style.sources.composite.url;
+    const newSource = `${oldSource.slice(0, oldSource.indexOf('start'))}start=${currentTileRange[0]}&end=${currentTileRange[1]}`;
+
+    const newStyle = JSON.parse(JSON.stringify(style));
+    newStyle.sources.composite.url = newSource;
+
+    return newStyle;
+  }
+
+  static getCurrentTileRange({ tileRanges, year }) {
+    const roundYear = Math.round(year);
+    // const {
+    //   tileRanges,
+    //   year,
+    // } = this.state;
+    return tileRanges.find(d => roundYear >= d[0] && roundYear <= d[1]);
+  }
+
   constructor(props) {
     super(props);
     const year = 1950;
@@ -54,15 +74,6 @@ class App extends React.Component {
     this.loadData();
   }
 
-  static getCurrentTileRange({ tileRanges, year }) {
-    const roundYear = Math.round(year);
-    // const {
-    //   tileRanges,
-    //   year,
-    // } = this.state;
-    return tileRanges.find(d => roundYear >= d[0] && roundYear <= d[1]);
-  }
-
   getAtlas() {
     const {
       style,
@@ -71,8 +82,8 @@ class App extends React.Component {
       currentOverlay,
       views,
       currentView,
-      // tileRanges,
-      // year,
+      tileRanges,
+      year,
     } = this.state;
     if (style === null) return null;
     // this.currentTileRange = App.getCurrentTileRange({
@@ -80,9 +91,17 @@ class App extends React.Component {
     //   year,
     // });
     // console.log('currenttilerange', this.currentTileRange);
+    const newTileRange = App.getCurrentTileRange({
+      year,
+      tileRanges,
+    });
+    const formattedStyle = App.formatStyle({
+      style,
+      currentTileRange: newTileRange,
+    });
     return (
       <Atlas
-        style={style}
+        style={formattedStyle}
         views={views}
         currentView={currentView}
         currentLayers={currentLayers}
@@ -145,12 +164,18 @@ class App extends React.Component {
 
     if (this.currentTileRange[0] !== newTileRange[0]) {
       this.currentTileRange = newTileRange;
-      console.log('new range', newTileRange);
       // need to cancel previous promise if scrubbing too fast
       this.getStylePromise()
         .then((style) => {
-          this.setState({
+          const formattedStyle = App.formatStyle({
             style,
+            currentTileRange: newTileRange,
+          });
+          
+          // slide style.sources.composite.url to use currentTileRange
+          // add style update method to Atlas module
+          this.setState({
+            style: formattedStyle,
           });
         });
     }
