@@ -101,6 +101,7 @@ class App extends React.Component {
     });
     return (
       <Atlas
+        year={year}
         style={formattedStyle}
         views={views}
         currentView={currentView}
