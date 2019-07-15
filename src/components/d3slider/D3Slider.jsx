@@ -9,14 +9,16 @@ class D3Slider {
 
   init() {
     this.draw();
-    this.setScales();
+    this.setScale();
   }
 
   draw() {
     this.drawSVG();
     this.drawTrack();
+    this.setScale();
+    this.drawAxis();
     this.drawHandle();
-    this.setScales();
+    
     this.setHandlePosition();
     this.setDrag();
   }
@@ -27,7 +29,7 @@ class D3Slider {
       width,
       height,
     } = this.props;
-    this.svg = d3.select(timelineNode)
+    this.components.svg = d3.select(timelineNode)
       .append('svg')
       .attr('class', 'timeline__slider-svg')
       .style('width', `${width}px`)
@@ -41,8 +43,9 @@ class D3Slider {
       height,
       trackHeight,
     } = this.props;
+    const { svg } = this.components;
 
-    this.track = this.svg.append('rect')
+    this.components.track = svg.append('rect')
       .attr('class', 'timeline__track')
       .attr('x', padding.left)
       .attr('y', (height / 2) - (trackHeight / 2))
@@ -51,20 +54,49 @@ class D3Slider {
       .attr('height', trackHeight);
   }
 
-  setScales() {
+  drawAxis() {
+    const {
+      height,
+      trackHeight,
+    } = this.props;
+    const {
+      svg,
+      axisScale,
+    } = this.components;
+
+    const axisGroup = svg.append('g')
+      .attr('transform', `translate(0, ${((height / 2) - (trackHeight / 2))})`)
+      .attr('class', 'timeline__axis');
+
+    const axis = d3.axisBottom(axisScale)
+      .tickFormat(d => d);
+
+    axisGroup.call(axis);
+  }
+
+  setScale() {
     const {
       padding,
       width,
       handleWidth,
       valueRange,
     } = this.props;
-    this.xScale = d3.scaleLinear()
+    const xScale = d3.scaleLinear()
       .domain([
         padding.left + (handleWidth / 2),
         width - padding.right - (handleWidth / 2),
       ])
       .range(valueRange)
       .clamp(true);
+    const axisScale = d3.scaleLinear()
+      .domain(xScale.range())
+      .range(xScale.domain());
+
+    Object.assign(this.components, { xScale, axisScale });
+  }
+
+  getScale() {
+    return this.components.xScale;
   }
 
   drawHandle() {
@@ -74,7 +106,9 @@ class D3Slider {
       handleCornerRadius,
       height,
     } = this.props;
-    this.handle = this.svg.append('rect')
+    const { svg } = this.components;
+
+    this.components.handle = svg.append('rect')
       .attr('class', 'timeline__handle')
       .attr('width', handleWidth)
       .attr('height', handleHeight)
@@ -89,15 +123,25 @@ class D3Slider {
       handleWidth,
     } = this.props;
 
-    this.handle
-      .attr('x', this.xScale.invert(currentValue) - (handleWidth / 2));
+    const {
+      handle,
+      xScale,
+    } = this.components;
+
+    handle
+      .attr('x', xScale.invert(currentValue) - (handleWidth / 2));
   }
 
   setDrag() {
     const { setYear } = this.props;
-    this.track.call(d3.drag()
+    const {
+      track,
+      xScale,
+    } = this.components;
+
+    track.call(d3.drag()
       .on('start drag', () => {
-        setYear(this.xScale(d3.event.x));
+        setYear(xScale(d3.event.x));
       }));
   }
 

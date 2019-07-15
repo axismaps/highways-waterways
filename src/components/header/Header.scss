@@ -68,10 +68,23 @@ $stepper-button-size: 36px;
 }
 
 .timeline__handle {
-  fill: grey;
+  fill: $dark-grey;
   pointer-events: none;
 }
 
 .timeline__slider-svg {
-  // background: lightgrey;
+  path {
+    opacity: 0;
+  }
+
+  .tick {
+    pointer-events: none;
+    line {
+      stroke: #999999;
+    }
+
+    text {
+      font-size: 13px;
+    }
+  }
 }
