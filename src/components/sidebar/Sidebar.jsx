@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SidebarBlock from './SidebarBlock';
-import SidebarSearch from './SidebarSearch';
+import SidebarSearchBar from './SidebarSearchBar';
 import SidebarViewFilmstrip from './SidebarViewFilmstrip';
+import SidebarLegend from './SidebarLegend';
+import SidebarSearchResults from './SidebarSearchResults';
 import './Sidebar.scss';
 
 /**
@@ -13,11 +15,41 @@ import './Sidebar.scss';
  */
 
 class Sidebar extends React.PureComponent {
+  getLegend() {
+    const {
+      searching,
+      legendData,
+    } = this.props;
+
+    if (searching || legendData === undefined) return null;
+
+    return (
+      <SidebarLegend
+        legendData={legendData}
+      />
+    );
+  }
+
+  getSearchResults() {
+    const {
+      searching,
+      searchFeatures,
+    } = this.props;
+
+    if (!searching) return null;
+
+    return (
+      <SidebarSearchResults
+        searchFeatures={searchFeatures}
+      />
+    );
+  }
+
   render() {
     const {
-      setView,
-      currentView,
-      availableViews,
+      // setView,
+      // currentView,
+      // availableViews,
       sidebarOpen,
       searchFeatures,
       searchByText,
@@ -26,19 +58,12 @@ class Sidebar extends React.PureComponent {
     return (
       <div className="sidebar">
         <div className="sidebar__inner">
-          <SidebarBlock>
-            <SidebarSearch
-              searchFeatures={searchFeatures}
-              searchByText={searchByText}
-            />
-          </SidebarBlock>
-          <SidebarBlock>
-            <SidebarViewFilmstrip
-              setView={setView}
-              currentView={currentView}
-              availableViews={availableViews}
-            />
-          </SidebarBlock>
+          <SidebarSearchBar
+            searchFeatures={searchFeatures}
+            searchByText={searchByText}
+          />
+          {this.getLegend()}
+          {this.getSearchResults()}
         </div>
       </div>
     );
@@ -52,6 +77,8 @@ Sidebar.defaultProps = {
 };
 
 Sidebar.propTypes = {
+  /** if sidebar is currently displaying search results */
+  searching: PropTypes.bool.isRequired,
   /** All views for selected year */
   availableViews: PropTypes.arrayOf(PropTypes.object),
   /** All base layers for selected year (e.g. roads, buildings, etc.) */

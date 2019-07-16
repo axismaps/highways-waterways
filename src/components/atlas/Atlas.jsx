@@ -34,7 +34,7 @@ class Atlas extends React.PureComponent {
   }
 
   componentDidMount() {
-    const { style } = this.props;
+    // const { style } = this.props;
     mapboxgl.accessToken = 'pk.eyJ1IjoiYXhpc21hcHMiLCJhIjoieUlmVFRmRSJ9.CpIxovz1TUWe_ecNLFuHNg';
     const mbMap = new mapboxgl.Map({
       container: this.atlasRef.current,
@@ -62,6 +62,7 @@ class Atlas extends React.PureComponent {
 
   getFilteredLayer(layer) {
     const { year } = this.props;
+    const roundYear = Math.round(year);
     if (!('filter' in layer)) return layer;
 
     const newLayer = Object.assign({}, layer);
@@ -71,14 +72,14 @@ class Atlas extends React.PureComponent {
           if (i === 0) return d;
           const copyFilter = [...d];
           if (copyFilter[1] === 'firstyear' || copyFilter[1] === 'lastyear') {
-            copyFilter[2] = year;
+            copyFilter[2] = roundYear;
           }
           return copyFilter;
         });
       }
       if (f[1] === 'firstyear' || f[1] === 'lastyear') {
         const copyFilter = [...f];
-        copyFilter[2] = year;
+        copyFilter[2] = roundYear;
         return copyFilter;
       }
       return f;

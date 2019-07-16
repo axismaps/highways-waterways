@@ -62,7 +62,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.loadInitialData1();
+    this.loadInitialData();
   }
 
   getAtlas() {
@@ -142,7 +142,7 @@ class App extends React.Component {
     return d3.json(`http://highways.axismaps.io/api/v1/getStyle?start=${this.currentTileRange[0]}&end=${this.currentTileRange[1]}`);
   }
 
-  getLegendPromise(year) {
+  static getLegendPromise(year) {
     return d3.json(`http://highways.axismaps.io/api/v1/getLegend?start=${year}&end=${year}`);
   }
 
@@ -155,7 +155,7 @@ class App extends React.Component {
     }
   }
 
-  updateStyle(newYear) {
+  async updateStyle(newYear) {
     if (this.currentTileRange === null) return;
     const { tileRanges } = this.state;
     const newTileRange = App.getCurrentTileRange({
@@ -166,59 +166,35 @@ class App extends React.Component {
     if (this.currentTileRange[0] !== newTileRange[0]) {
       this.currentTileRange = newTileRange;
       // need to cancel previous promise if scrubbing too fast
-      this.getStylePromise(newYear)
-        .then((style) => {
-          console.log('STYLE????', style);
-          // const formattedStyle = App.formatStyle({
-          //   style,
-          //   currentTileRange: newTileRange,
-          // });
-          
-          // slide style.sources.composite.url to use currentTileRange
-          // add style update method to Atlas module
-          this.setState({
-            // style: formattedStyle,
-            style,
-          });
-        });
+      const style = await this.getStylePromise(newYear);
+      this.setState({
+        style,
+      });
+      // this.getStylePromise(newYear)
+      //   .then((style) => {
+      //     this.setState({
+      //       style,
+      //     });
+      //   });
     }
   }
 
-  updateLegendData(newYear) {
-    this.getLegendPromise(newYear)
-      .then((legendData) => {
-        this.setState({
-          legendData,
-        });
-      });
-  }
-
-  async loadInitialData2({
-    tileRanges,
-    yearRange,
-    legendData,
-  }) {
-    const stylePromise = this.getStylePromise();
-
-    const style = await stylePromise;
+  async updateLegendData(newYear) {
+    const legendData = await App.getLegendPromise(newYear);
 
     this.setState({
-      style,
-      tileRanges,
-      yearRange,
-      legendData,
+      legendData: legendData.response.legend,
     });
-    // this.setState({ style });
   }
 
-  async loadInitialData1() {
+  async loadInitialData() {
     const { year } = this.state;
     const [
       tileRangesData,
       legendData,
     ] = await Promise.all([
       d3.json('http://highways.axismaps.io/api/v1/getTimeline'),
-      this.getLegendPromise(year),
+      App.getLegendPromise(year),
     ]);
 
     const tileRanges = tileRangesData.response;
@@ -229,10 +205,16 @@ class App extends React.Component {
       tileRanges,
       year,
     });
-    this.loadInitialData2({
-      legendData,
+
+    const stylePromise = this.getStylePromise();
+
+    const style = await stylePromise;
+
+    this.setState({
+      style,
       tileRanges,
       yearRange,
+      legendData: legendData.response.legend,
     });
   }
 
@@ -259,6 +241,7 @@ class App extends React.Component {
       sidebarOpen,
       searchFeatures,
       year,
+      legendData,
       tileRanges,
       // currentTileRange,
     } = this.state;
@@ -273,6 +256,7 @@ class App extends React.Component {
         />
         <div className="app__body">
           <Sidebar
+            legendData={legendData}
             sidebarOpen={sidebarOpen}
             setView={this.setView}
             views={views}
