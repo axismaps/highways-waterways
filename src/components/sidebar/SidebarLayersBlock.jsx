@@ -14,10 +14,28 @@ import PropTypes from 'prop-types';
  */
 
 class SidebarLayersBlock extends React.PureComponent {
+  drawLayerRow(layer) {
+    return (
+      <div
+        className="sidebar__layer-row"
+        key={layer.name}
+      >
+        {layer.title}
+      </div>
+    );
+  }
+
+  drawLayerRows() {
+    const {
+      mapLayers,
+    } = this.props;
+    return mapLayers.map(layer => this.drawLayerRow(layer));
+  }
+
   render() {
     return (
       <div className="sidebar__layers-block">
-        Layers block
+        {this.drawLayerRows()}
       </div>
     );
   }
@@ -36,11 +54,11 @@ SidebarLayersBlock.propTypes = {
   /** layer ids of all layers currently on */
   currentLayers: PropTypes.arrayOf(PropTypes.string),
   /** callback to toggle layers */
-  toggleLayer: PropTypes.func.isRequired,
+  toggleLayer: PropTypes.func,
   /** currently highlighted layer */
   highlightedLayer: PropTypes.object,
   /** callback to set highlightedLayer */
-  highlightLayer: PropTypes.func.isRequired,
+  highlightLayer: PropTypes.func,
 };
 
 export default SidebarLayersBlock;

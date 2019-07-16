@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
  * Clicking feature results highlights the feature on the map.
  */
 
-class SidebarSearchResults extends React.Component {
+class SidebarSearchResults extends React.PureComponent {
   render() {
     return (
       <div className="sidebar__search-results">
