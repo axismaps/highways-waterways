@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+
 /**
  * This component renders a list of map layers
  * into a Sidebar block. Map layers depend on current year.

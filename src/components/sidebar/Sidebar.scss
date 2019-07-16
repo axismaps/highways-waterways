@@ -1,7 +1,7 @@
 @import '../../config';
 
 .sidebar {
-  background: white;
+  background: #EEEEEE;
   display: flex;
   width: 310px;
   flex-direction: column;
@@ -10,6 +10,55 @@
 
 }
 
+.sidebar__search-row {
+  width: 100%;
+  background: white;
+  display: flex;
+  height: 60px;
+  align-items: center;
+  justify-content: space-between;
+  color: $dark-grey;
+  font-size: 15px;
+  box-shadow: $main-shadow;
+}
+
+.sidebar__search-row-right {
+  display: flex;
+  margin-right: 20px;
+  height: 100%;
+  align-items: center;
+}
+
+.sidebar__text-input {
+  border: none;
+  height: 95%;
+  padding-left: 20px;
+}
+
+.sidebar__search-row-divider {
+  height: 26px;
+  background: #CCCCCC;
+  width: 1px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
 .sidebar__inner {
+  padding-left: 20px;
+  padding-right: 20px;
+  overflow-y: auto;
+  // this needs to be changed...
+  height: calc(100vh - 169px);
+}
+
+.sidebar__legend {
+  margin-bottom: 10px;
+}
+
+.sidebar__block {
+  background: white;
   padding: 20px;
+  border-radius: 5px;
+  box-shadow: $main-shadow;
+  margin-top: 20px;
 }

@@ -1,5 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faAngleDoubleLeft,
+} from '@fortawesome/pro-regular-svg-icons';
 
 /**
 
@@ -17,9 +21,20 @@ class SidebarSearchBar extends React.PureComponent {
   render() {
     return (
       <div className="sidebar__search-row">
-        <input type="text" className="sidebar__text-input" />
-        <div className="sidebar__search-area-button">area</div>
-        <div className="sidebar__toggle-button">toggle</div>
+        <input
+          type="text"
+          className="sidebar__text-input"
+          placeholder="Search this year..."
+        />
+        <div className="sidebar__search-row-right">
+          <div className="sidebar__search-area-button">area</div>
+          <div className="sidebar__search-row-divider" />
+          <div className="sidebar__toggle-button">
+            <FontAwesomeIcon
+              icon={faAngleDoubleLeft}
+            />
+          </div>
+        </div>
       </div>
     );
   }

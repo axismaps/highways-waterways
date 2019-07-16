@@ -57,11 +57,11 @@ class Sidebar extends React.PureComponent {
     if (!sidebarOpen) return null;
     return (
       <div className="sidebar">
+        <SidebarSearchBar
+          searchFeatures={searchFeatures}
+          searchByText={searchByText}
+        />
         <div className="sidebar__inner">
-          <SidebarSearchBar
-            searchFeatures={searchFeatures}
-            searchByText={searchByText}
-          />
           {this.getLegend()}
           {this.getSearchResults()}
         </div>

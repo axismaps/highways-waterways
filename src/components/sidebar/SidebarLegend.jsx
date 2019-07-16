@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SidebarLayersBlock from './SidebarLayersBlock';
+import SidebarBlock from './SidebarBlock';
 
 /**
  * This component displays the map legend--map layers,
@@ -36,7 +37,9 @@ class SidebarLegend extends React.PureComponent {
     console.log('legendData', legendData);
     return (
       <div className="sidebar__legend">
-        {this.drawLayerBlocks()}
+        <SidebarBlock>
+          {this.drawLayerBlocks()}
+        </SidebarBlock>
       </div>
     );
   }

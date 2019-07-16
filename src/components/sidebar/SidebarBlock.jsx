@@ -12,23 +12,16 @@ import PropTypes from 'prop-types';
 
 class SidebarBlock extends React.PureComponent {
   render() {
-    const { children, groupName } = this.props;
+    const { children } = this.props;
     return (
       <div className="sidebar__block">
-        {groupName}
         {children}
       </div>
     );
   }
 }
 
-SidebarBlock.defaultProps = {
-  groupName: null,
-};
-
 SidebarBlock.propTypes = {
-  /** Layer group name (vulnerability, views, etc.) */
-  groupName: PropTypes.string,
   /** Child nodes to be rendered into block */
   children: PropTypes.node.isRequired,
 };
