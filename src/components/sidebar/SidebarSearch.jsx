@@ -11,11 +11,18 @@ import PropTypes from 'prop-types';
  * Sidebar -> SidebarBlock -> SidebarSearch
  */
 
-class SidebarSearch {
+class SidebarSearch extends React.Component {
   render() {
     return (
-      <div className="sidebar__search">
-        Search results
+      <div className="sidebar__search search">
+        <div className="search__top-row">
+          <input type="text" className="search__text-input" />
+          <div className="search__area-button">area</div>
+          <div className="sidebar__toggle-button">tog</div>
+        </div>
+        <div className="search__results">
+          Search results
+        </div>
       </div>
     );
   }

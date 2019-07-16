@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SidebarBlock from './SidebarBlock';
+import SidebarSearch from './SidebarSearch';
 import SidebarViewFilmstrip from './SidebarViewFilmstrip';
 import './Sidebar.scss';
 
@@ -18,12 +19,19 @@ class Sidebar extends React.PureComponent {
       currentView,
       availableViews,
       sidebarOpen,
+      searchFeatures,
+      searchByText,
     } = this.props;
     if (!sidebarOpen) return null;
     return (
       <div className="sidebar">
         <div className="sidebar__inner">
-          SIDEBAR
+          <SidebarBlock>
+            <SidebarSearch
+              searchFeatures={searchFeatures}
+              searchByText={searchByText}
+            />
+          </SidebarBlock>
           <SidebarBlock>
             <SidebarViewFilmstrip
               setView={setView}
@@ -89,6 +97,8 @@ Sidebar.propTypes = {
   setTextSearch: PropTypes.func,
   /** callback to clear application search features */
   clearSearch: PropTypes.func,
+  /** callback to set text search value */
+  searchByText: PropTypes.func.isRequired,
 };
 
 export default Sidebar;

@@ -70,13 +70,13 @@ class Atlas extends React.PureComponent {
         return f.map((d, i) => {
           if (i === 0) return d;
           const copyFilter = [...d];
-          if (copyFilter[1] === 'FirstYear' || copyFilter[1] === 'LastYear') {
+          if (copyFilter[1] === 'firstyear' || copyFilter[1] === 'lastyear') {
             copyFilter[2] = year;
           }
           return copyFilter;
         });
       }
-      if (f[1] === 'FirstYear' || f[1] === 'LastYear') {
+      if (f[1] === 'firstyear' || f[1] === 'lastyear') {
         const copyFilter = [...f];
         copyFilter[2] = year;
         return copyFilter;
@@ -95,10 +95,7 @@ class Atlas extends React.PureComponent {
     // console.log('style', style);
     const styleCopy = JSON.parse(JSON.stringify(style));
     styleCopy.layers = styleCopy.layers.map(layer => this.getFilteredLayer(layer));
-    // style.layers.forEach((layer) => {
-    //   const filteredLayer = this.getFilteredLayer(layer);
-    //   console.log('filteredLayer', filteredLayer);
-    // });
+    console.log('filterSTyle', styleCopy);
     return styleCopy;
   }
 
@@ -113,10 +110,6 @@ class Atlas extends React.PureComponent {
   }
 
   render() {
-    // const {
-    //   style,
-    // } = this.props;
-
     return (
       <div className="atlas" ref={this.atlasRef} />
     );
