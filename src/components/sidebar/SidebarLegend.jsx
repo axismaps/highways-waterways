@@ -6,7 +6,7 @@ import SidebarBlock from './SidebarBlock';
 /**
  * This component displays the map legend--map layers,
  * raster filmstrips, layer filters, etc.
- * 
+ *
  * App -> Sidebar-> SidebarBlock -> SidebarLegend
  */
 
@@ -19,6 +19,14 @@ import SidebarBlock from './SidebarBlock';
 // </SidebarBlock>
 
 class SidebarLegend extends React.PureComponent {
+  drawOverlayFilmstrip() {
+
+  }
+
+  drawViewFilmstrip() {
+    
+  }
+
   drawLayerBlocks() {
     const {
       legendData,

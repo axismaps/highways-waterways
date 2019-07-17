@@ -31,12 +31,15 @@ class App extends React.Component {
       year,
       sidebarOpen: true,
       rasterProbe: null,
-      /** List of available base layers */
-      availableBaseLayers: [],
-      availableViews: [],
-      availableOverlays: [],
-      availableHydroRasters: [],
-      availableChoropleth: [],
+      viewsData: [
+        { name: 'placeholder1', id: 1 },
+        { name: 'placeholder2', id: 2 },
+      ],
+      overlaysData: [
+        { name: 'overlay1', id: 1 },
+        { name: 'overlay2', id: 2 },
+        { name: 'overlay3', id: 3 },
+      ],
       /** List of layer ids for layers to be displayed */
       currentLayers: [],
       currentFilters: [],
@@ -51,7 +54,6 @@ class App extends React.Component {
       style: null,
       yearRange: null,
       tileRanges: null,
-      // currentTileRange: null,
     };
 
     this.setView = this.setView.bind(this);
@@ -117,7 +119,8 @@ class App extends React.Component {
   }
 
   setYear(newYear) {
-    // add async update style object / tiles here
+    // combine all of these into one setState call?
+    // or would that be too slow w/ the async stuff?
     this.setState({
       year: newYear,
     });
@@ -170,12 +173,6 @@ class App extends React.Component {
       this.setState({
         style,
       });
-      // this.getStylePromise(newYear)
-      //   .then((style) => {
-      //     this.setState({
-      //       style,
-      //     });
-      //   });
     }
   }
 
@@ -244,6 +241,8 @@ class App extends React.Component {
       legendData,
       tileRanges,
       // currentTileRange,
+      viewsData,
+      overlaysData,
     } = this.state;
     const searching = searchFeatures.length > 0;
     return (
@@ -256,6 +255,8 @@ class App extends React.Component {
         />
         <div className="app__body">
           <Sidebar
+            overlaysData={overlaysData}
+            viewsData={viewsData}
             legendData={legendData}
             sidebarOpen={sidebarOpen}
             setView={this.setView}
