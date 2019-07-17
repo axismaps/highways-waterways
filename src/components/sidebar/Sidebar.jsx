@@ -19,12 +19,17 @@ class Sidebar extends React.PureComponent {
     const {
       searching,
       legendData,
+      hiddenLayers,
+      toggleLayerVisibility,
     } = this.props;
+
 
     if (searching || legendData === undefined) return null;
 
     return (
       <SidebarLegend
+        toggleLayerVisibility={toggleLayerVisibility}
+        hiddenLayers={hiddenLayers}
         legendData={legendData}
       />
     );
@@ -108,10 +113,10 @@ Sidebar.propTypes = {
   setChoroplethValue: PropTypes.func,
   /** If sidebar is open or collapsed */
   sidebarOpen: PropTypes.bool.isRequired,
-  /** layer ids of all layers currently on */
-  currentLayers: PropTypes.arrayOf(PropTypes.string),
+  /** layer ids of all layers currently off */
+  hiddenLayers: PropTypes.arrayOf(PropTypes.string),
   /** callback to toggle layers */
-  toggleLayer: PropTypes.func,
+  toggleLayerVisibility: PropTypes.func,
   /** currently highlighted layer */
   highlightedLayer: PropTypes.object,
   /** callback to set highlightedLayer */

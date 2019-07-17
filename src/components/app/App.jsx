@@ -41,7 +41,7 @@ class App extends React.Component {
         { name: 'overlay3', id: 3 },
       ],
       /** List of layer ids for layers to be displayed */
-      currentLayers: [],
+      hiddenLayers: [],
       currentFilters: [],
       currentView: null,
       currentOverlay: null,
@@ -49,7 +49,7 @@ class App extends React.Component {
       hydroRasterValues: [],
       choroplethValues: [],
       highlightedFeatures: [],
-      highlightedLayer: [],
+      highlightedLayer: null,
       searchFeatures: [],
       style: null,
       yearRange: null,
@@ -60,6 +60,7 @@ class App extends React.Component {
     this.setYear = this.setYear.bind(this);
     this.setSearchFeatures = this.setSearchFeatures.bind(this);
     this.searchByText = this.searchByText.bind(this);
+    this.toggleLayerVisibility = this.toggleLayerVisibility.bind(this);
     this.currentTileRange = null;
   }
 
@@ -70,12 +71,12 @@ class App extends React.Component {
   getAtlas() {
     const {
       style,
-      currentLayers,
+      hiddenLayers,
       currentFilters,
       currentOverlay,
       views,
       currentView,
-      tileRanges,
+      // tileRanges,
       year,
     } = this.state;
     if (style === null) return null;
@@ -95,7 +96,7 @@ class App extends React.Component {
         style={style}
         views={views}
         currentView={currentView}
-        currentLayers={currentLayers}
+        hiddenLayers={hiddenLayers}
         currentFilters={currentFilters}
         currentOverlay={currentOverlay}
         setSearchFeatures={this.setSearchFeatures}
@@ -140,6 +141,15 @@ class App extends React.Component {
     });
   }
 
+  setHighlightedLayer(layer) {
+
+  }
+
+  setHighlightedFeatures(features) {
+
+  }
+
+
 
   getStylePromise() {
     return d3.json(`http://highways.axismaps.io/api/v1/getStyle?start=${this.currentTileRange[0]}&end=${this.currentTileRange[1]}`);
@@ -147,6 +157,20 @@ class App extends React.Component {
 
   static getLegendPromise(year) {
     return d3.json(`http://highways.axismaps.io/api/v1/getLegend?start=${year}&end=${year}`);
+  }
+
+  toggleLayerVisibility(layerId) {
+    const { hiddenLayers } = this.state;
+
+    if (!hiddenLayers.includes(layerId)) {
+      this.setState({
+        hiddenLayers: [...hiddenLayers, layerId],
+      });
+    } else {
+      this.setState({
+        hiddenLayers: hiddenLayers.filter(d => d !== layerId),
+      });
+    }
   }
 
 
@@ -243,6 +267,7 @@ class App extends React.Component {
       // currentTileRange,
       viewsData,
       overlaysData,
+      hiddenLayers,
     } = this.state;
     const searching = searchFeatures.length > 0;
     return (
@@ -255,6 +280,7 @@ class App extends React.Component {
         />
         <div className="app__body">
           <Sidebar
+            hiddenLayers={hiddenLayers}
             overlaysData={overlaysData}
             viewsData={viewsData}
             legendData={legendData}
@@ -265,6 +291,7 @@ class App extends React.Component {
             searchFeatures={searchFeatures}
             searching={searching}
             searchByText={this.searchByText}
+            toggleLayerVisibility={this.toggleLayerVisibility}
           />
           {this.getAtlas()}
         </div>

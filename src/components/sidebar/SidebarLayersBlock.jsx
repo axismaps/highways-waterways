@@ -1,6 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faLevelUp,
+  faToggleOff,
+  faToggleOn,
+} from '@fortawesome/pro-regular-svg-icons';
 
 /**
  * This component renders a list of map layers
@@ -15,7 +20,9 @@ import PropTypes from 'prop-types';
  */
 
 class SidebarLayersBlock extends React.PureComponent {
-  drawLayerRow(layer) {
+
+
+  static drawLayerRow(layer) {
     return (
       <div
         className="sidebar__layer-row"
@@ -26,16 +33,56 @@ class SidebarLayersBlock extends React.PureComponent {
     );
   }
 
+  getTitleSwitch() {
+    const {
+      hidden,
+      toggleLayerVisibility,
+      groupName,
+    } = this.props;
+
+    const icon = hidden
+      ? faToggleOff
+      : faToggleOn;
+    return (
+      <FontAwesomeIcon
+        icon={icon}
+        onClick={() => toggleLayerVisibility(groupName)}
+      />
+    );
+  }
+
+  drawTitleRow() {
+    const {
+      groupTitle,
+    } = this.props;
+    return (
+      <div className="sidebar__layers-title-row">
+        <div className="sidebar__layers-title-left">
+          <FontAwesomeIcon
+            icon={faLevelUp}
+          />
+          <div className="sidebar__layers-title">
+            {groupTitle}
+          </div>
+        </div>
+        <div className="sidebar__layers-title-right">
+          {this.getTitleSwitch()}
+        </div>
+      </div>
+    );
+  }
+
   drawLayerRows() {
     const {
       mapLayers,
     } = this.props;
-    return mapLayers.map(layer => this.drawLayerRow(layer));
+    return mapLayers.map(layer => SidebarLayersBlock.drawLayerRow(layer));
   }
 
   render() {
     return (
       <div className="sidebar__layers-block">
+        {this.drawTitleRow()}
         {this.drawLayerRows()}
       </div>
     );
@@ -47,19 +94,24 @@ SidebarLayersBlock.defaultProps = {
   mapLayers: [],
   currentLayers: [],
   highlightedLayer: null,
+  hidden: false,
 };
 
 SidebarLayersBlock.propTypes = {
+  /** layer group title (roads, etc.) */
+  groupTitle: PropTypes.string.isRequired,
   /** map layers to be rendered in block */
   mapLayers: PropTypes.arrayOf(PropTypes.object),
   /** layer ids of all layers currently on */
   currentLayers: PropTypes.arrayOf(PropTypes.string),
   /** callback to toggle layers */
-  toggleLayer: PropTypes.func,
+  toggleLayerVisibility: PropTypes.func,
   /** currently highlighted layer */
   highlightedLayer: PropTypes.object,
   /** callback to set highlightedLayer */
   highlightLayer: PropTypes.func,
+  /** if layer is currently turned off */
+  hidden: PropTypes.bool,
 };
 
 export default SidebarLayersBlock;

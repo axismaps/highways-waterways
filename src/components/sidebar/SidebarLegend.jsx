@@ -24,18 +24,24 @@ class SidebarLegend extends React.PureComponent {
   }
 
   drawViewFilmstrip() {
-    
+
   }
 
   drawLayerBlocks() {
     const {
+      hiddenLayers,
       legendData,
+      toggleLayerVisibility,
     } = this.props;
+    console.log('hiddenLayers', hiddenLayers);
     return legendData.map(legendGroup => (
       <SidebarLayersBlock
         key={legendGroup.id}
         mapLayers={legendGroup.Types}
-        groupName={legendGroup.title}
+        groupTitle={legendGroup.title}
+        groupName={legendGroup.name}
+        toggleLayerVisibility={toggleLayerVisibility}
+        hidden={hiddenLayers.includes(legendGroup.name)}
       />
     ));
   }
@@ -54,7 +60,10 @@ class SidebarLegend extends React.PureComponent {
 }
 
 SidebarLegend.propTypes = {
+  /** all layers and swatches */
   legendData: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /** layers (ids) currently turned off */
+  hiddenLayers: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default SidebarLegend;
