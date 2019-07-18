@@ -60,9 +60,12 @@ class SidebarLayersBlock extends React.PureComponent {
         <div className="sidebar__layers-title-left">
           <FontAwesomeIcon
             icon={faLevelUp}
+            rotation={90}
           />
           <div className="sidebar__layers-title">
-            {groupTitle}
+            <div className="sidebar__layers-title">
+              {groupTitle}
+            </div>
           </div>
         </div>
         <div className="sidebar__layers-title-right">

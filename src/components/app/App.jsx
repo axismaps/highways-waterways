@@ -149,8 +149,6 @@ class App extends React.Component {
 
   }
 
-
-
   getStylePromise() {
     return d3.json(`http://highways.axismaps.io/api/v1/getStyle?start=${this.currentTileRange[0]}&end=${this.currentTileRange[1]}`);
   }
