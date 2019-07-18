@@ -74,15 +74,43 @@
 
 .sidebar__layers-title-right {
   font-size: 24px;
+  cursor: pointer;
 }
 
 .sidebar__layers-title-row {
   justify-content: space-between;
   align-items: center;
   margin-bottom : 10px;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .sidebar__layers-title {
   margin-left: 8px;
+}
+
+.sidebar__layer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.sidebar__layer-button {
+  height: 30px;
+  width: 180px;
+  display: flex;
+  align-items: center;
+  background: #EEEEEE;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.sidebar__layer-button:hover {
+  background: rgb(221, 221, 221);
+}
+
+.sidebar__layer-button-inner {
+  padding-left: 10px;
+  padding-right: 10px;
 }

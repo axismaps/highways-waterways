@@ -28,7 +28,12 @@ class SidebarLayersBlock extends React.PureComponent {
         className="sidebar__layer-row"
         key={layer.name}
       >
-        {layer.title}
+        <div className="sidebar__layer-button">
+          <div className="sidebar__layer-button-inner">
+            {layer.title}
+          </div>
+        </div>
+        <div className="sidebar__layer-swatch" />
       </div>
     );
   }
@@ -95,20 +100,19 @@ class SidebarLayersBlock extends React.PureComponent {
 
 SidebarLayersBlock.defaultProps = {
   mapLayers: [],
-  currentLayers: [],
   highlightedLayer: null,
   hidden: false,
 };
 
 SidebarLayersBlock.propTypes = {
-  /** layer group title (roads, etc.) */
+  /** layer group display name */
   groupTitle: PropTypes.string.isRequired,
+  /** layer group mapbox (id) name */
+  groupName: PropTypes.string.isRequired,
   /** map layers to be rendered in block */
   mapLayers: PropTypes.arrayOf(PropTypes.object),
-  /** layer ids of all layers currently on */
-  currentLayers: PropTypes.arrayOf(PropTypes.string),
   /** callback to toggle layers */
-  toggleLayerVisibility: PropTypes.func,
+  toggleLayerVisibility: PropTypes.func.isRequired,
   /** currently highlighted layer */
   highlightedLayer: PropTypes.object,
   /** callback to set highlightedLayer */

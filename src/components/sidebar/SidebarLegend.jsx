@@ -33,7 +33,6 @@ class SidebarLegend extends React.PureComponent {
       legendData,
       toggleLayerVisibility,
     } = this.props;
-    console.log('hiddenLayers', hiddenLayers);
     return legendData.map(legendGroup => (
       <SidebarLayersBlock
         key={legendGroup.id}
@@ -48,7 +47,7 @@ class SidebarLegend extends React.PureComponent {
 
   render() {
     const { legendData } = this.props;
-    console.log('legendData', legendData);
+    // console.log('legendData', legendData);
     return (
       <div className="sidebar__legend">
         <SidebarBlock>
@@ -64,6 +63,8 @@ SidebarLegend.propTypes = {
   legendData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /** layers (ids) currently turned off */
   hiddenLayers: PropTypes.arrayOf(PropTypes.string).isRequired,
+  /** toggles layer groups on/off */
+  toggleLayerVisibility: PropTypes.func.isRequired,
 };
 
 export default SidebarLegend;
