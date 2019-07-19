@@ -31,6 +31,7 @@ class Atlas extends React.PureComponent {
       style: null,
       year: null,
       highlightedLayer: null,
+      layerOpacityProps: {},
     };
   }
 
@@ -44,6 +45,7 @@ class Atlas extends React.PureComponent {
 
     this.mbMap = mbMap;
     this.logStyle();
+    this.logLayerOpacityProps();
     this.logYear();
     this.logHighlightedLayer();
     this.logHiddenLayers();
@@ -58,6 +60,7 @@ class Atlas extends React.PureComponent {
     } = this.props;
     if (style.sources.composite.url !== this.logged.style.sources.composite.url) {
       this.logStyle();
+      this.logLayerOpacityProps();
       this.logYear();
       this.mbMap.setStyle(this.getFilteredStyle());
     } else if (year !== this.logged.year) {
@@ -121,11 +124,27 @@ class Atlas extends React.PureComponent {
   setHighlightedLayer() {
     const { highlightedLayer } = this.props;
     const { layers } = this.mbMap.getStyle();
+    const { layerOpacityProps } = this.logged;
+    // console.log('logged', layerOpacityProps);
+    // console.log('highlightLayer', highlightedLayer);
+    layers.forEach((layer) => {
+      const originalPaint = layerOpacityProps[layer.id];
+      if (originalPaint !== null) {
+        if (highlightedLayer === null) {
+          this.mbMap.setPaintProperty(layer.id, originalPaint.field, originalPaint.value);
+        } else if (!layer.id.includes(highlightedLayer)) {
+          this.mbMap.setPaintProperty(layer.id, originalPaint.field, 0.1);
+        } else if (layer.id.includes(highlightedLayer)) {
+          this.mbMap.setPaintProperty(layer.id, originalPaint.field, originalPaint.value);
+        }
+      }
+    });
   }
 
   setLayerVisibilities() {
     const { hiddenLayers } = this.props;
     const { layers } = this.mbMap.getStyle();
+    console.log('hidden', hiddenLayers);
 
     layers.forEach((layer) => {
       // console.log('layer', layer);
@@ -140,6 +159,38 @@ class Atlas extends React.PureComponent {
         this.mbMap.setLayoutProperty(layer.id, 'visibility', 'visible');
       }
     });
+    console.log('logged style', this.logged.style);
+  }
+
+  logLayerOpacityProps() {
+    const {
+      layerOpacityFields,
+    } = this.props;
+    const {
+      style,
+    } = this.logged;
+    this.logged.layerOpacityProps = style.layers.reduce((accumulator, layer) => {
+      const field = layerOpacityFields.find(d => (d in layer.paint));
+      if (field === undefined) {
+        let record = { value: 1 };
+        if (layer.type === 'fill') {
+          record.field = 'fill-opacity';
+        } else if (layer.type === 'line') {
+          record.field = 'line-opacity';
+        } else if (layer.type === 'symbol') {
+          record.field = 'icon-opacity';
+        } else {
+          record = null;
+        }
+        accumulator[layer.id] = record;
+        return accumulator;
+      }
+      accumulator[layer.id] = {
+        field,
+        value: layer.paint[field],
+      };
+      return accumulator;
+    }, {});
   }
 
   logStyle() {
@@ -174,6 +225,12 @@ Atlas.defaultProps = {
   views: null,
   hiddenLayers: [],
   highlightedLayer: null,
+  layerOpacityFields: [
+    'fill-opacity',
+    'line-opacity',
+    'text-opacity',
+    'icon-opacity',
+  ],
 };
 
 Atlas.propTypes = {
@@ -189,6 +246,8 @@ Atlas.propTypes = {
   year: PropTypes.number.isRequired,
   /** Currently highlighted layer id */
   highlightedLayer: PropTypes.string,
+  /** List of layer paint properties that affect opacity */
+  layerOpacityFields: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default Atlas;

@@ -132,6 +132,8 @@ class App extends React.Component {
     // or would that be too slow w/ the async stuff?
     this.setState({
       hiddenLayers: [],
+      highlightedLayer: null,
+      highlightedFeature: null,
       year: newYear,
     });
     this.updateStyle(newYear);
