@@ -82,6 +82,8 @@ class App extends React.Component {
       currentView,
       // tileRanges,
       year,
+      highlightedLayer,
+      highlightedFeature,
     } = this.state;
     if (style === null) return null;
 
@@ -104,6 +106,8 @@ class App extends React.Component {
         currentFilters={currentFilters}
         currentOverlay={currentOverlay}
         setSearchFeatures={this.setSearchFeatures}
+        highlightedLayer={highlightedLayer}
+        highlightedFeature={highlightedFeature}
         // currentTileRange={this.currentTileRange}
       />
     );
@@ -127,6 +131,7 @@ class App extends React.Component {
     // combine all of these into one setState call?
     // or would that be too slow w/ the async stuff?
     this.setState({
+      hiddenLayers: [],
       year: newYear,
     });
     this.updateStyle(newYear);

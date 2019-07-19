@@ -30,6 +30,7 @@ class Atlas extends React.PureComponent {
     this.logged = {
       style: null,
       year: null,
+      highlightedLayer: null,
     };
   }
 
@@ -44,19 +45,32 @@ class Atlas extends React.PureComponent {
     this.mbMap = mbMap;
     this.logStyle();
     this.logYear();
+    this.logHighlightedLayer();
+    this.logHiddenLayers();
   }
 
   componentDidUpdate() {
-    const { style, year } = this.props;
+    const {
+      style,
+      year,
+      highlightedLayer,
+      hiddenLayers,
+    } = this.props;
     if (style.sources.composite.url !== this.logged.style.sources.composite.url) {
       this.logStyle();
       this.logYear();
       this.mbMap.setStyle(this.getFilteredStyle());
     } else if (year !== this.logged.year) {
-      // console.log('UPDATE YEAR');
       this.logYear();
       this.mbMap.setStyle(this.getFilteredStyle());
-      // console.log('filtered style', this.getFilteredStyle());
+    }
+    if (this.logged.highlightedLayer !== highlightedLayer) {
+      this.logHighlightedLayer();
+      this.setHighlightedLayer();
+    }
+    if (this.logged.hiddenLayers !== hiddenLayers) {
+      this.logHiddenLayers();
+      this.setLayerVisibilities();
     }
   }
 
@@ -96,8 +110,31 @@ class Atlas extends React.PureComponent {
     // console.log('style', style);
     const styleCopy = JSON.parse(JSON.stringify(style));
     styleCopy.layers = styleCopy.layers.map(layer => this.getFilteredLayer(layer));
-    console.log('filterSTyle', styleCopy);
+
     return styleCopy;
+  }
+
+  setHighlightedLayer() {
+    const { highlightedLayer } = this.props;
+    console.log('highlightedLayer', highlightedLayer);
+  }
+
+  setLayerVisibilities() {
+    const { hiddenLayers } = this.props;
+    const { layers } = this.mbMap.getStyle();
+
+    layers.forEach((layer) => {
+      const visible = this.mbMap.getLayoutProperty(layer.id, 'visibility') === 'visible';
+
+      const shouldBeHidden = hiddenLayers
+        .includes(layer['source-layer']);
+
+      if (visible && shouldBeHidden) {
+        this.mbMap.setLayoutProperty(layer.id, 'visibility', 'none');
+      } else if (!visible && !shouldBeHidden) {
+        this.mbMap.setLayoutProperty(layer.id, 'visibility', 'visible');
+      }
+    });
   }
 
   logStyle() {
@@ -110,6 +147,17 @@ class Atlas extends React.PureComponent {
     this.logged.year = year;
   }
 
+
+  logHighlightedLayer() {
+    const { highlightedLayer } = this.props;
+    this.logged.highlightedLayer = highlightedLayer;
+  }
+
+  logHiddenLayers() {
+    const { hiddenLayers } = this.props;
+    this.logged.hiddenLayers = hiddenLayers;
+  }
+
   render() {
     return (
       <div className="atlas" ref={this.atlasRef} />
@@ -119,7 +167,8 @@ class Atlas extends React.PureComponent {
 
 Atlas.defaultProps = {
   views: null,
-  currentLayers: [],
+  hiddenLayers: [],
+  highlightedLayer: null,
 };
 
 Atlas.propTypes = {
@@ -127,12 +176,14 @@ Atlas.propTypes = {
   style: PropTypes.object.isRequired,
   /** Available view rasters */
   views: PropTypes.arrayOf(PropTypes.object),
-  /** All map layers to display (layer ids) */
-  currentLayers: PropTypes.arrayOf(PropTypes.string),
+  /** All map layers to hide (layer ids) */
+  hiddenLayers: PropTypes.arrayOf(PropTypes.string),
   /** Callback to set application search feature results */
   setSearchFeatures: PropTypes.func.isRequired,
   /** Current year */
   year: PropTypes.number.isRequired,
+  /** Currently highlighted layer id */
+  highlightedLayer: PropTypes.string,
 };
 
 export default Atlas;
