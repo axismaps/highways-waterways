@@ -99,6 +99,10 @@ class Atlas extends React.PureComponent {
       return f;
     });
 
+    if (!('visibility' in newLayer.layout)) {
+      newLayer.layout.visibility = 'visible';
+    }
+
     return newLayer;
   }
 
@@ -116,7 +120,7 @@ class Atlas extends React.PureComponent {
 
   setHighlightedLayer() {
     const { highlightedLayer } = this.props;
-    console.log('highlightedLayer', highlightedLayer);
+    const { layers } = this.mbMap.getStyle();
   }
 
   setLayerVisibilities() {
@@ -124,6 +128,7 @@ class Atlas extends React.PureComponent {
     const { layers } = this.mbMap.getStyle();
 
     layers.forEach((layer) => {
+      // console.log('layer', layer);
       const visible = this.mbMap.getLayoutProperty(layer.id, 'visibility') === 'visible';
 
       const shouldBeHidden = hiddenLayers
