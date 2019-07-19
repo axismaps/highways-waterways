@@ -32,9 +32,13 @@ class SidebarLegend extends React.PureComponent {
       hiddenLayers,
       legendData,
       toggleLayerVisibility,
+      highlightedLayer,
+      setHighlightedLayer,
     } = this.props;
     return legendData.map(legendGroup => (
       <SidebarLayersBlock
+        highlightedLayer={highlightedLayer}
+        setHighlightedLayer={setHighlightedLayer}
         key={legendGroup.id}
         mapLayers={legendGroup.Types}
         groupTitle={legendGroup.title}
@@ -46,8 +50,7 @@ class SidebarLegend extends React.PureComponent {
   }
 
   render() {
-    const { legendData } = this.props;
-    // console.log('legendData', legendData);
+    // draw film strips, hydrolayers, etc.
     return (
       <div className="sidebar__legend">
         <SidebarBlock>
@@ -58,6 +61,10 @@ class SidebarLegend extends React.PureComponent {
   }
 }
 
+SidebarLegend.defaultProps = {
+  highlightedLayer: null,
+};
+
 SidebarLegend.propTypes = {
   /** all layers and swatches */
   legendData: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -65,6 +72,10 @@ SidebarLegend.propTypes = {
   hiddenLayers: PropTypes.arrayOf(PropTypes.string).isRequired,
   /** toggles layer groups on/off */
   toggleLayerVisibility: PropTypes.func.isRequired,
+  /** currently highlighted layer */
+  highlightedLayer: PropTypes.string,
+  /** callback to set highlightedLayer (layer id/name) */
+  setHighlightedLayer: PropTypes.func.isRequired,
 };
 
 export default SidebarLegend;

@@ -21,23 +21,6 @@ import {
 
 class SidebarLayersBlock extends React.PureComponent {
 
-
-  static drawLayerRow(layer) {
-    return (
-      <div
-        className="sidebar__layer-row"
-        key={layer.name}
-      >
-        <div className="sidebar__layer-button">
-          <div className="sidebar__layer-button-inner">
-            {layer.title}
-          </div>
-        </div>
-        <div className="sidebar__layer-swatch" />
-      </div>
-    );
-  }
-
   getTitleSwitch() {
     const {
       hidden,
@@ -53,6 +36,34 @@ class SidebarLayersBlock extends React.PureComponent {
         icon={icon}
         onClick={() => toggleLayerVisibility(groupName)}
       />
+    );
+  }
+
+  drawLayerRow(layer) {
+    const {
+      setHighlightedLayer,
+      highlightedLayer,
+    } = this.props;
+
+    let buttonClass = 'sidebar__layer-button';
+    if (highlightedLayer === layer.name) {
+      buttonClass += ` ${buttonClass}--highlighted`;
+    }
+    return (
+      <div
+        className="sidebar__layer-row"
+        key={layer.name}
+      >
+        <div
+          className={buttonClass}
+          onClick={() => setHighlightedLayer(layer.name)}
+        >
+          <div className="sidebar__layer-button-inner">
+            {layer.title}
+          </div>
+        </div>
+        <div className="sidebar__layer-swatch" />
+      </div>
     );
   }
 
@@ -84,7 +95,7 @@ class SidebarLayersBlock extends React.PureComponent {
     const {
       mapLayers,
     } = this.props;
-    return mapLayers.map(layer => SidebarLayersBlock.drawLayerRow(layer));
+    return mapLayers.map(layer => this.drawLayerRow(layer));
   }
 
   render() {
@@ -113,12 +124,12 @@ SidebarLayersBlock.propTypes = {
   mapLayers: PropTypes.arrayOf(PropTypes.object),
   /** callback to toggle layers */
   toggleLayerVisibility: PropTypes.func.isRequired,
-  /** currently highlighted layer */
-  highlightedLayer: PropTypes.object,
-  /** callback to set highlightedLayer */
-  highlightLayer: PropTypes.func,
   /** if layer is currently turned off */
   hidden: PropTypes.bool,
+  /** currently highlighted layer id */
+  highlightedLayer: PropTypes.string,
+  /** callback to set highlightedLayer (layer id/name) */
+  setHighlightedLayer: PropTypes.func.isRequired,
 };
 
 export default SidebarLayersBlock;

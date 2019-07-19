@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import SidebarBlock from './SidebarBlock';
+// import SidebarBlock from './SidebarBlock';
 import SidebarSearchBar from './SidebarSearchBar';
-import SidebarViewFilmstrip from './SidebarViewFilmstrip';
+// import SidebarViewFilmstrip from './SidebarViewFilmstrip';
 import SidebarLegend from './SidebarLegend';
 import SidebarSearchResults from './SidebarSearchResults';
 import './Sidebar.scss';
@@ -21,16 +21,20 @@ class Sidebar extends React.PureComponent {
       legendData,
       hiddenLayers,
       toggleLayerVisibility,
+      setHighlightedLayer,
+      highlightedLayer,
     } = this.props;
 
 
-    if (searching || legendData === undefined) return null;
+    if (searching || legendData === null) return null;
 
     return (
       <SidebarLegend
         toggleLayerVisibility={toggleLayerVisibility}
         hiddenLayers={hiddenLayers}
         legendData={legendData}
+        setHighlightedLayer={setHighlightedLayer}
+        highlightedLayer={highlightedLayer}
       />
     );
   }
@@ -79,9 +83,13 @@ Sidebar.defaultProps = {
   availableViews: [],
   currentView: null,
   searchFeatures: [],
+  legendData: null,
+  highlightedLayer: null,
 };
 
 Sidebar.propTypes = {
+  /** all layers and swatches */
+  legendData: PropTypes.arrayOf(PropTypes.object),
   /** if sidebar is currently displaying search results */
   searching: PropTypes.bool.isRequired,
   /** All views for selected year */
@@ -117,12 +125,12 @@ Sidebar.propTypes = {
   hiddenLayers: PropTypes.arrayOf(PropTypes.string),
   /** callback to toggle layers */
   toggleLayerVisibility: PropTypes.func,
-  /** currently highlighted layer */
-  highlightedLayer: PropTypes.object,
-  /** callback to set highlightedLayer */
-  highlightLayer: PropTypes.func,
-  /** callback to highlight feature */
-  highlightFeature: PropTypes.func,
+  /** currently highlighted layer id */
+  highlightedLayer: PropTypes.string,
+  /** callback to set highlightedLayer (layer id/name) */
+  setHighlightedLayer: PropTypes.func.isRequired,
+  /** callback to highlight feature (GeoJSON feature object) */
+  setHighlightedFeature: PropTypes.func,
   /** Results from Atlas search */
   searchFeatures: PropTypes.arrayOf(PropTypes.object),
   /** callback to set application text search value */

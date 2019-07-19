@@ -40,7 +40,7 @@ class App extends React.Component {
         { name: 'overlay2', id: 2 },
         { name: 'overlay3', id: 3 },
       ],
-      /** List of layer ids for layers to be displayed */
+      /** List of layer ids for layers to be hidden */
       hiddenLayers: [],
       currentFilters: [],
       currentView: null,
@@ -48,7 +48,9 @@ class App extends React.Component {
       currentHydroRaster: null,
       hydroRasterValues: [],
       choroplethValues: [],
-      highlightedFeatures: [],
+      /** GeoJSON feature object of highlighted feature */
+      highlightedFeature: null,
+      /** Layer id for isolated layer */
       highlightedLayer: null,
       searchFeatures: [],
       style: null,
@@ -58,6 +60,8 @@ class App extends React.Component {
 
     this.setView = this.setView.bind(this);
     this.setYear = this.setYear.bind(this);
+    this.setHighlightedLayer = this.setHighlightedLayer.bind(this);
+    this.setHighlightedFeature = this.setHighlightedFeature.bind(this);
     this.setSearchFeatures = this.setSearchFeatures.bind(this);
     this.searchByText = this.searchByText.bind(this);
     this.toggleLayerVisibility = this.toggleLayerVisibility.bind(this);
@@ -141,11 +145,21 @@ class App extends React.Component {
     });
   }
 
-  setHighlightedLayer(layer) {
-
+  setHighlightedLayer(layerId) {
+    const { highlightedLayer } = this.state;
+    if (highlightedLayer === layerId
+    || layerId === null) {
+      this.setState({
+        highlightedLayer: null,
+      });
+    } else {
+      this.setState({
+        highlightedLayer: layerId,
+      });
+    }
   }
 
-  setHighlightedFeatures(features) {
+  setHighlightedFeature(features) {
 
   }
 
@@ -266,6 +280,8 @@ class App extends React.Component {
       viewsData,
       overlaysData,
       hiddenLayers,
+      highlightedLayer,
+      highlightedFeature,
     } = this.state;
     const searching = searchFeatures.length > 0;
     return (
@@ -290,6 +306,10 @@ class App extends React.Component {
             searching={searching}
             searchByText={this.searchByText}
             toggleLayerVisibility={this.toggleLayerVisibility}
+            setHighlightedLayer={this.setHighlightedLayer}
+            setHighlightedFeature={this.setHighlightedFeature}
+            highlightedLayer={highlightedLayer}
+            highlightedFeature={highlightedFeature}
           />
           {this.getAtlas()}
         </div>
