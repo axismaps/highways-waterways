@@ -49,6 +49,7 @@ class Atlas extends React.PureComponent {
     this.logYear();
     this.logHighlightedLayer();
     this.logHiddenLayers();
+    this.setClickSearchListener();
   }
 
   componentDidUpdate() {
@@ -119,6 +120,26 @@ class Atlas extends React.PureComponent {
     styleCopy.layers = styleCopy.layers.map(layer => this.getFilteredLayer(layer));
 
     return styleCopy;
+  }
+
+  setClickSearchListener() {
+    const {
+      setSearchFeatures,
+    } = this.props;
+
+    this.mbMap.on('click', (e) => {
+      const { year } = this.props;
+      const bbox = [[e.point.x - 5, e.point.y - 5], [e.point.x + 5, e.point.y + 5]];
+
+      const features = this.mbMap.queryRenderedFeatures(bbox, {
+        filter: [
+          'all',
+          ['<=', 'firstyear', year],
+          ['>=', 'lastyear', year],
+        ],
+      });
+      setSearchFeatures(features);
+    });
   }
 
   setHighlightedLayer() {

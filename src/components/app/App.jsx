@@ -52,6 +52,7 @@ class App extends React.Component {
       highlightedFeature: null,
       /** Layer id for isolated layer */
       highlightedLayer: null,
+      /** Mapbox-gl features */
       searchFeatures: [],
       style: null,
       yearRange: null,
