@@ -53,6 +53,8 @@ $stepper-button-size: 36px;
   width: 100%;
   display: flex;
   align-items: center;
+  flex-shrink: 2;
+  overflow: hidden;
 }
 
 .timeline__slider {

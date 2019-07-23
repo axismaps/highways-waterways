@@ -7,6 +7,11 @@ class D3Slider {
     this.components = {};
   }
 
+  config(config) {
+    Object.assign(this.props, config);
+    return this;
+  }
+
   init() {
     this.draw();
     this.setScale();
@@ -14,32 +19,49 @@ class D3Slider {
 
   draw() {
     this.drawSVG();
+    this.setSVGWidth();
     this.drawTrack();
+    this.setTrackWidth();
     this.setScale();
     this.drawAxis();
+    this.updateAxisWidth();
     this.drawHandle();
     
     this.setHandlePosition();
     this.setDrag();
   }
 
+  updateSize() {
+    this.setSVGWidth();
+    this.setTrackWidth();
+    this.setScale();
+    this.setHandlePosition();
+    this.updateAxisWidth();
+  }
+
   drawSVG() {
     const {
       timelineNode,
-      width,
       height,
     } = this.props;
     this.components.svg = d3.select(timelineNode)
       .append('svg')
       .attr('class', 'timeline__slider-svg')
-      .style('width', `${width}px`)
       .style('height', `${height}px`);
+  }
+
+  setSVGWidth() {
+    const {
+      width,
+    } = this.props;
+
+    this.components.svg
+      .style('width', `${width}px`);
   }
 
   drawTrack() {
     const {
       padding,
-      width,
       height,
       trackHeight,
     } = this.props;
@@ -50,8 +72,17 @@ class D3Slider {
       .attr('x', padding.left)
       .attr('y', (height / 2) - (trackHeight / 2))
       .attr('rx', 10)
-      .attr('width', width - padding.left - padding.right)
       .attr('height', trackHeight);
+  }
+
+  setTrackWidth() {
+    const {
+      width,
+      padding,
+    } = this.props;
+
+    this.components.track
+      .attr('width', width - padding.left - padding.right);
   }
 
   drawAxis() {
@@ -61,17 +92,19 @@ class D3Slider {
     } = this.props;
     const {
       svg,
-      axisScale,
     } = this.components;
 
-    const axisGroup = svg.append('g')
+    this.axisGroup = svg.append('g')
       .attr('transform', `translate(0, ${((height / 2) - (trackHeight / 2))})`)
       .attr('class', 'timeline__axis');
+  }
 
-    const axis = d3.axisBottom(axisScale)
+  updateAxisWidth() {
+    const { axisScale } = this.components;
+    this.axis = d3.axisBottom(axisScale)
       .tickFormat(d => d);
 
-    axisGroup.call(axis);
+    this.axisGroup.call(this.axis);
   }
 
   setScale() {
@@ -136,11 +169,12 @@ class D3Slider {
     const { setYear } = this.props;
     const {
       track,
-      xScale,
+      // xScale,
     } = this.components;
 
     track.call(d3.drag()
       .on('start drag', () => {
+        const { xScale } = this.components;
         setYear(xScale(d3.event.x));
       }));
   }

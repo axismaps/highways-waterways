@@ -18,6 +18,7 @@ class HeaderTimeline extends React.PureComponent {
   constructor(props) {
     super(props);
     this.sliderRef = React.createRef();
+    this.containerRef = React.createRef();
     this.state = {
       containerWidth: null,
       containerHeight: null,
@@ -32,16 +33,13 @@ class HeaderTimeline extends React.PureComponent {
 
   componentDidMount() {
     this.timelineNode = this.sliderRef.current;
+    this.containerNode = this.containerRef.current;
 
-    if (this.timelineNode !== undefined) {
-      const bounds = this.timelineNode.getBoundingClientRect();
-      this.setState({
-        containerWidth: bounds.width,
-        containerHeight: bounds.height,
-      });
-    }
+    this.setDimensions();
+    this.listenForResize();
 
     this.logYear();
+    this.logDimensions();
   }
 
   componentDidUpdate() {
@@ -55,7 +53,7 @@ class HeaderTimeline extends React.PureComponent {
       setYear,
     } = this.props;
 
-    // const trackHeight = containerHeight - 10;
+
     const trackHeight = 36;
     // const handleHeight = trackHeight + 4;
     const handleHeight = containerHeight;
@@ -84,6 +82,29 @@ class HeaderTimeline extends React.PureComponent {
       this.d3Slider.updateValue(year);
       this.logYear();
     }
+    if (this.logged.containerWidth !== containerWidth) {
+      this.d3Slider.config({ width: containerWidth })
+        .updateSize();
+      this.logDimensions();
+    }
+  }
+
+  setDimensions() {
+    if (this.timelineNode !== undefined) {
+      const bounds = this.timelineNode.getBoundingClientRect();
+      const containerBounds = this.containerNode.getBoundingClientRect();
+      this.setState({
+        containerWidth: containerBounds.width - 40,
+        // containerWidth: bounds.width,
+        containerHeight: bounds.height,
+      });
+    }
+  }
+
+  listenForResize() {
+    window.addEventListener('resize', () => {
+      this.setDimensions();
+    });
   }
 
   logYear() {
@@ -93,9 +114,17 @@ class HeaderTimeline extends React.PureComponent {
     }
   }
 
+  logDimensions() {
+    const {
+      containerWidth,
+      containerHeight,
+    } = this.state;
+    Object.assign(this.logged, { containerWidth, containerHeight });
+  }
+
   render() {
     return (
-      <div className="header__timeline">
+      <div className="header__timeline" ref={this.containerRef}>
         <div className="timeline__slider" ref={this.sliderRef} />
       </div>
     );

@@ -138,6 +138,7 @@ class Atlas extends React.PureComponent {
           ['>=', 'lastyear', year],
         ],
       });
+        // .filter(d => )
       setSearchFeatures(features);
     });
   }
@@ -165,10 +166,10 @@ class Atlas extends React.PureComponent {
   setLayerVisibilities() {
     const { hiddenLayers } = this.props;
     const { layers } = this.mbMap.getStyle();
-    console.log('hidden', hiddenLayers);
+
 
     layers.forEach((layer) => {
-      // console.log('layer', layer);
+
       const visible = this.mbMap.getLayoutProperty(layer.id, 'visibility') === 'visible';
 
       const shouldBeHidden = hiddenLayers
@@ -180,7 +181,6 @@ class Atlas extends React.PureComponent {
         this.mbMap.setLayoutProperty(layer.id, 'visibility', 'visible');
       }
     });
-    console.log('logged style', this.logged.style);
   }
 
   logLayerOpacityProps() {
