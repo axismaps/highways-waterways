@@ -39,6 +39,21 @@ class Sidebar extends React.PureComponent {
     );
   }
 
+  getSearchBar() {
+    const {
+      searchFeatures,
+      searchByText,
+      toggleSidebar,
+    } = this.props;
+    return (
+      <SidebarSearchBar
+        searchFeatures={searchFeatures}
+        searchByText={searchByText}
+        toggleSidebar={toggleSidebar}
+      />
+    );
+  }
+
   getSearchResults() {
     const {
       searching,
@@ -60,16 +75,12 @@ class Sidebar extends React.PureComponent {
       // currentView,
       // availableViews,
       sidebarOpen,
-      searchFeatures,
-      searchByText,
+      
     } = this.props;
     if (!sidebarOpen) return null;
     return (
       <div className="sidebar">
-        <SidebarSearchBar
-          searchFeatures={searchFeatures}
-          searchByText={searchByText}
-        />
+        {this.getSearchBar()}
         <div className="sidebar__inner">
           {this.getLegend()}
           {this.getSearchResults()}
@@ -139,6 +150,8 @@ Sidebar.propTypes = {
   clearSearch: PropTypes.func,
   /** callback to set text search value */
   searchByText: PropTypes.func.isRequired,
+  /** callback to close sidebar */
+  toggleSidebar: PropTypes.func.isRequired,
 };
 
 export default Sidebar;

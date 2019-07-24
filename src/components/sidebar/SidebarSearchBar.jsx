@@ -19,6 +19,9 @@ import {
 
 class SidebarSearchBar extends React.PureComponent {
   render() {
+    const {
+      toggleSidebar,
+    } = this.props;
     return (
       <div className="sidebar__search-row">
         <input
@@ -29,7 +32,10 @@ class SidebarSearchBar extends React.PureComponent {
         <div className="sidebar__search-row-right">
           <div className="sidebar__search-area-button">area</div>
           <div className="sidebar__search-row-divider" />
-          <div className="sidebar__toggle-button">
+          <div
+            className="sidebar__toggle-button"
+            onClick={toggleSidebar}
+          >
             <FontAwesomeIcon
               icon={faAngleDoubleLeft}
             />
@@ -47,6 +53,8 @@ SidebarSearchBar.propTypes = {
   setTextSearch: PropTypes.func,
   /** callback to clear application search features */
   clearSearch: PropTypes.func,
+  /** callback to close sidebar */
+  toggleSidebar: PropTypes.func.isRequired,
 };
 
 export default SidebarSearchBar;

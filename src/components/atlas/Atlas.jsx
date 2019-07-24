@@ -1,6 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as mapboxgl from 'mapbox-gl';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faAngleDoubleRight,
+} from '@fortawesome/pro-regular-svg-icons';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './Atlas.scss';
 
@@ -49,6 +53,7 @@ class Atlas extends React.PureComponent {
     this.logYear();
     this.logHighlightedLayer();
     this.logHiddenLayers();
+    this.logSidebarOpen();
     this.setClickSearchListener();
   }
 
@@ -58,6 +63,7 @@ class Atlas extends React.PureComponent {
       year,
       highlightedLayer,
       hiddenLayers,
+      sidebarOpen,
     } = this.props;
     if (style.sources.composite.url !== this.logged.style.sources.composite.url) {
       this.logStyle();
@@ -75,6 +81,10 @@ class Atlas extends React.PureComponent {
     if (this.logged.hiddenLayers !== hiddenLayers) {
       this.logHiddenLayers();
       this.setLayerVisibilities();
+    }
+    if (this.logged.sidebarOpen !== sidebarOpen) {
+      this.logSidebarOpen();
+      this.mbMap.resize();
     }
   }
 
@@ -224,6 +234,11 @@ class Atlas extends React.PureComponent {
     this.logged.year = year;
   }
 
+  logSidebarOpen() {
+    const { sidebarOpen } = this.props;
+    this.logged.sidebarOpen = sidebarOpen;
+  }
+
 
   logHighlightedLayer() {
     const { highlightedLayer } = this.props;
@@ -235,9 +250,28 @@ class Atlas extends React.PureComponent {
     this.logged.hiddenLayers = hiddenLayers;
   }
 
+  getSidebarButton() {
+    const {
+      sidebarOpen,
+      toggleSidebar,
+    } = this.props;
+    if (sidebarOpen) return null;
+    return (
+      <div
+        className="atlas__sidebar-button"
+        onClick={toggleSidebar}
+      >
+        <FontAwesomeIcon icon={faAngleDoubleRight} />
+      </div>
+    );
+  }
+
   render() {
     return (
-      <div className="atlas" ref={this.atlasRef} />
+      <div className="atlas__outer">
+        <div className="atlas" ref={this.atlasRef} />
+        {this.getSidebarButton()}
+      </div>
     );
   }
 }
@@ -269,6 +303,10 @@ Atlas.propTypes = {
   highlightedLayer: PropTypes.string,
   /** List of layer paint properties that affect opacity */
   layerOpacityFields: PropTypes.arrayOf(PropTypes.string),
+  /** If sidebar is current open */
+  sidebarOpen: PropTypes.bool.isRequired,
+  /** Callback to toggle sidebar visibility */
+  toggleSidebar: PropTypes.func.isRequired,
 };
 
 export default Atlas;

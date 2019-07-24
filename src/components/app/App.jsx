@@ -67,6 +67,7 @@ class App extends React.Component {
     this.searchByText = this.searchByText.bind(this);
     this.toggleLayerVisibility = this.toggleLayerVisibility.bind(this);
     this.currentTileRange = null;
+    this.toggleSidebar = this.toggleSidebar.bind(this);
   }
 
   componentDidMount() {
@@ -85,6 +86,7 @@ class App extends React.Component {
       year,
       highlightedLayer,
       highlightedFeature,
+      sidebarOpen,
     } = this.state;
     if (style === null) return null;
 
@@ -98,6 +100,8 @@ class App extends React.Component {
     // });
     return (
       <Atlas
+        sidebarOpen={sidebarOpen}
+        toggleSidebar={this.toggleSidebar}
         year={year}
         // style={formattedStyle}
         style={style}
@@ -193,6 +197,12 @@ class App extends React.Component {
     }
   }
 
+  toggleSidebar() {
+    const { sidebarOpen } = this.state;
+    this.setState({
+      sidebarOpen: !sidebarOpen,
+    });
+  }
 
   searchByText(input) {
     console.log('input', input);
@@ -318,6 +328,7 @@ class App extends React.Component {
             setHighlightedFeature={this.setHighlightedFeature}
             highlightedLayer={highlightedLayer}
             highlightedFeature={highlightedFeature}
+            toggleSidebar={this.toggleSidebar}
           />
           {this.getAtlas()}
         </div>
