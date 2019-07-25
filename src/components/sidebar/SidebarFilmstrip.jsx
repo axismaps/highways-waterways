@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 /**
  * Sidebar viewshed filmstrip component.
  *
- * This component displays thumbnails of viewshed rasters.
+ * This component displays thumbnails of map rasters.
  * Clicking a thumbnail causes the map to pan to and
- * display the corresponding viewshed.
- * Hovering over a thumbnail also displays relevant viewshed on the map
+ * display the corresponding viewshed or overlay.
+ * For view rasters, hovering over a thumbnail also displays relevant viewshed on the map
  * and displays data probe tooltip.
  * Clicking toggle button expands or collapses filmstrip.
  * Displays number of rasters in filmstrip.
@@ -50,22 +50,16 @@ class SidebarViewFilmstrip extends React.PureComponent {
   */
   getViewThumbs() {
     const {
-      availableViews,
-      currentView,
-      setView,
+      rasterData,
+      setRaster,
     } = this.props;
 
-    const isCurrentView = view => view === currentView;
+    return rasterData.map((view) => {
 
-    return availableViews.map((view) => {
-      let thumbClass = 'filmstrip__thumbnail';
-      if (isCurrentView(view)) {
-        thumbClass += ` ${thumbClass}--selected`;
-      }
       return (
         <div
-          className={thumbClass}
-          onClick={() => setView(view)}
+          className="filmstrip__thumbnail"
+          onClick={() => setRaster(view)}
         >
           {view.name}
         </div>
@@ -74,10 +68,10 @@ class SidebarViewFilmstrip extends React.PureComponent {
   }
 
   getCountDisplay() {
-    const { availableViews } = this.props;
+    const { rasterData } = this.props;
     return (
       <div className="filmstrip__count">
-        {availableViews.length}
+        {rasterData.length}
       </div>
     );
   }
@@ -98,23 +92,14 @@ class SidebarViewFilmstrip extends React.PureComponent {
   }
 }
 
-SidebarViewFilmstrip.defaultProps = {
-  availableViews: [],
-  currentView: null,
-};
-
 SidebarViewFilmstrip.propTypes = {
-  /** Available view rasters */
-  availableViews: PropTypes.arrayOf(PropTypes.object),
-  /** Selected views */
-  currentView: PropTypes.shape({
-    name: PropTypes.string,
-  }),
+  /** Available rasters */
+  rasterData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
-   * Set app `currentView` state.
-   * @param {Object} view A viewshed object
+   * Set app `currentView` or `currentOverlay` state.
+   * @param {Object} raster A viewshed or overlay object
    * */
-  setView: PropTypes.func.isRequired,
+  setRaster: PropTypes.func.isRequired,
 };
 
 export default SidebarViewFilmstrip;

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SidebarLayersBlock from './SidebarLayersBlock';
 import SidebarBlock from './SidebarBlock';
+import SidebarFilmstrip from './SidebarFilmstrip';
 
 /**
  * This component displays the map legend--map layers,
@@ -24,7 +25,24 @@ class SidebarLegend extends React.PureComponent {
   }
 
   drawViewFilmstrip() {
+    const {
+      viewsData,
+    } = this.props;
+    if (viewsData.length === 0) return null;
 
+    const thumbs = viewsData.map(view => (
+      <div
+        key={view.id}
+        className="sidebar__view-thumb"
+      />
+    ));
+    return (
+      <SidebarBlock>
+        <div className="sidebar__filmstrip">
+          {thumbs}
+        </div>
+      </SidebarBlock>
+    );
   }
 
   drawLayerBlocks() {
@@ -35,7 +53,8 @@ class SidebarLegend extends React.PureComponent {
       highlightedLayer,
       setHighlightedLayer,
     } = this.props;
-    return legendData.map(legendGroup => (
+    if (legendData.length === 0) return null;
+    const layerBlocks = legendData.map(legendGroup => (
       <SidebarLayersBlock
         highlightedLayer={highlightedLayer}
         setHighlightedLayer={setHighlightedLayer}
@@ -47,15 +66,19 @@ class SidebarLegend extends React.PureComponent {
         hidden={hiddenLayers.includes(legendGroup.name)}
       />
     ));
+    return (
+      <SidebarBlock>
+        {layerBlocks}
+      </SidebarBlock>
+    );
   }
 
   render() {
     // draw film strips, hydrolayers, etc.
     return (
       <div className="sidebar__legend">
-        <SidebarBlock>
-          {this.drawLayerBlocks()}
-        </SidebarBlock>
+        {this.drawViewFilmstrip()}
+        {this.drawLayerBlocks()}
       </div>
     );
   }
@@ -66,8 +89,17 @@ SidebarLegend.defaultProps = {
 };
 
 SidebarLegend.propTypes = {
+  /** All views for selected year */
+  viewsData: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /** All overlays for selected year */
+  overlaysData: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /** all hydro rasters (SLR) for selected year */
+  hydroRasterData: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /** All choropleth layers for selected year */
+  choroplethData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /** all layers and swatches */
   legendData: PropTypes.arrayOf(PropTypes.object).isRequired,
+
   /** layers (ids) currently turned off */
   hiddenLayers: PropTypes.arrayOf(PropTypes.string).isRequired,
   /** toggles layer groups on/off */

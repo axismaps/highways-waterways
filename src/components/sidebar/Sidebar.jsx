@@ -19,6 +19,10 @@ class Sidebar extends React.PureComponent {
     const {
       searching,
       legendData,
+      viewsData,
+      overlaysData,
+      choroplethData,
+      hydroRasterData,
       hiddenLayers,
       toggleLayerVisibility,
       setHighlightedLayer,
@@ -30,6 +34,10 @@ class Sidebar extends React.PureComponent {
 
     return (
       <SidebarLegend
+        viewsData={viewsData}
+        overlaysData={overlaysData}
+        choroplethData={choroplethData}
+        hydroRasterData={hydroRasterData}
         toggleLayerVisibility={toggleLayerVisibility}
         hiddenLayers={hiddenLayers}
         legendData={legendData}
@@ -91,7 +99,7 @@ class Sidebar extends React.PureComponent {
 }
 
 Sidebar.defaultProps = {
-  availableViews: [],
+  // viewsData: [],
   currentView: null,
   searchFeatures: [],
   legendData: null,
@@ -104,15 +112,13 @@ Sidebar.propTypes = {
   /** if sidebar is currently displaying search results */
   searching: PropTypes.bool.isRequired,
   /** All views for selected year */
-  availableViews: PropTypes.arrayOf(PropTypes.object),
-  /** All base layers for selected year (e.g. roads, buildings, etc.) */
-  availableBaseLayers: PropTypes.arrayOf(PropTypes.object),
+  viewsData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /** All overlays for selected year */
-  availableOverlays: PropTypes.arrayOf(PropTypes.object),
+  overlaysData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /** all hydro rasters (SLR) for selected year */
-  availableHydroRasters: PropTypes.arrayOf(PropTypes.object),
+  hydroRasterData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /** All choropleth layers for selected year */
-  availableChoropleth: PropTypes.arrayOf(PropTypes.object),
+  choroplethData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /** Current range slider values for available choropleths */
   choroplethValues: PropTypes.arrayOf(PropTypes.object),
   /** Current slider values for hydro raster layers */

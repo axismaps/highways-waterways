@@ -34,18 +34,24 @@ class App extends React.Component {
       viewsData: [
         { name: 'placeholder1', id: 1 },
         { name: 'placeholder2', id: 2 },
+        { name: 'placeholder2', id: 3 },
+        { name: 'placeholder2', id: 4 },
+        { name: 'placeholder2', id: 5 },
       ],
       overlaysData: [
         { name: 'overlay1', id: 1 },
         { name: 'overlay2', id: 2 },
         { name: 'overlay3', id: 3 },
       ],
+      hydroRasterData: [],
+      choroplethData: [],
       /** List of layer ids for layers to be hidden */
       hiddenLayers: [],
       currentFilters: [],
       currentView: null,
       currentOverlay: null,
       currentHydroRaster: null,
+      currentChoropleth: null,
       hydroRasterValues: [],
       choroplethValues: [],
       /** GeoJSON feature object of highlighted feature */
@@ -59,6 +65,7 @@ class App extends React.Component {
       tileRanges: null,
     };
 
+    this.setRaster = this.setRaster.bind(this);
     this.setView = this.setView.bind(this);
     this.setYear = this.setYear.bind(this);
     this.setHighlightedLayer = this.setHighlightedLayer.bind(this);
@@ -230,6 +237,18 @@ class App extends React.Component {
     }
   }
 
+  setRaster({ raster, type }) {
+    const rasterFields = {
+      view: 'currentView',
+      overlay: 'currentOverlay',
+      choropleth: 'currentChoropleth',
+      hydroRaster: 'currentHydroRaster',
+    };
+    const stateUpdate = {};
+    stateUpdate[rasterFields[type]] = raster;
+    this.setState(stateUpdate);
+  }
+
   async updateLegendData(newYear) {
     const legendData = await App.getLegendPromise(newYear);
 
@@ -296,6 +315,8 @@ class App extends React.Component {
       tileRanges,
       // currentTileRange,
       viewsData,
+      hydroRasterData,
+      choroplethData,
       overlaysData,
       hiddenLayers,
       highlightedLayer,
@@ -315,6 +336,8 @@ class App extends React.Component {
             hiddenLayers={hiddenLayers}
             overlaysData={overlaysData}
             viewsData={viewsData}
+            choroplethData={choroplethData}
+            hydroRasterData={hydroRasterData}
             legendData={legendData}
             sidebarOpen={sidebarOpen}
             setView={this.setView}
