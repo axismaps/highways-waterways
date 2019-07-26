@@ -5,6 +5,7 @@ import SidebarToggleButton from '../sidebar/SidebarToggleButton';
 import RasterProbe from '../rasterProbe/RasterProbe';
 import Atlas from '../atlas/Atlas';
 import Header from '../header/Header';
+import Lightbox from '../lightbox/Lightbox';
 import exportMethods from './appExport';
 
 import './App.scss';
@@ -41,7 +42,8 @@ class App extends React.Component {
         type: 'overlay',
         raster: { name: 'placeholder2', id: 3 },
       },
-      // currentRaster: null,
+      /** Takes `currentRaster` object */
+      lightbox: null,
       viewsData: [
         { name: 'placeholder1', id: 1 },
         { name: 'placeholder2', id: 2 },
@@ -77,6 +79,8 @@ class App extends React.Component {
       tileRanges: null,
     };
 
+    this.setLightbox = this.setLightbox.bind(this);
+    this.clearLightbox = this.clearLightbox.bind(this);
     this.setRaster = this.setRaster.bind(this);
     this.clearRaster = this.clearRaster.bind(this);
     this.prevRaster = this.prevRaster.bind(this);
@@ -202,6 +206,7 @@ class App extends React.Component {
         clearRaster={this.clearRaster}
         prevRaster={this.prevRaster}
         nextRaster={this.nextRaster}
+        setLightbox={this.setLightbox}
       />
     );
   }
@@ -223,6 +228,32 @@ class App extends React.Component {
 
   nextRaster() {
     console.log('next raster');
+  }
+
+  setLightbox(raster) {
+    console.log('launch lightbox');
+    this.setState({
+      lightbox: raster,
+    });
+  }
+
+  clearLightbox() {
+    this.setState({
+      lightbox: null,
+    });
+  }
+
+  getLightbox() {
+    const {
+      lightbox,
+    } = this.state;
+    if (lightbox === null) return null;
+    return (
+      <Lightbox
+        lightbox={lightbox}
+        clearLightbox={this.clearLightbox}
+      />
+    );
   }
 
   async updateLegendData(newYear) {
@@ -380,7 +411,7 @@ class App extends React.Component {
             {this.getRasterProbe()}
           </div>
         </div>
-        
+        {this.getLightbox()}
       </div>
     );
   }

@@ -74,12 +74,26 @@ class RasterProbe extends React.PureComponent {
     );
   }
 
+  getImage() {
+    const {
+      currentRaster,
+      setLightbox,
+    } = this.props;
+
+    return (
+      <div
+        className="raster-probe__image"
+        onClick={() => setLightbox(currentRaster)}
+      />
+    );
+  }
+
   render() {
     return (
       <div className="raster-probe">
         <div className="raster-probe__inner">
           {this.getProbeHeader()}
-          <div className="raster-probe__image" />
+          {this.getImage()}
           <div className="raster-probe__caption">
             Caption
           </div>
@@ -102,6 +116,8 @@ RasterProbe.propTypes = {
   prevRaster: PropTypes.func.isRequired,
   /** Callback to set app currentRaster state field to `null` */
   clearRaster: PropTypes.func.isRequired,
+  /** Callback to launch lightbox of current raster */
+  setLightbox: PropTypes.func.isRequired,
 };
 
 export default RasterProbe;
