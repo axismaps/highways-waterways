@@ -1,0 +1,46 @@
+@import '../../config';
+
+.raster-probe {
+  width: 330px;
+  background: white;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  border-radius: 5px;
+  box-shadow: $main-shadow;
+}
+
+.raster-probe__inner {
+  padding: 20px;
+}
+
+.raster-probe__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.raster-probe__title {
+  font-weight: bold;
+}
+
+.raster-probe__close-icon {
+  cursor: pointer;
+  color: $dark-grey;
+}
+
+.raster-probe__close-icon:hover {
+  color: black;
+}
+
+.raster-probe__image {
+  height: 180px;
+  background: lightgrey;
+}
+
+.raster-probe__caption {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}

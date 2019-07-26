@@ -1,6 +1,8 @@
 import React from 'react';
 import * as d3 from 'd3';
 import Sidebar from '../sidebar/Sidebar';
+import SidebarToggleButton from '../sidebar/SidebarToggleButton';
+import RasterProbe from '../rasterProbe/RasterProbe';
 import Atlas from '../atlas/Atlas';
 import Header from '../header/Header';
 import exportMethods from './appExport';
@@ -31,12 +33,20 @@ class App extends React.Component {
       year,
       sidebarOpen: true,
       rasterProbe: null,
+      /** Selected raster to be shown on map + raster probe
+       * view, choropleth, overlay, or hydroRaster
+       */
+      currentRaster: {
+        type: 'view',
+        raster: { name: 'placeholder2', id: 3 },
+      },
+      // currentRaster: null,
       viewsData: [
         { name: 'placeholder1', id: 1 },
         { name: 'placeholder2', id: 2 },
-        { name: 'placeholder2', id: 3 },
-        { name: 'placeholder2', id: 4 },
-        { name: 'placeholder2', id: 5 },
+        { name: 'placeholder3', id: 3 },
+        { name: 'placeholder4', id: 4 },
+        { name: 'placeholder5', id: 5 },
       ],
       overlaysData: [
         { name: 'overlay1', id: 1 },
@@ -48,10 +58,10 @@ class App extends React.Component {
       /** List of layer ids for layers to be hidden */
       hiddenLayers: [],
       currentFilters: [],
-      currentView: null,
-      currentOverlay: null,
-      currentHydroRaster: null,
-      currentChoropleth: null,
+      // currentView: null,
+      // currentOverlay: null,
+      // currentHydroRaster: null,
+      // currentChoropleth: null,
       hydroRasterValues: [],
       choroplethValues: [],
       /** GeoJSON feature object of highlighted feature */
@@ -66,7 +76,7 @@ class App extends React.Component {
     };
 
     this.setRaster = this.setRaster.bind(this);
-    this.setView = this.setView.bind(this);
+    this.clearRaster = this.clearRaster.bind(this);
     this.setYear = this.setYear.bind(this);
     this.setHighlightedLayer = this.setHighlightedLayer.bind(this);
     this.setHighlightedFeature = this.setHighlightedFeature.bind(this);
@@ -86,57 +96,30 @@ class App extends React.Component {
       style,
       hiddenLayers,
       currentFilters,
-      currentOverlay,
       views,
-      currentView,
-      // tileRanges,
       year,
       highlightedLayer,
       highlightedFeature,
       sidebarOpen,
+      currentRaster,
     } = this.state;
     if (style === null) return null;
 
-    // const newTileRange = App.getCurrentTileRange({
-    //   year,
-    //   tileRanges,
-    // });
-    // const formattedStyle = App.formatStyle({
-    //   style,
-    //   currentTileRange: newTileRange,
-    // });
     return (
       <Atlas
+        currentRaster={currentRaster}
         sidebarOpen={sidebarOpen}
         toggleSidebar={this.toggleSidebar}
         year={year}
-        // style={formattedStyle}
         style={style}
         views={views}
-        currentView={currentView}
         hiddenLayers={hiddenLayers}
         currentFilters={currentFilters}
-        currentOverlay={currentOverlay}
         setSearchFeatures={this.setSearchFeatures}
         highlightedLayer={highlightedLayer}
         highlightedFeature={highlightedFeature}
-        // currentTileRange={this.currentTileRange}
       />
     );
-  }
-
-  setView(newView) {
-    const { currentView } = this.state;
-
-    if (currentView === newView) {
-      this.setState({
-        currentView: null,
-      });
-    } else {
-      this.setState({
-        currentView: newView,
-      });
-    }
   }
 
   setYear(newYear) {
@@ -178,8 +161,10 @@ class App extends React.Component {
     }
   }
 
-  setHighlightedFeature(features) {
-
+  setHighlightedFeature(newFeature) {
+    this.setState({
+      highlightedFeature: newFeature,
+    });
   }
 
   getStylePromise() {
@@ -190,34 +175,52 @@ class App extends React.Component {
     return d3.json(`http://highways.axismaps.io/api/v1/getLegend?start=${year}&end=${year}`);
   }
 
-  toggleLayerVisibility(layerId) {
-    const { hiddenLayers } = this.state;
-
-    if (!hiddenLayers.includes(layerId)) {
-      this.setState({
-        hiddenLayers: [...hiddenLayers, layerId],
-      });
-    } else {
-      this.setState({
-        hiddenLayers: hiddenLayers.filter(d => d !== layerId),
-      });
-    }
+  getSidebarToggleButton() {
+    const {
+      sidebarOpen,
+    } = this.state;
+    if (sidebarOpen) return null;
+    return (
+      <SidebarToggleButton
+        toggleSidebar={this.toggleSidebar}
+      />
+    );
   }
 
-  toggleSidebar() {
-    const { sidebarOpen } = this.state;
+  getRasterProbe() {
+    const {
+      currentRaster,
+    } = this.state;
+    if (currentRaster === null) return null;
+    return (
+      <RasterProbe
+        currentRaster={currentRaster}
+        clearRaster={this.clearRaster}
+      />
+    );
+  }
+
+
+
+  setRaster(newRaster) {
     this.setState({
-      sidebarOpen: !sidebarOpen,
+      currentRaster: newRaster,
     });
   }
 
-  searchByText(input) {
-    console.log('input', input);
-    const featureResults = null;
-    if (featureResults) {
-      this.setSearchFeatures(featureResults);
-    }
+
+  clearRaster() {
+    this.setRaster(null);
   }
+
+  async updateLegendData(newYear) {
+    const legendData = await App.getLegendPromise(newYear);
+
+    this.setState({
+      legendData: legendData.response.legend,
+    });
+  }
+
 
   async updateStyle(newYear) {
     if (this.currentTileRange === null) return;
@@ -235,26 +238,6 @@ class App extends React.Component {
         style,
       });
     }
-  }
-
-  setRaster({ raster, type }) {
-    const rasterFields = {
-      view: 'currentView',
-      overlay: 'currentOverlay',
-      choropleth: 'currentChoropleth',
-      hydroRaster: 'currentHydroRaster',
-    };
-    const stateUpdate = {};
-    stateUpdate[rasterFields[type]] = raster;
-    this.setState(stateUpdate);
-  }
-
-  async updateLegendData(newYear) {
-    const legendData = await App.getLegendPromise(newYear);
-
-    this.setState({
-      legendData: legendData.response.legend,
-    });
   }
 
   async loadInitialData() {
@@ -288,6 +271,35 @@ class App extends React.Component {
     });
   }
 
+  toggleLayerVisibility(layerId) {
+    const { hiddenLayers } = this.state;
+
+    if (!hiddenLayers.includes(layerId)) {
+      this.setState({
+        hiddenLayers: [...hiddenLayers, layerId],
+      });
+    } else {
+      this.setState({
+        hiddenLayers: hiddenLayers.filter(d => d !== layerId),
+      });
+    }
+  }
+
+  toggleSidebar() {
+    const { sidebarOpen } = this.state;
+    this.setState({
+      sidebarOpen: !sidebarOpen,
+    });
+  }
+
+  searchByText(input) {
+    console.log('input', input);
+    const featureResults = null;
+    if (featureResults) {
+      this.setSearchFeatures(featureResults);
+    }
+  }
+
   /**
    * @public
    */
@@ -307,7 +319,6 @@ class App extends React.Component {
   render() {
     const {
       views,
-      currentView,
       sidebarOpen,
       searchFeatures,
       year,
@@ -329,10 +340,10 @@ class App extends React.Component {
           year={year}
           setYear={this.setYear}
           tileRanges={tileRanges}
-          // currentTileRange={currentTileRange}
         />
         <div className="app__body">
           <Sidebar
+            setRaster={this.setRaster}
             hiddenLayers={hiddenLayers}
             overlaysData={overlaysData}
             viewsData={viewsData}
@@ -340,9 +351,7 @@ class App extends React.Component {
             hydroRasterData={hydroRasterData}
             legendData={legendData}
             sidebarOpen={sidebarOpen}
-            setView={this.setView}
             views={views}
-            currentView={currentView}
             searchFeatures={searchFeatures}
             searching={searching}
             searchByText={this.searchByText}
@@ -353,7 +362,11 @@ class App extends React.Component {
             highlightedFeature={highlightedFeature}
             toggleSidebar={this.toggleSidebar}
           />
-          {this.getAtlas()}
+          <div className="app__atlas-outer">
+            {this.getAtlas()}
+            {this.getSidebarToggleButton()}
+            {this.getRasterProbe()}
+          </div>
         </div>
         
       </div>

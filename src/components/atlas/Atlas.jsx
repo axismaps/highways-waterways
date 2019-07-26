@@ -1,10 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as mapboxgl from 'mapbox-gl';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faAngleDoubleRight,
-} from '@fortawesome/pro-regular-svg-icons';
+
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './Atlas.scss';
 
@@ -250,32 +247,17 @@ class Atlas extends React.PureComponent {
     this.logged.hiddenLayers = hiddenLayers;
   }
 
-  getSidebarButton() {
-    const {
-      sidebarOpen,
-      toggleSidebar,
-    } = this.props;
-    if (sidebarOpen) return null;
-    return (
-      <div
-        className="atlas__sidebar-button"
-        onClick={toggleSidebar}
-      >
-        <FontAwesomeIcon icon={faAngleDoubleRight} />
-      </div>
-    );
-  }
 
   render() {
     return (
-      <div className="atlas__outer">
-        <div className="atlas" ref={this.atlasRef} />
-        {this.getSidebarButton()}
-      </div>
+
+      <div className="atlas" ref={this.atlasRef} />
+      
+
     );
   }
 }
-
+// {this.getSidebarButton()}
 Atlas.defaultProps = {
   views: null,
   hiddenLayers: [],
@@ -286,9 +268,15 @@ Atlas.defaultProps = {
     'text-opacity',
     'icon-opacity',
   ],
+  currentRaster: null,
 };
 
 Atlas.propTypes = {
+  /** Current raster overlay/view/choropleth/hydroRaster */
+  currentRaster: PropTypes.shape({
+    type: PropTypes.string,
+    raster: PropTypes.object,
+  }),
   /** mapbox-gl style object */
   style: PropTypes.object.isRequired,
   /** Available view rasters */

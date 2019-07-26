@@ -27,6 +27,7 @@ class Sidebar extends React.PureComponent {
       toggleLayerVisibility,
       setHighlightedLayer,
       highlightedLayer,
+      setRaster,
     } = this.props;
 
 
@@ -34,6 +35,7 @@ class Sidebar extends React.PureComponent {
 
     return (
       <SidebarLegend
+        setRaster={setRaster}
         viewsData={viewsData}
         overlaysData={overlaysData}
         choroplethData={choroplethData}
@@ -99,11 +101,10 @@ class Sidebar extends React.PureComponent {
 }
 
 Sidebar.defaultProps = {
-  // viewsData: [],
-  currentView: null,
   searchFeatures: [],
   legendData: null,
   highlightedLayer: null,
+  currentRaster: null,
 };
 
 Sidebar.propTypes = {
@@ -124,14 +125,15 @@ Sidebar.propTypes = {
   /** Current slider values for hydro raster layers */
   hydroRasterValues: PropTypes.arrayOf(PropTypes.object),
   /** Selected view */
-  currentView: PropTypes.shape({
-    name: PropTypes.string,
+  currentRaster: PropTypes.shape({
+    type: PropTypes.string,
+    raster: PropTypes.object,
   }),
   /**
-   * Set app `currentView` state.
-   * @param {Object} view A viewshed object
+   * Set app `currentRaster` state.
+   * @param {Object} raster A raster object
    * */
-  setView: PropTypes.func.isRequired,
+  setRaster: PropTypes.func.isRequired,
   /** Sets hydroRaster filter values */
   setHydroRasterValue: PropTypes.func,
   /** Sets choropleth filter values */

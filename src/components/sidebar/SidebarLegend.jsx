@@ -27,6 +27,7 @@ class SidebarLegend extends React.PureComponent {
   drawViewFilmstrip() {
     const {
       viewsData,
+      setRaster,
     } = this.props;
     if (viewsData.length === 0) return null;
 
@@ -34,6 +35,12 @@ class SidebarLegend extends React.PureComponent {
       <div
         key={view.id}
         className="sidebar__view-thumb"
+        onClick={() => {
+          setRaster({
+            type: 'view',
+            raster: view,
+          });
+        }}
       />
     ));
     return (
@@ -108,6 +115,8 @@ SidebarLegend.propTypes = {
   highlightedLayer: PropTypes.string,
   /** callback to set highlightedLayer (layer id/name) */
   setHighlightedLayer: PropTypes.func.isRequired,
+  /** Callbak to set app `currentRaster` state field */
+  setRaster: PropTypes.func.isRequired,
 };
 
 export default SidebarLegend;

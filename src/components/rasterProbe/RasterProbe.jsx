@@ -1,5 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import {
+  faTimes,
+} from '@fortawesome/pro-regular-svg-icons';
+import './RasterProbe.scss';
 
 /**
  * This component displays the currently the image and metadata of
@@ -13,10 +19,73 @@ import PropTypes from 'prop-types';
  */
 
 class RasterProbe extends React.PureComponent {
+  getProbeHeader() {
+    const {
+      currentRaster,
+      clearRaster,
+    } = this.props;
+    return (
+      <div className="raster-probe__header">
+        <div className="raster-probe__title">
+          {currentRaster.raster.name}
+        </div>
+        <div
+          className="raster-probe__close-icon"
+          onClick={clearRaster}
+        >
+          <FontAwesomeIcon icon={faTimes} />
+        </div>
+      </div>
+    );
+  }
+
+  getProbeFooter() {
+    const {
+      currentRaster,
+      clearRaster,
+    } = this.props;
+    if (currentRaster.type === 'view') {
+      return (
+        <div className="raster-probe__nav-buttons">
+          <div
+            className="raster-probe__nav-button raster-probe__prev"
+          >
+            Prev
+          </div>
+          <div
+            className="raster-probe__nav-button raster-probe__next"
+          >
+            Next
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div
+        className="raster-probe__close-button"
+        onClick={clearRaster}
+      >
+        Remove from map
+      </div>
+    );
+  }
+
   render() {
+    const {
+      clearRaster,
+      currentRaster,
+    } = this.props;
+
     return (
       <div className="raster-probe">
-        Raster probe
+        <div className="raster-probe__inner">
+          {this.getProbeHeader()}
+          <div className="raster-probe__image" />
+          <div className="raster-probe__caption">
+            Caption
+          </div>
+          {this.getProbeFooter()}
+        </div>
       </div>
     );
   }
@@ -24,12 +93,13 @@ class RasterProbe extends React.PureComponent {
 
 RasterProbe.propTypes = {
   /** Current raster probe layer data */
-  rasterProbe: PropTypes.object,
+  currentRaster: PropTypes.object.isRequired,
   /** Sets map rasterProbe and overlay/view to next available raster */
   nextRaster: PropTypes.func,
   /** Sets map rasterProbe and overlay/view to previous available raster */
   prevRaster: PropTypes.func,
-
+  /** Callback to set app currentRaster state field to `null` */
+  clearRaster: PropTypes.func.isRequired,
 };
 
 export default RasterProbe;
