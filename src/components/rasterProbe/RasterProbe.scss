@@ -43,4 +43,40 @@
 .raster-probe__caption {
   margin-top: 10px;
   margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.raster-probe__nav-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+// .raster-probe__nav-button,
+// .raster-probe__clear-button
+
+.raster-probe__footer-button {
+  height: 36px;
+  background: $light-grey;
+  width: 100%;
+  
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 13px;
+  color: $dark-grey;
+}
+
+.raster-probe__footer-button:hover {
+  background: $light-grey-hover;
+}
+
+
+.raster-probe__prev {
+  margin-right: 10px;
+}
+
+.raster-probe__next {
+  margin-left: 10px;
 }

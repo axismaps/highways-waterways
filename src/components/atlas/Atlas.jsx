@@ -37,7 +37,6 @@ class Atlas extends React.PureComponent {
   }
 
   componentDidMount() {
-    // const { style } = this.props;
     mapboxgl.accessToken = 'pk.eyJ1IjoiYXhpc21hcHMiLCJhIjoieUlmVFRmRSJ9.CpIxovz1TUWe_ecNLFuHNg';
     const mbMap = new mapboxgl.Map({
       container: this.atlasRef.current,

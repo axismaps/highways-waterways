@@ -30,7 +30,7 @@ $stepper-button-size: 36px;
 .header__stepper-button {
   width: $stepper-button-size;
   height: $stepper-button-size;
-  background: #EEEEEE;
+  background: $light-grey;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,7 +41,7 @@ $stepper-button-size: 36px;
 }
 
 .header__stepper-button:hover {
-  background: rgb(230, 230, 230);
+  background: $light-grey-hover;
 }
 
 .header__stepper-year {

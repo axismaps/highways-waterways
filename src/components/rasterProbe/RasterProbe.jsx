@@ -43,17 +43,21 @@ class RasterProbe extends React.PureComponent {
     const {
       currentRaster,
       clearRaster,
+      prevRaster,
+      nextRaster,
     } = this.props;
     if (currentRaster.type === 'view') {
       return (
         <div className="raster-probe__nav-buttons">
           <div
-            className="raster-probe__nav-button raster-probe__prev"
+            className="raster-probe__nav-button raster-probe__prev raster-probe__footer-button"
+            onClick={prevRaster}
           >
             Prev
           </div>
           <div
-            className="raster-probe__nav-button raster-probe__next"
+            className="raster-probe__nav-button raster-probe__next raster-probe__footer-button"
+            onClick={nextRaster}
           >
             Next
           </div>
@@ -62,7 +66,7 @@ class RasterProbe extends React.PureComponent {
     }
     return (
       <div
-        className="raster-probe__close-button"
+        className="raster-probe__clear-button raster-probe__footer-button"
         onClick={clearRaster}
       >
         Remove from map
@@ -71,11 +75,6 @@ class RasterProbe extends React.PureComponent {
   }
 
   render() {
-    const {
-      clearRaster,
-      currentRaster,
-    } = this.props;
-
     return (
       <div className="raster-probe">
         <div className="raster-probe__inner">
@@ -93,11 +92,14 @@ class RasterProbe extends React.PureComponent {
 
 RasterProbe.propTypes = {
   /** Current raster probe layer data */
-  currentRaster: PropTypes.object.isRequired,
+  currentRaster: PropTypes.shape({
+    type: PropTypes.string,
+    raster: PropTypes.object,
+  }).isRequired,
   /** Sets map rasterProbe and overlay/view to next available raster */
-  nextRaster: PropTypes.func,
+  nextRaster: PropTypes.func.isRequired,
   /** Sets map rasterProbe and overlay/view to previous available raster */
-  prevRaster: PropTypes.func,
+  prevRaster: PropTypes.func.isRequired,
   /** Callback to set app currentRaster state field to `null` */
   clearRaster: PropTypes.func.isRequired,
 };

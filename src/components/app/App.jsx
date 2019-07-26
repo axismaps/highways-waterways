@@ -37,7 +37,8 @@ class App extends React.Component {
        * view, choropleth, overlay, or hydroRaster
        */
       currentRaster: {
-        type: 'view',
+        // type: 'view',
+        type: 'overlay',
         raster: { name: 'placeholder2', id: 3 },
       },
       // currentRaster: null,
@@ -55,6 +56,7 @@ class App extends React.Component {
       ],
       hydroRasterData: [],
       choroplethData: [],
+      rasterOpacity: 1,
       /** List of layer ids for layers to be hidden */
       hiddenLayers: [],
       currentFilters: [],
@@ -77,6 +79,8 @@ class App extends React.Component {
 
     this.setRaster = this.setRaster.bind(this);
     this.clearRaster = this.clearRaster.bind(this);
+    this.prevRaster = this.prevRaster.bind(this);
+    this.nextRaster = this.nextRaster.bind(this);
     this.setYear = this.setYear.bind(this);
     this.setHighlightedLayer = this.setHighlightedLayer.bind(this);
     this.setHighlightedFeature = this.setHighlightedFeature.bind(this);
@@ -196,11 +200,11 @@ class App extends React.Component {
       <RasterProbe
         currentRaster={currentRaster}
         clearRaster={this.clearRaster}
+        prevRaster={this.prevRaster}
+        nextRaster={this.nextRaster}
       />
     );
   }
-
-
 
   setRaster(newRaster) {
     this.setState({
@@ -211,6 +215,14 @@ class App extends React.Component {
 
   clearRaster() {
     this.setRaster(null);
+  }
+
+  prevRaster() {
+    console.log('prev raster');
+  }
+
+  nextRaster() {
+    console.log('next raster');
   }
 
   async updateLegendData(newYear) {
