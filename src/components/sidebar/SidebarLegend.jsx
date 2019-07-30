@@ -44,7 +44,10 @@ class SidebarLegend extends React.PureComponent {
       />
     ));
     return (
-      <SidebarBlock>
+      <SidebarBlock
+        title="views"
+        icon="x"
+      >
         <div className="sidebar__filmstrip">
           {thumbs}
         </div>
