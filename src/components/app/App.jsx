@@ -44,6 +44,7 @@ class App extends React.Component {
       },
       /** Takes `currentRaster` object */
       lightbox: null,
+      // lightboxOpen: false,
       viewsData: [
         { name: 'placeholder1', id: 1 },
         { name: 'placeholder2', id: 2 },
@@ -250,7 +251,7 @@ class App extends React.Component {
     if (lightbox === null) return null;
     return (
       <Lightbox
-        lightbox={lightbox}
+        lightboxRaster={lightbox}
         clearLightbox={this.clearLightbox}
       />
     );

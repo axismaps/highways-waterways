@@ -1,3 +1,5 @@
+@import '../../config';
+
 .lightbox {
   width: 100%;
   height: 100vh;
@@ -6,4 +8,20 @@
   position: absolute;
   top: 0px;
   left: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox__container {
+  width: 1111px;
+  max-width: 95%;
+  max-height: 85%;
+  border-radius: 5px;
+  box-shadow: $main-shadow;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.lightbox__inner {
+  padding: 20px;
 }
