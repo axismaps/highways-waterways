@@ -17,7 +17,7 @@ import './Sidebar.scss';
 class Sidebar extends React.PureComponent {
   getLegend() {
     const {
-      searching,
+      searchView,
       legendData,
       viewsData,
       overlaysData,
@@ -31,7 +31,7 @@ class Sidebar extends React.PureComponent {
     } = this.props;
 
 
-    if (searching || legendData === null) return null;
+    if (searchView || legendData === null) return null;
 
     return (
       <SidebarLegend
@@ -51,14 +51,17 @@ class Sidebar extends React.PureComponent {
 
   getSearchBar() {
     const {
-      searchFeatures,
+      searchView,
       searchByText,
       toggleSidebar,
+      clearSearch,
     } = this.props;
+
     return (
       <SidebarSearchBar
-        searchFeatures={searchFeatures}
+        searchView={searchView}
         searchByText={searchByText}
+        clearSearch={clearSearch}
         toggleSidebar={toggleSidebar}
       />
     );
@@ -66,11 +69,11 @@ class Sidebar extends React.PureComponent {
 
   getSearchResults() {
     const {
-      searching,
+      searchView,
       searchFeatures,
     } = this.props;
 
-    if (!searching) return null;
+    if (searchView === null) return null;
 
     return (
       <SidebarSearchResults
@@ -105,13 +108,14 @@ Sidebar.defaultProps = {
   legendData: null,
   highlightedLayer: null,
   currentRaster: null,
+  searchView: null,
 };
 
 Sidebar.propTypes = {
   /** all layers and swatches */
   legendData: PropTypes.arrayOf(PropTypes.object),
   /** if sidebar is currently displaying search results */
-  searching: PropTypes.bool.isRequired,
+  searchView: PropTypes.string,
   /** All views for selected year */
   viewsData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /** All overlays for selected year */
@@ -152,10 +156,8 @@ Sidebar.propTypes = {
   setHighlightedFeature: PropTypes.func,
   /** Results from Atlas search */
   searchFeatures: PropTypes.arrayOf(PropTypes.object),
-  /** callback to set application text search value */
-  setTextSearch: PropTypes.func,
   /** callback to clear application search features */
-  clearSearch: PropTypes.func,
+  clearSearch: PropTypes.func.isRequired,
   /** callback to set text search value */
   searchByText: PropTypes.func.isRequired,
   /** callback to close sidebar */

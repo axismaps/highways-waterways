@@ -17,10 +17,18 @@
   display: flex;
   height: 60px;
   align-items: center;
-  justify-content: space-between;
+  
   color: $dark-grey;
   font-size: 15px;
   box-shadow: $main-shadow;
+}
+
+.sidebar__search-row--search {
+  justify-content: space-between;
+}
+
+.sidebar__search-row--return {
+  cursor: pointer;
 }
 
 .sidebar__search-row-right {
@@ -42,6 +50,17 @@
   width: 1px;
   margin-right: 10px;
   margin-left: 10px;
+}
+
+.sidebar__search-back-icon {
+  
+  font-size: 30px;
+  margin-left: 20px;
+  margin-right: 6px;
+}
+
+.sidebar__search-back-text {
+  font-style: italic;
 }
 
 .sidebar__inner {

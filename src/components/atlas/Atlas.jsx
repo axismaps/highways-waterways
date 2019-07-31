@@ -145,7 +145,10 @@ class Atlas extends React.PureComponent {
         ],
       });
         // .filter(d => )
-      setSearchFeatures(features);
+      setSearchFeatures({
+        features,
+        view: 'atlas',
+      });
     });
   }
 

@@ -8,7 +8,7 @@ class Lightbox extends React.PureComponent {
       clearLightbox,
       lightboxRaster,
     } = this.props;
-    console.log('raster', lightboxRaster);
+
     return (
       <div
         className="lightbox"

@@ -4,6 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faAngleDoubleLeft,
 } from '@fortawesome/pro-regular-svg-icons';
+import {
+  faArrowCircleLeft,
+} from '@fortawesome/pro-solid-svg-icons';
+
 
 /**
 
@@ -18,12 +22,32 @@ import {
  */
 
 class SidebarSearchBar extends React.PureComponent {
-  render() {
+  getReturnBar() {
+    const {
+      clearSearch,
+    } = this.props;
+    return (
+      <div
+        className="sidebar__search-row sidebar__search-row--return"
+        onClick={clearSearch}
+      >
+        <div className="sidebar__search-back-icon">
+          <FontAwesomeIcon icon={faArrowCircleLeft} />
+        </div>
+        <div className="sidebar__search-back-text">
+          Back to Legend
+        </div>
+      </div>
+    );
+  }
+
+  getSearchBar() {
     const {
       toggleSidebar,
     } = this.props;
+
     return (
-      <div className="sidebar__search-row">
+      <div className="sidebar__search-row sidebar__search-row--search">
         <input
           type="text"
           className="sidebar__text-input"
@@ -44,9 +68,26 @@ class SidebarSearchBar extends React.PureComponent {
       </div>
     );
   }
+
+
+  render() {
+    const {
+      searchView,
+    } = this.props;
+    if (searchView === 'atlas') {
+      return this.getReturnBar();
+    }
+    return this.getSearchBar();
+  }
 }
 
+SidebarSearchBar.defaultProps = {
+  searchView: null,
+};
+
 SidebarSearchBar.propTypes = {
+  /** Current search view (null, atlas, or text) */
+  searchView: PropTypes.string,
   /** callback to highlight feature */
   highlightFeature: PropTypes.func,
   /** callback to set application text search value */

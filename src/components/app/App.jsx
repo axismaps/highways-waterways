@@ -75,6 +75,8 @@ class App extends React.Component {
       highlightedLayer: null,
       /** Mapbox-gl features */
       searchFeatures: [],
+      /** Null, text, or atlas */
+      searchView: null,
       style: null,
       yearRange: null,
       tileRanges: null,
@@ -90,6 +92,7 @@ class App extends React.Component {
     this.setHighlightedLayer = this.setHighlightedLayer.bind(this);
     this.setHighlightedFeature = this.setHighlightedFeature.bind(this);
     this.setSearchFeatures = this.setSearchFeatures.bind(this);
+    this.clearSearch = this.clearSearch.bind(this);
     this.searchByText = this.searchByText.bind(this);
     this.toggleLayerVisibility = this.toggleLayerVisibility.bind(this);
     this.currentTileRange = null;
@@ -138,6 +141,9 @@ class App extends React.Component {
       hiddenLayers: [],
       highlightedLayer: null,
       highlightedFeature: null,
+      searchFeatures: [],
+      searchView: null,
+      currentRaster: null,
       year: newYear,
     });
     this.updateStyle(newYear);
@@ -150,11 +156,14 @@ class App extends React.Component {
    * @public
    */
 
-  setSearchFeatures(newFeatures) {
+  setSearchFeatures({ view, features }) {
     this.setState({
-      searchFeatures: newFeatures,
+      searchView: view,
+      searchFeatures: features,
     });
   }
+
+
 
   setHighlightedLayer(layerId) {
     const { highlightedLayer } = this.state;
@@ -232,7 +241,6 @@ class App extends React.Component {
   }
 
   setLightbox(raster) {
-    console.log('launch lightbox');
     this.setState({
       lightbox: raster,
     });
@@ -255,6 +263,13 @@ class App extends React.Component {
         clearLightbox={this.clearLightbox}
       />
     );
+  }
+
+  clearSearch() {
+    this.setState({
+      searchView: null,
+      searchFeatures: [],
+    });
   }
 
   async updateLegendData(newYear) {
@@ -376,8 +391,9 @@ class App extends React.Component {
       hiddenLayers,
       highlightedLayer,
       highlightedFeature,
+      searchView,
     } = this.state;
-    const searching = searchFeatures.length > 0;
+    // const searchView = searchFeatures.length > 0;
     return (
       <div className="app">
         <Header
@@ -397,8 +413,9 @@ class App extends React.Component {
             sidebarOpen={sidebarOpen}
             views={views}
             searchFeatures={searchFeatures}
-            searching={searching}
+            searchView={searchView}
             searchByText={this.searchByText}
+            clearSearch={this.clearSearch}
             toggleLayerVisibility={this.toggleLayerVisibility}
             setHighlightedLayer={this.setHighlightedLayer}
             setHighlightedFeature={this.setHighlightedFeature}
