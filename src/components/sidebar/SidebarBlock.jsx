@@ -5,7 +5,7 @@ import {
   faMinus,
   faPlus,
 } from '@fortawesome/pro-solid-svg-icons';
-console.log('faMinus', faMinus);
+
 /**
  * This is a simple wrapper component a child node
  * (filmstrip or list of layers) into a sidebar layout block.
@@ -41,13 +41,19 @@ class SidebarBlock extends React.PureComponent {
     const toggleIcon = collapsed
       ? faPlus
       : faMinus;
+    
+    const iconBlock = icon === null
+      ? null
+      : (
+        <div className="sidebar__block-title-icon">
+          {icon}
+        </div>
+      );
 
     return (
       <div className="sidebar__block-title-row">
         <div className="sidebar__block-title-row-left">
-          <div className="sidebar__block-title-icon">
-            {icon}
-          </div>
+          {iconBlock}
           <div className="sidebar__block-title-text">
             {title}
           </div>
@@ -81,10 +87,6 @@ class SidebarBlock extends React.PureComponent {
   }
 
   render() {
-    const {
-      children,
-      title,
-    } = this.props;
     return (
       <div className="sidebar__block-outer">
         {this.getBlockTitle()}
@@ -96,12 +98,14 @@ class SidebarBlock extends React.PureComponent {
 
 SidebarBlock.defaultProps = {
   title: null,
+  icon: null,
 };
 
 SidebarBlock.propTypes = {
   /** Child nodes to be rendered into block */
   title: PropTypes.string,
   children: PropTypes.node.isRequired,
+  icon: PropTypes.node,
 };
 
 export default SidebarBlock;

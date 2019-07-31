@@ -1,8 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faCamera,
+} from '@fortawesome/pro-solid-svg-icons';
 import SidebarLayersBlock from './SidebarLayersBlock';
 import SidebarBlock from './SidebarBlock';
-import SidebarFilmstrip from './SidebarFilmstrip';
+
+// import SidebarFilmstrip from './SidebarFilmstrip';
 
 /**
  * This component displays the map legend--map layers,
@@ -45,8 +50,8 @@ class SidebarLegend extends React.PureComponent {
     ));
     return (
       <SidebarBlock
-        title="views"
-        icon="x"
+        title="Views"
+        icon=<FontAwesomeIcon icon={faCamera} />
       >
         <div className="sidebar__filmstrip">
           {thumbs}
@@ -76,8 +81,11 @@ class SidebarLegend extends React.PureComponent {
         hidden={hiddenLayers.includes(legendGroup.name)}
       />
     ));
+    // this block should be split into categories
     return (
-      <SidebarBlock>
+      <SidebarBlock
+        title="Environment"
+      >
         {layerBlocks}
       </SidebarBlock>
     );
