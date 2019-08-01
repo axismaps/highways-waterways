@@ -1,0 +1,21 @@
+.header--mobile {
+  .header__inner {
+    flex-direction: column;
+  }
+  .header__stepper {
+    height: 50px;
+    width: 100%;
+    justify-content: center;
+    // width: auto;
+  }
+
+  .header__stepper-year {
+    margin-left: 25px;
+    margin-right: 25px;
+  }
+
+  .header__stepper-button {
+    width: 27px;
+    height: 27px;
+  }
+}

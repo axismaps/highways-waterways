@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import HeaderStepper from './HeaderStepper';
 import HeaderTimeline from './HeaderTimeline';
 import './Header.scss';
+import './HeaderMobile.scss';
 
 /**
  * This component establishes the layout of and passing props to
@@ -45,8 +46,15 @@ class Header extends React.PureComponent {
   }
 
   render() {
+    const { mobile } = this.props;
+
+    let containerName = 'header';
+    if (mobile) {
+      containerName += ` ${containerName}--mobile`;
+    }
+
     return (
-      <div className="header">
+      <div className={containerName}>
         <div className="header__inner">
           {this.getStepper()}
           {this.getTimeline()}
@@ -57,6 +65,7 @@ class Header extends React.PureComponent {
 }
 
 Header.propTypes = {
+  mobile: PropTypes.bool.isRequired,
   /** Current year */
   year: PropTypes.number.isRequired,
   /** Sets application year */

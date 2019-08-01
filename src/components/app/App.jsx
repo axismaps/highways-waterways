@@ -30,7 +30,9 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     const year = 1950;
+    const mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     this.state = {
+      mobile,
       year,
       sidebarOpen: true,
       rasterProbe: null,
@@ -392,17 +394,20 @@ class App extends React.Component {
       highlightedLayer,
       highlightedFeature,
       searchView,
+      mobile,
     } = this.state;
     // const searchView = searchFeatures.length > 0;
     return (
       <div className="app">
         <Header
+          mobile={mobile}
           year={year}
           setYear={this.setYear}
           tileRanges={tileRanges}
         />
         <div className="app__body">
           <Sidebar
+            mobile={mobile}
             setRaster={this.setRaster}
             hiddenLayers={hiddenLayers}
             overlaysData={overlaysData}
