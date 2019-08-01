@@ -34,17 +34,16 @@ class App extends React.Component {
     this.state = {
       mobile,
       year,
-      sidebarOpen: true,
+      sidebarOpen: !mobile,
       rasterProbe: null,
       /** Selected raster to be shown on map + raster probe
        * view, choropleth, overlay, or hydroRaster
        */
-      currentRaster: {
-        // type: 'view',
-        type: 'overlay',
-        raster: { name: 'placeholder2', id: 3 },
-      },
-      /** Takes `currentRaster` object */
+      // currentRaster: {
+      //   type: 'overlay',
+      //   raster: { name: 'placeholder2', id: 3 },
+      // },
+      currentRaster: null,
       lightbox: null,
       // lightboxOpen: false,
       viewsData: [
@@ -162,6 +161,7 @@ class App extends React.Component {
     this.setState({
       searchView: view,
       searchFeatures: features,
+      sidebarOpen: true,
     });
   }
 
@@ -198,8 +198,9 @@ class App extends React.Component {
   getSidebarToggleButton() {
     const {
       sidebarOpen,
+      mobile,
     } = this.state;
-    if (sidebarOpen) return null;
+    if (sidebarOpen || mobile) return null;
     return (
       <SidebarToggleButton
         toggleSidebar={this.toggleSidebar}
