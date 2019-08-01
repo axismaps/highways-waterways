@@ -100,9 +100,10 @@ class D3Slider {
   }
 
   updateAxisWidth() {
+    const { mobile } = this.props;
     const { axisScale } = this.components;
     this.axis = d3.axisBottom(axisScale)
-      .tickFormat(d => d);
+      .tickFormat(d => (mobile ? '' : d));
 
     this.axisGroup.call(this.axis);
   }

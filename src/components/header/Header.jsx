@@ -17,16 +17,12 @@ class Header extends React.PureComponent {
     const {
       year,
       setYear,
-      // setTileRange,
-      // tileRanges,
     } = this.props;
 
     return (
       <HeaderStepper
         year={year}
         setYear={setYear}
-        // setTileRange={setTileRange}
-        // tileRanges={tileRanges}
       />
     );
   }
@@ -35,12 +31,14 @@ class Header extends React.PureComponent {
     const {
       year,
       setYear,
+      mobile,
     } = this.props;
 
     return (
       <HeaderTimeline
         year={year}
         setYear={setYear}
+        mobile={mobile}
       />
     );
   }

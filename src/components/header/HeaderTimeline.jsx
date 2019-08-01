@@ -51,11 +51,12 @@ class HeaderTimeline extends React.PureComponent {
     const {
       year,
       setYear,
+      mobile,
     } = this.props;
 
 
     const trackHeight = 36;
-    // const handleHeight = trackHeight + 4;
+
     const handleHeight = containerHeight;
     if (this.d3Slider === null) {
       this.d3Slider = new D3Slider({
@@ -75,6 +76,7 @@ class HeaderTimeline extends React.PureComponent {
         valueRange: [1800, 2010],
         setYear,
         axis: true,
+        mobile,
       });
       this.d3Slider.init();
     }
@@ -131,7 +133,12 @@ class HeaderTimeline extends React.PureComponent {
   }
 }
 
+HeaderTimeline.defaultProps = {
+  mobile: false,
+};
+
 HeaderTimeline.propTypes = {
+  mobile: PropTypes.bool,
   /** Current year */
   year: PropTypes.number.isRequired,
   /** Sets current year */
