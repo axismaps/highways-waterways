@@ -88,9 +88,13 @@ class Sidebar extends React.PureComponent {
       // currentView,
       // availableViews,
       sidebarOpen,
-      
+      mobile,
     } = this.props;
     if (!sidebarOpen) return null;
+    let containerClass = 'sidebar';
+    if (mobile) {
+      containerClass += ` ${containerClass}--mobile`;
+    }
     return (
       <div className="sidebar">
         {this.getSearchBar()}
@@ -112,6 +116,7 @@ Sidebar.defaultProps = {
 };
 
 Sidebar.propTypes = {
+  mobile: PropTypes.bool.isRequired,
   /** all layers and swatches */
   legendData: PropTypes.arrayOf(PropTypes.object),
   /** if sidebar is currently displaying search results */

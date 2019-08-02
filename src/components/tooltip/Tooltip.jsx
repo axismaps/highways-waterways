@@ -24,7 +24,7 @@ const tooltipRoot = document.getElementById('tooltip-root');
  * App -> Atlas -> Tooltip
  */
 
-class Tooltip extends React.Component {
+class Tooltip extends React.PureComponent {
   constructor(props) {
     super(props);
     this.el = document.createElement('div');

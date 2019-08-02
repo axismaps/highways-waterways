@@ -6,6 +6,7 @@ import RasterProbe from '../rasterProbe/RasterProbe';
 import Atlas from '../atlas/Atlas';
 import Header from '../header/Header';
 import Lightbox from '../lightbox/Lightbox';
+import MobileMenu from '../mobileMenu/MobileMenu';
 import exportMethods from './appExport';
 
 import './App.scss';
@@ -20,10 +21,6 @@ import './App.scss';
 class App extends React.Component {
   static getCurrentTileRange({ tileRanges, year }) {
     const roundYear = Math.round(year);
-    // const {
-    //   tileRanges,
-    //   year,
-    // } = this.state;
     return tileRanges.find(d => roundYear >= d[0] && roundYear <= d[1]);
   }
 
@@ -224,6 +221,18 @@ class App extends React.Component {
     );
   }
 
+  getMobileMenu() {
+    const {
+      mobile,
+    } = this.state;
+    if (!mobile) return null;
+    return (
+      <MobileMenu
+        toggleSidebar={this.toggleSidebar}
+      />
+    )
+  }
+
   setRaster(newRaster) {
     this.setState({
       currentRaster: newRaster,
@@ -405,6 +414,7 @@ class App extends React.Component {
           year={year}
           setYear={this.setYear}
           tileRanges={tileRanges}
+          toggleSidebar={this.toggleSidebar}
         />
         <div className="app__body">
           <Sidebar

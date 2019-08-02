@@ -1,5 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faSearch,
+} from '@fortawesome/pro-solid-svg-icons';
 import HeaderStepper from './HeaderStepper';
 import HeaderTimeline from './HeaderTimeline';
 import './Header.scss';
@@ -43,6 +47,19 @@ class Header extends React.PureComponent {
     );
   }
 
+  getSidebarButton() {
+    const {
+      toggleSidebar,
+      mobile,
+    } = this.props;
+    if (!mobile) return null;
+    return (
+      <div className="header__sidebar-toggle" onClick={toggleSidebar}>
+        <FontAwesomeIcon icon={faSearch} />
+      </div>
+    );
+  }
+
   render() {
     const { mobile } = this.props;
 
@@ -57,12 +74,14 @@ class Header extends React.PureComponent {
           {this.getStepper()}
           {this.getTimeline()}
         </div>
+        {this.getSidebarButton()}
       </div>
     );
   }
 }
 
 Header.propTypes = {
+  toggleSidebar: PropTypes.func.isRequired,
   mobile: PropTypes.bool.isRequired,
   /** Current year */
   year: PropTypes.number.isRequired,
