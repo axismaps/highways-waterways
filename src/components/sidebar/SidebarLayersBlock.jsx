@@ -20,7 +20,6 @@ import {
  */
 
 class SidebarLayersBlock extends React.PureComponent {
-
   getTitleSwitch() {
     const {
       hidden,
@@ -99,8 +98,13 @@ class SidebarLayersBlock extends React.PureComponent {
   }
 
   render() {
+    const { firstBlock } = this.props;
+    let containerClass = 'sidebar__layers-block';
+    if (firstBlock) {
+      containerClass += `${containerClass}--first`;
+    }
     return (
-      <div className="sidebar__layers-block">
+      <div className={containerClass}>
         {this.drawTitleRow()}
         {this.drawLayerRows()}
       </div>
@@ -116,6 +120,8 @@ SidebarLayersBlock.defaultProps = {
 };
 
 SidebarLayersBlock.propTypes = {
+  /** block is first in the list of layer blocks */
+  firstBlock: PropTypes.bool.isRequired,
   /** layer group display name */
   groupTitle: PropTypes.string.isRequired,
   /** layer group mapbox (id) name */

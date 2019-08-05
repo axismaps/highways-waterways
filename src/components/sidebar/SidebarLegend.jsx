@@ -48,10 +48,11 @@ class SidebarLegend extends React.PureComponent {
         }}
       />
     ));
+
     return (
       <SidebarBlock
         title="Views"
-        icon=<FontAwesomeIcon icon={faCamera} />
+        icon={<FontAwesomeIcon icon={faCamera} />}
       >
         <div className="sidebar__filmstrip">
           {thumbs}
@@ -69,8 +70,9 @@ class SidebarLegend extends React.PureComponent {
       setHighlightedLayer,
     } = this.props;
     if (legendData.length === 0) return null;
-    const layerBlocks = legendData.map(legendGroup => (
+    const layerBlocks = legendData.map((legendGroup, i) => (
       <SidebarLayersBlock
+        firstBlock={i === 0}
         highlightedLayer={highlightedLayer}
         setHighlightedLayer={setHighlightedLayer}
         key={legendGroup.id}

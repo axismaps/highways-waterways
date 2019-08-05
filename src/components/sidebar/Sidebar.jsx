@@ -96,7 +96,7 @@ class Sidebar extends React.PureComponent {
       containerClass += ` ${containerClass}--mobile`;
     }
     return (
-      <div className="sidebar">
+      <div className={containerClass}>
         {this.getSearchBar()}
         <div className="sidebar__inner">
           {this.getLegend()}

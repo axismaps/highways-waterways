@@ -56,7 +56,10 @@ class App extends React.Component {
         { name: 'overlay3', id: 3 },
       ],
       hydroRasterData: [],
-      choroplethData: [],
+      choroplethData: [
+        { name: 'choropleth placeholder 1', id: 1 },
+        { name: 'choropleth placeholder 2', id: 2},
+      ],
       rasterOpacity: 1,
       /** List of layer ids for layers to be hidden */
       hiddenLayers: [],
