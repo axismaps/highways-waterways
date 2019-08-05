@@ -93,10 +93,25 @@ class SidebarLegend extends React.PureComponent {
     );
   }
 
+  drawVulnerability() {
+    const {
+      choroplethData,
+    } = this.props;
+    const choroplethBlocks = choroplethData.map((d, i) => <div key={i}>{d.name}</div>);
+    return (
+      <SidebarBlock
+        title="Vulnerability"
+      >
+        {choroplethBlocks}
+      </SidebarBlock>
+    );
+  }
+
   render() {
     // draw film strips, hydrolayers, etc.
     return (
       <div className="sidebar__legend">
+        {this.drawVulnerability()}
         {this.drawViewFilmstrip()}
         {this.drawLayerBlocks()}
       </div>
