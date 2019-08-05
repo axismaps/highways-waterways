@@ -59,7 +59,6 @@ $stepper-button-size: 36px;
 
 .timeline__slider {
   height: 40px;
-  // width: 100%;
   flex-grow: 1;
   margin-right: 20px;
   margin-left: 20px;
@@ -67,10 +66,12 @@ $stepper-button-size: 36px;
 
 .timeline__track {
   fill: lightgrey;
+  cursor: pointer;
 }
 
 .timeline__handle {
   fill: $dark-grey;
+  cursor: pointer;
   pointer-events: none;
 }
 

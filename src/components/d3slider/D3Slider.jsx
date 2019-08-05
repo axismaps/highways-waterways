@@ -89,10 +89,13 @@ class D3Slider {
     const {
       height,
       trackHeight,
+      axisOn,
     } = this.props;
     const {
       svg,
     } = this.components;
+
+    if (!axisOn) return;
 
     this.axisGroup = svg.append('g')
       .attr('transform', `translate(0, ${((height / 2) - (trackHeight / 2))})`)
@@ -100,8 +103,9 @@ class D3Slider {
   }
 
   updateAxisWidth() {
-    const { mobile } = this.props;
+    const { mobile, axisOn } = this.props;
     const { axisScale } = this.components;
+    if (!axisOn) return;
     this.axis = d3.axisBottom(axisScale)
       .tickFormat(d => (mobile ? '' : d));
 

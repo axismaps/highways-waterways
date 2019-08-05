@@ -6,6 +6,7 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import SidebarLayersBlock from './SidebarLayersBlock';
 import SidebarBlock from './SidebarBlock';
+import SidebarVulnerabilityLayer from './SidebarVulnerabilityLayer';
 
 // import SidebarFilmstrip from './SidebarFilmstrip';
 
@@ -96,8 +97,26 @@ class SidebarLegend extends React.PureComponent {
   drawVulnerability() {
     const {
       choroplethData,
+      choroplethValues,
     } = this.props;
-    const choroplethBlocks = choroplethData.map((d, i) => <div key={i}>{d.name}</div>);
+
+    const choroplethBlocks = choroplethData.map((d) => {
+      const {
+        name,
+        id,
+        minValue,
+        maxValue,
+      } = d;
+      return (
+        <SidebarVulnerabilityLayer
+          key={id}
+          name={name}
+          minValue={minValue}
+          maxValue={maxValue}
+          value={choroplethValues.get(id)}
+        />
+      );
+    });
     return (
       <SidebarBlock
         title="Vulnerability"
@@ -132,6 +151,8 @@ SidebarLegend.propTypes = {
   hydroRasterData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /** All choropleth layers for selected year */
   choroplethData: PropTypes.arrayOf(PropTypes.object).isRequired,
+  choroplethValues: PropTypes.instanceOf(Map).isRequired,
+  hydroRasterValues: PropTypes.instanceOf(Map).isRequired,
   /** all layers and swatches */
   legendData: PropTypes.arrayOf(PropTypes.object).isRequired,
 

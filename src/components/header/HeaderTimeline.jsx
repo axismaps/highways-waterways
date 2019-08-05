@@ -75,7 +75,7 @@ class HeaderTimeline extends React.PureComponent {
         currentValue: year,
         valueRange: [1800, 2010],
         setYear,
-        axis: true,
+        axisOn: true,
         mobile,
       });
       this.d3Slider.init();

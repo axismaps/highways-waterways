@@ -57,8 +57,18 @@ class App extends React.Component {
       ],
       hydroRasterData: [],
       choroplethData: [
-        { name: 'choropleth placeholder 1', id: 1 },
-        { name: 'choropleth placeholder 2', id: 2},
+        {
+          name: 'choropleth placeholder 1',
+          id: 1,
+          minValue: 2,
+          maxValue: 20,
+        },
+        {
+          name: 'choropleth placeholder 2',
+          id: 2,
+          minValue: 5,
+          maxValue: 60,
+        },
       ],
       rasterOpacity: 1,
       /** List of layer ids for layers to be hidden */
@@ -68,8 +78,11 @@ class App extends React.Component {
       // currentOverlay: null,
       // currentHydroRaster: null,
       // currentChoropleth: null,
-      hydroRasterValues: [],
-      choroplethValues: [],
+      hydroRasterValues: new Map([]),
+      choroplethValues: new Map([
+        [1, 15], // keys correspond to choroplethData 'id' field
+        [2, 53],
+      ]),
       /** GeoJSON feature object of highlighted feature */
       highlightedFeature: null,
       /** Layer id for isolated layer */
@@ -164,8 +177,6 @@ class App extends React.Component {
       sidebarOpen: true,
     });
   }
-
-
 
   setHighlightedLayer(layerId) {
     const { highlightedLayer } = this.state;
@@ -401,7 +412,9 @@ class App extends React.Component {
       // currentTileRange,
       viewsData,
       hydroRasterData,
+      hydroRasterValues,
       choroplethData,
+      choroplethValues,
       overlaysData,
       hiddenLayers,
       highlightedLayer,
@@ -427,7 +440,9 @@ class App extends React.Component {
             overlaysData={overlaysData}
             viewsData={viewsData}
             choroplethData={choroplethData}
+            choroplethValues={choroplethValues}
             hydroRasterData={hydroRasterData}
+            hydroRasterValues={hydroRasterValues}
             legendData={legendData}
             sidebarOpen={sidebarOpen}
             views={views}

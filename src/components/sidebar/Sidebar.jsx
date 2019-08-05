@@ -22,7 +22,9 @@ class Sidebar extends React.PureComponent {
       viewsData,
       overlaysData,
       choroplethData,
+      choroplethValues,
       hydroRasterData,
+      hydroRasterValues,
       hiddenLayers,
       toggleLayerVisibility,
       setHighlightedLayer,
@@ -40,6 +42,8 @@ class Sidebar extends React.PureComponent {
         overlaysData={overlaysData}
         choroplethData={choroplethData}
         hydroRasterData={hydroRasterData}
+        choroplethValues={choroplethValues}
+        hydroRasterValues={hydroRasterValues}
         toggleLayerVisibility={toggleLayerVisibility}
         hiddenLayers={hiddenLayers}
         legendData={legendData}
@@ -130,9 +134,9 @@ Sidebar.propTypes = {
   /** All choropleth layers for selected year */
   choroplethData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /** Current range slider values for available choropleths */
-  choroplethValues: PropTypes.arrayOf(PropTypes.object),
+  choroplethValues: PropTypes.instanceOf(Map).isRequired,
   /** Current slider values for hydro raster layers */
-  hydroRasterValues: PropTypes.arrayOf(PropTypes.object),
+  hydroRasterValues: PropTypes.instanceOf(Map).isRequired,
   /** Selected view */
   currentRaster: PropTypes.shape({
     type: PropTypes.string,
