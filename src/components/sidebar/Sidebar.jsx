@@ -23,6 +23,7 @@ class Sidebar extends React.PureComponent {
       overlaysData,
       choroplethData,
       choroplethValues,
+      setChoroplethValue,
       hydroRasterData,
       hydroRasterValues,
       hiddenLayers,
@@ -37,6 +38,7 @@ class Sidebar extends React.PureComponent {
 
     return (
       <SidebarLegend
+        setChoroplethValue={setChoroplethValue}
         setRaster={setRaster}
         viewsData={viewsData}
         overlaysData={overlaysData}
@@ -150,7 +152,7 @@ Sidebar.propTypes = {
   /** Sets hydroRaster filter values */
   setHydroRasterValue: PropTypes.func,
   /** Sets choropleth filter values */
-  setChoroplethValue: PropTypes.func,
+  setChoroplethValue: PropTypes.func.isRequired,
   /** If sidebar is open or collapsed */
   sidebarOpen: PropTypes.bool.isRequired,
   /** layer ids of all layers currently off */

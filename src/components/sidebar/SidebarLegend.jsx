@@ -98,6 +98,7 @@ class SidebarLegend extends React.PureComponent {
     const {
       choroplethData,
       choroplethValues,
+      setChoroplethValue,
     } = this.props;
 
     const choroplethBlocks = choroplethData.map((d) => {
@@ -106,10 +107,14 @@ class SidebarLegend extends React.PureComponent {
         id,
         minValue,
         maxValue,
+        
       } = d;
+
       return (
         <SidebarVulnerabilityLayer
           key={id}
+          setChoroplethValue={setChoroplethValue}
+          id={id}
           name={name}
           minValue={minValue}
           maxValue={maxValue}
@@ -143,6 +148,8 @@ SidebarLegend.defaultProps = {
 };
 
 SidebarLegend.propTypes = {
+  /** Sets choropleth filter values */
+  setChoroplethValue: PropTypes.func.isRequired,
   /** All views for selected year */
   viewsData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /** All overlays for selected year */

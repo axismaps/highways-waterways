@@ -97,6 +97,7 @@ class App extends React.Component {
     };
 
     this.setLightbox = this.setLightbox.bind(this);
+    this.setChoroplethValue = this.setChoroplethValue.bind(this);
     this.clearLightbox = this.clearLightbox.bind(this);
     this.setRaster = this.setRaster.bind(this);
     this.clearRaster = this.clearRaster.bind(this);
@@ -195,6 +196,17 @@ class App extends React.Component {
   setHighlightedFeature(newFeature) {
     this.setState({
       highlightedFeature: newFeature,
+    });
+  }
+
+  setChoroplethValue(key, value) {
+    const {
+      choroplethValues,
+    } = this.state;
+    const newChoroplethValues = new Map(choroplethValues);
+    newChoroplethValues.set(key, value);
+    this.setState({
+      choroplethValues: newChoroplethValues,
     });
   }
 
@@ -434,6 +446,7 @@ class App extends React.Component {
         />
         <div className="app__body">
           <Sidebar
+            setChoroplethValue={this.setChoroplethValue}
             mobile={mobile}
             setRaster={this.setRaster}
             hiddenLayers={hiddenLayers}
