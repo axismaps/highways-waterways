@@ -91,6 +91,7 @@ class App extends React.Component {
       searchFeatures: [],
       /** Null, text, or atlas */
       searchView: null,
+      areaSearching: false,
       style: null,
       yearRange: null,
       tileRanges: null,
@@ -101,12 +102,15 @@ class App extends React.Component {
     this.clearLightbox = this.clearLightbox.bind(this);
     this.setRaster = this.setRaster.bind(this);
     this.clearRaster = this.clearRaster.bind(this);
-    this.prevRaster = this.prevRaster.bind(this);
+    
     this.nextRaster = this.nextRaster.bind(this);
-    this.setYear = this.setYear.bind(this);
+    this.prevRaster = this.prevRaster.bind(this);
+    
     this.setHighlightedLayer = this.setHighlightedLayer.bind(this);
     this.setHighlightedFeature = this.setHighlightedFeature.bind(this);
+    
     this.setSearchFeatures = this.setSearchFeatures.bind(this);
+    this.setYear = this.setYear.bind(this);
     this.clearSearch = this.clearSearch.bind(this);
     this.searchByText = this.searchByText.bind(this);
     this.toggleLayerVisibility = this.toggleLayerVisibility.bind(this);
@@ -135,32 +139,34 @@ class App extends React.Component {
     return (
       <Atlas
         currentRaster={currentRaster}
-        sidebarOpen={sidebarOpen}
-        toggleSidebar={this.toggleSidebar}
-        year={year}
-        style={style}
-        views={views}
         hiddenLayers={hiddenLayers}
+        highlightedFeature={highlightedFeature}
+        highlightedLayer={highlightedLayer}
+        
+        sidebarOpen={sidebarOpen}
+        style={style}
+        toggleSidebar={this.toggleSidebar}
+        views={views}
+        
         currentFilters={currentFilters}
         setSearchFeatures={this.setSearchFeatures}
-        highlightedLayer={highlightedLayer}
-        highlightedFeature={highlightedFeature}
+        
+        year={year}
       />
     );
   }
 
   setYear(newYear) {
-    // combine all of these into one setState call?
-    // or would that be too slow w/ the async stuff?
     this.setState({
+      currentRaster: null,
       hiddenLayers: [],
-      highlightedLayer: null,
       highlightedFeature: null,
+      highlightedLayer: null,
       searchFeatures: [],
       searchView: null,
-      currentRaster: null,
       year: newYear,
     });
+    // combine these, where possible
     this.updateStyle(newYear);
     this.updateLegendData(newYear);
   }
@@ -173,9 +179,9 @@ class App extends React.Component {
 
   setSearchFeatures({ view, features }) {
     this.setState({
-      searchView: view,
-      searchFeatures: features,
       sidebarOpen: true,
+      searchFeatures: features,
+      searchView: view,
     });
   }
 
@@ -211,17 +217,19 @@ class App extends React.Component {
   }
 
   getStylePromise() {
+    // return d3.json('temp/style.json');
     return d3.json(`http://highways.axismaps.io/api/v1/getStyle?start=${this.currentTileRange[0]}&end=${this.currentTileRange[1]}`);
   }
 
   static getLegendPromise(year) {
+    // return d3.json('temp/newlegend.json');
     return d3.json(`http://highways.axismaps.io/api/v1/getLegend?start=${year}&end=${year}`);
   }
 
   getSidebarToggleButton() {
     const {
-      sidebarOpen,
       mobile,
+      sidebarOpen,
     } = this.state;
     if (sidebarOpen || mobile) return null;
     return (
@@ -238,10 +246,10 @@ class App extends React.Component {
     if (currentRaster === null) return null;
     return (
       <RasterProbe
-        currentRaster={currentRaster}
         clearRaster={this.clearRaster}
-        prevRaster={this.prevRaster}
+        currentRaster={currentRaster}
         nextRaster={this.nextRaster}
+        prevRaster={this.prevRaster}
         setLightbox={this.setLightbox}
       />
     );
@@ -256,18 +264,13 @@ class App extends React.Component {
       <MobileMenu
         toggleSidebar={this.toggleSidebar}
       />
-    )
+    );
   }
 
   setRaster(newRaster) {
     this.setState({
       currentRaster: newRaster,
     });
-  }
-
-
-  clearRaster() {
-    this.setRaster(null);
   }
 
   prevRaster() {
@@ -290,6 +293,10 @@ class App extends React.Component {
     });
   }
 
+  clearRaster() {
+    this.setRaster(null);
+  }
+
   getLightbox() {
     const {
       lightbox,
@@ -297,16 +304,16 @@ class App extends React.Component {
     if (lightbox === null) return null;
     return (
       <Lightbox
-        lightboxRaster={lightbox}
         clearLightbox={this.clearLightbox}
+        lightboxRaster={lightbox}
       />
     );
   }
 
   clearSearch() {
     this.setState({
-      searchView: null,
       searchFeatures: [],
+      searchView: null,
     });
   }
 
@@ -318,8 +325,8 @@ class App extends React.Component {
     });
   }
 
-
   async updateStyle(newYear) {
+
     if (this.currentTileRange === null) return;
     const { tileRanges } = this.state;
     const newTileRange = App.getCurrentTileRange({
@@ -329,7 +336,7 @@ class App extends React.Component {
 
     if (this.currentTileRange[0] !== newTileRange[0]) {
       this.currentTileRange = newTileRange;
-      // need to cancel previous promise if scrubbing too fast
+
       const style = await this.getStylePromise(newYear);
       this.setState({
         style,
@@ -344,8 +351,10 @@ class App extends React.Component {
       legendData,
     ] = await Promise.all([
       d3.json('http://highways.axismaps.io/api/v1/getTimeline'),
+      // d3.json('temp/tileranges.json'),
       App.getLegendPromise(year),
     ]);
+
 
     const tileRanges = tileRangesData.response;
 
@@ -357,7 +366,6 @@ class App extends React.Component {
     });
 
     const stylePromise = this.getStylePromise();
-
     const style = await stylePromise;
 
     this.setState({
@@ -389,6 +397,13 @@ class App extends React.Component {
     });
   }
 
+  toggleAreaSearching() {
+    const { areaSearching } = this.state;
+    this.setState({
+      areaSearching: !areaSearching,
+    });
+  }
+
   searchByText(input) {
     console.log('input', input);
     const featureResults = null;
@@ -405,36 +420,31 @@ class App extends React.Component {
     exportMethods.rasterize(this);
   }
 
-  /**
-   * @public
-   */
-
   download() {
     exportMethods.download(this);
   }
 
   render() {
     const {
-      views,
-      sidebarOpen,
-      searchFeatures,
-      year,
       legendData,
-      tileRanges,
-      // currentTileRange,
-      viewsData,
       hydroRasterData,
       hydroRasterValues,
       choroplethData,
       choroplethValues,
-      overlaysData,
       hiddenLayers,
-      highlightedLayer,
       highlightedFeature,
-      searchView,
+      highlightedLayer,
       mobile,
+      overlaysData,
+      searchFeatures,
+      searchView,
+      sidebarOpen,
+      tileRanges,
+      views,
+      viewsData,
+      year,
     } = this.state;
-    // const searchView = searchFeatures.length > 0;
+
     return (
       <div className="app">
         <Header
@@ -446,29 +456,29 @@ class App extends React.Component {
         />
         <div className="app__body">
           <Sidebar
-            setChoroplethValue={this.setChoroplethValue}
-            mobile={mobile}
-            setRaster={this.setRaster}
-            hiddenLayers={hiddenLayers}
-            overlaysData={overlaysData}
-            viewsData={viewsData}
             choroplethData={choroplethData}
             choroplethValues={choroplethValues}
+            clearSearch={this.clearSearch}
+            hiddenLayers={hiddenLayers}
+            highlightedFeature={highlightedFeature}
+            highlightedLayer={highlightedLayer}
             hydroRasterData={hydroRasterData}
             hydroRasterValues={hydroRasterValues}
             legendData={legendData}
-            sidebarOpen={sidebarOpen}
-            views={views}
+            mobile={mobile}
+            overlaysData={overlaysData}
+            searchByText={this.searchByText}
             searchFeatures={searchFeatures}
             searchView={searchView}
-            searchByText={this.searchByText}
-            clearSearch={this.clearSearch}
-            toggleLayerVisibility={this.toggleLayerVisibility}
-            setHighlightedLayer={this.setHighlightedLayer}
+            setChoroplethValue={this.setChoroplethValue}
             setHighlightedFeature={this.setHighlightedFeature}
-            highlightedLayer={highlightedLayer}
-            highlightedFeature={highlightedFeature}
+            setHighlightedLayer={this.setHighlightedLayer}
+            setRaster={this.setRaster}
+            sidebarOpen={sidebarOpen}
+            toggleLayerVisibility={this.toggleLayerVisibility}
             toggleSidebar={this.toggleSidebar}
+            views={views}
+            viewsData={viewsData}
           />
           <div className="app__atlas-outer">
             {this.getAtlas()}
