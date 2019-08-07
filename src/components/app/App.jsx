@@ -29,33 +29,8 @@ class App extends React.Component {
     const year = 1950;
     const mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     this.state = {
-      mobile,
-      year,
-      sidebarOpen: !mobile,
-      rasterProbe: null,
-      /** Selected raster to be shown on map + raster probe
-       * view, choropleth, overlay, or hydroRaster
-       */
-      // currentRaster: {
-      //   type: 'overlay',
-      //   raster: { name: 'placeholder2', id: 3 },
-      // },
-      currentRaster: null,
-      lightbox: null,
-      // lightboxOpen: false,
-      viewsData: [
-        { name: 'placeholder1', id: 1 },
-        { name: 'placeholder2', id: 2 },
-        { name: 'placeholder3', id: 3 },
-        { name: 'placeholder4', id: 4 },
-        { name: 'placeholder5', id: 5 },
-      ],
-      overlaysData: [
-        { name: 'overlay1', id: 1 },
-        { name: 'overlay2', id: 2 },
-        { name: 'overlay3', id: 3 },
-      ],
-      hydroRasterData: [],
+      /** if area search button has been clicked but search has not yet been performed */
+      areaSearching: false,
       choroplethData: [
         {
           name: 'choropleth placeholder 1',
@@ -70,51 +45,80 @@ class App extends React.Component {
           maxValue: 60,
         },
       ],
-      rasterOpacity: 1,
-      /** List of layer ids for layers to be hidden */
-      hiddenLayers: [],
-      currentFilters: [],
-      // currentView: null,
-      // currentOverlay: null,
-      // currentHydroRaster: null,
-      // currentChoropleth: null,
-      hydroRasterValues: new Map([]),
+      /**
+       * choropleth layer values
+       * keys correspond to layer ids
+       */
       choroplethValues: new Map([
-        [1, 15], // keys correspond to choroplethData 'id' field
+        [1, 15],
         [2, 53],
       ]),
-      /** GeoJSON feature object of highlighted feature */
-      highlightedFeature: null,
-      /** Layer id for isolated layer */
+      /** List of layer ids for layers to be hidden */
+      currentFilters: [],
+      /**
+       * raster currently displayed in probe
+       * view or overlay
+       */
+      currentRaster: null,
+      hiddenLayers: [],
+      /** layer id for isolated layer */
       highlightedLayer: null,
-      /** Mapbox-gl features */
+      /** geoJSON feature object of highlighted feature */
+      highlightedFeature: null,
+      hydroRasterData: [],
+      hydroRasterValues: new Map([]),
+      /**
+       * raster object to be displayed in lightbox
+       */
+      lightbox: null,
+      /** if app is running on mobile device */
+      mobile,
+      rasterOpacity: 1,
+      /** if sidebar is open */
+      sidebarOpen: !mobile,
+      /** overlay data for given year */
+      overlaysData: [
+        { name: 'overlay1', id: 1 },
+        { name: 'overlay2', id: 2 },
+        { name: 'overlay3', id: 3 },
+      ],
+      
+      
+      /** mapbox-gl features */
       searchFeatures: [],
-      /** Null, text, or atlas */
+      /** null, text, or atlas */
       searchView: null,
-      areaSearching: false,
+      /** mapbox-gl style object */
       style: null,
-      yearRange: null,
+      
       tileRanges: null,
+      viewsData: [
+        { name: 'placeholder1', id: 1 },
+        { name: 'placeholder2', id: 2 },
+        { name: 'placeholder3', id: 3 },
+        { name: 'placeholder4', id: 4 },
+        { name: 'placeholder5', id: 5 },
+      ],
+      year,
+      yearRange: null,
     };
 
-    this.setLightbox = this.setLightbox.bind(this);
-    this.setChoroplethValue = this.setChoroplethValue.bind(this);
     this.clearLightbox = this.clearLightbox.bind(this);
-    this.setRaster = this.setRaster.bind(this);
     this.clearRaster = this.clearRaster.bind(this);
-    
+    this.clearSearch = this.clearSearch.bind(this);
+    this.currentTileRange = null;
     this.nextRaster = this.nextRaster.bind(this);
     this.prevRaster = this.prevRaster.bind(this);
-    
-    this.setHighlightedLayer = this.setHighlightedLayer.bind(this);
+    this.searchByText = this.searchByText.bind(this);
+    this.setChoroplethValue = this.setChoroplethValue.bind(this);
     this.setHighlightedFeature = this.setHighlightedFeature.bind(this);
-    
+    this.setHighlightedLayer = this.setHighlightedLayer.bind(this);
+    this.setLightbox = this.setLightbox.bind(this);
+    this.setRaster = this.setRaster.bind(this);
     this.setSearchFeatures = this.setSearchFeatures.bind(this);
     this.setYear = this.setYear.bind(this);
-    this.clearSearch = this.clearSearch.bind(this);
-    this.searchByText = this.searchByText.bind(this);
+    this.toggleAreaSearching = this.toggleAreaSearching.bind(this);
     this.toggleLayerVisibility = this.toggleLayerVisibility.bind(this);
-    this.currentTileRange = null;
     this.toggleSidebar = this.toggleSidebar.bind(this);
   }
 
