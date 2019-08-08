@@ -8,6 +8,7 @@ import Header from '../header/Header';
 import Lightbox from '../lightbox/Lightbox';
 import MobileMenu from '../mobileMenu/MobileMenu';
 import exportMethods from './appExport';
+import AreaSearchBox from '../areaSearchBox/AreaSearchBox';
 
 import './App.scss';
 /**
@@ -31,6 +32,11 @@ class App extends React.Component {
     this.state = {
       /** if area search button has been clicked but search has not yet been performed */
       areaSearching: false,
+      areaBoxOn: true,
+      areaBox: {
+        start: [0, 0],
+        end: [0, 0],
+      },
       choroplethData: [
         {
           name: 'choropleth placeholder 1',
@@ -107,6 +113,8 @@ class App extends React.Component {
     this.nextRaster = this.nextRaster.bind(this);
     this.prevRaster = this.prevRaster.bind(this);
     this.searchByText = this.searchByText.bind(this);
+    this.setAreaBoxEnd = this.setAreaBoxEnd.bind(this);
+    this.setAreaBoxStart = this.setAreaBoxStart.bind(this);
     this.setChoroplethValue = this.setChoroplethValue.bind(this);
     this.setHighlightedFeature = this.setHighlightedFeature.bind(this);
     this.setHighlightedLayer = this.setHighlightedLayer.bind(this);
@@ -114,6 +122,7 @@ class App extends React.Component {
     this.setRaster = this.setRaster.bind(this);
     this.setSearchFeatures = this.setSearchFeatures.bind(this);
     this.setYear = this.setYear.bind(this);
+    this.toggleAreaBox = this.toggleAreaBox.bind(this);
     this.toggleAreaSearching = this.toggleAreaSearching.bind(this);
     this.toggleLayerVisibility = this.toggleLayerVisibility.bind(this);
     this.toggleSidebar = this.toggleSidebar.bind(this);
@@ -146,12 +155,28 @@ class App extends React.Component {
         hiddenLayers={hiddenLayers}
         highlightedFeature={highlightedFeature}
         highlightedLayer={highlightedLayer}
+        setAreaBoxEnd={this.setAreaBoxEnd}
+        setAreaBoxStart={this.setAreaBoxStart}
         setSearchFeatures={this.setSearchFeatures}
         sidebarOpen={sidebarOpen}
         style={style}
+        toggleAreaBox={this.toggleAreaBox}
         toggleSidebar={this.toggleSidebar}
         views={views}
         year={year}
+      />
+    );
+  }
+
+  getAreaSearchBox() {
+    const {
+      areaBoxOn,
+      areaBox,
+    } = this.state;
+    if (!areaBoxOn) return null;
+    return (
+      <AreaSearchBox
+        areaBox={areaBox}
       />
     );
   }
@@ -260,6 +285,23 @@ class App extends React.Component {
     );
   }
 
+  setAreaBoxStart(pos) {
+    const { areaBox } = this.state;
+    const newBox = Object.assign({}, areaBox, { start: pos });
+    console.log('set box start', newBox);
+    this.setState({
+      areaBox: newBox,
+    });
+  }
+
+  setAreaBoxEnd(pos) {
+    const { areaBox } = this.state;
+    const newBox = Object.assign({}, areaBox, { end: pos });
+    this.setState({
+      areaBox: newBox,
+    });
+  }
+
   getRasterProbe() {
     const {
       currentRaster,
@@ -329,6 +371,21 @@ class App extends React.Component {
         lightboxRaster={lightbox}
       />
     );
+  }
+
+  toggleAreaBox(bool) {
+    const {
+      areaBoxOn,
+    } = this.state;
+    if (bool !== undefined) {
+      this.setState({
+        areaBoxOn: bool,
+      });
+    } else {
+      this.setState({
+        areaBoxOn: !areaBoxOn,
+      });
+    }
   }
 
   clearSearch() {
@@ -434,9 +491,10 @@ class App extends React.Component {
     }
   }
 
-  /**
-   * @public
-   */
+  searchByArea(area) {
+    // query API here
+    console.log('area');
+  }
 
   rasterize() {
     exportMethods.rasterize(this);
@@ -499,6 +557,7 @@ class App extends React.Component {
             {this.getAtlas()}
             {this.getSidebarToggleButton()}
             {this.getRasterProbe()}
+            {this.getAreaSearchBox()}
           </div>
         </div>
         {this.getLightbox()}

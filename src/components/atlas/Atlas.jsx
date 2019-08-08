@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as mapboxgl from 'mapbox-gl';
 
+import searchMethods from './AtlasSearchMethods';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './Atlas.scss';
 
@@ -34,6 +35,13 @@ class Atlas extends React.PureComponent {
       highlightedLayer: null,
       layerOpacityProps: {},
     };
+    this.state = {
+      areaBoxOn: true,
+      areaBox: {
+        start: 0,
+        end: 0,
+      },
+    }
   }
 
   componentDidMount() {
@@ -44,6 +52,7 @@ class Atlas extends React.PureComponent {
     });
 
     this.mbMap = mbMap;
+    this.canvas = mbMap.getCanvasContainer();
     this.logStyle();
     this.logLayerOpacityProps();
     this.logYear();
@@ -51,6 +60,7 @@ class Atlas extends React.PureComponent {
     this.logHiddenLayers();
     this.logSidebarOpen();
     this.setClickSearchListener();
+    this.setAreaSearchListener();
   }
 
   componentDidUpdate() {
@@ -150,6 +160,10 @@ class Atlas extends React.PureComponent {
         view: 'atlas',
       });
     });
+  }
+
+  setAreaSearchListener() {
+    this.canvas.addEventListener('mousedown', this.onAreaMouseDown.bind(this), true);
   }
 
   setHighlightedLayer() {
@@ -258,14 +272,13 @@ class Atlas extends React.PureComponent {
       containerClass += ' atlas--area-searching';
     }
     return (
-
       <div className={containerClass} ref={this.atlasRef} />
-      
-
     );
   }
 }
-// {this.getSidebarButton()}
+
+Object.assign(Atlas.prototype, searchMethods);
+
 Atlas.defaultProps = {
   views: null,
   hiddenLayers: [],
