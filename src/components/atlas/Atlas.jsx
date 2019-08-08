@@ -156,8 +156,7 @@ class Atlas extends React.PureComponent {
     const { highlightedLayer } = this.props;
     const { layers } = this.mbMap.getStyle();
     const { layerOpacityProps } = this.logged;
-    // console.log('logged', layerOpacityProps);
-    // console.log('highlightLayer', highlightedLayer);
+
     layers.forEach((layer) => {
       const originalPaint = layerOpacityProps[layer.id];
       if (originalPaint !== null) {
@@ -251,9 +250,16 @@ class Atlas extends React.PureComponent {
 
 
   render() {
+    const {
+      areaSearching,
+    } = this.props;
+    let containerClass = 'atlas';
+    if (areaSearching) {
+      containerClass += ' atlas--area-searching';
+    }
     return (
 
-      <div className="atlas" ref={this.atlasRef} />
+      <div className={containerClass} ref={this.atlasRef} />
       
 
     );
@@ -274,29 +280,31 @@ Atlas.defaultProps = {
 };
 
 Atlas.propTypes = {
+  /** if area search is on */
+  areaSearching: PropTypes.bool.isRequired,
   /** Current raster overlay/view/choropleth/hydroRaster */
   currentRaster: PropTypes.shape({
     type: PropTypes.string,
     raster: PropTypes.object,
   }),
-  /** mapbox-gl style object */
-  style: PropTypes.object.isRequired,
-  /** Available view rasters */
-  views: PropTypes.arrayOf(PropTypes.object),
   /** All map layers to hide (layer ids) */
   hiddenLayers: PropTypes.arrayOf(PropTypes.string),
-  /** Callback to set application search feature results */
-  setSearchFeatures: PropTypes.func.isRequired,
-  /** Current year */
-  year: PropTypes.number.isRequired,
   /** Currently highlighted layer id */
   highlightedLayer: PropTypes.string,
   /** List of layer paint properties that affect opacity */
   layerOpacityFields: PropTypes.arrayOf(PropTypes.string),
+  /** Callback to set application search feature results */
+  setSearchFeatures: PropTypes.func.isRequired,
   /** If sidebar is current open */
   sidebarOpen: PropTypes.bool.isRequired,
+  /** mapbox-gl style object */
+  style: PropTypes.object.isRequired,
   /** Callback to toggle sidebar visibility */
   toggleSidebar: PropTypes.func.isRequired,
+  /** Available view rasters */
+  views: PropTypes.arrayOf(PropTypes.object),
+  /** Current year */
+  year: PropTypes.number.isRequired,
 };
 
 export default Atlas;

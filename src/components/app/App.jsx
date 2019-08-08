@@ -125,33 +125,32 @@ class App extends React.Component {
 
   getAtlas() {
     const {
-      style,
-      hiddenLayers,
+      areaSearching,
       currentFilters,
+      currentRaster,
+      hiddenLayers,
+      highlightedFeature,
+      highlightedLayer,
+      sidebarOpen,
+      style,
       views,
       year,
-      highlightedLayer,
-      highlightedFeature,
-      sidebarOpen,
-      currentRaster,
     } = this.state;
     if (style === null) return null;
 
     return (
       <Atlas
+        areaSearching={areaSearching}
+        currentFilters={currentFilters}
         currentRaster={currentRaster}
         hiddenLayers={hiddenLayers}
         highlightedFeature={highlightedFeature}
         highlightedLayer={highlightedLayer}
-        
+        setSearchFeatures={this.setSearchFeatures}
         sidebarOpen={sidebarOpen}
         style={style}
         toggleSidebar={this.toggleSidebar}
         views={views}
-        
-        currentFilters={currentFilters}
-        setSearchFeatures={this.setSearchFeatures}
-        
         year={year}
       />
     );

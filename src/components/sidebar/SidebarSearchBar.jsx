@@ -44,6 +44,7 @@ class SidebarSearchBar extends React.PureComponent {
   getSearchBar() {
     const {
       toggleSidebar,
+      toggleAreaSearching,
     } = this.props;
 
     return (
@@ -54,7 +55,12 @@ class SidebarSearchBar extends React.PureComponent {
           placeholder="Search this year..."
         />
         <div className="sidebar__search-row-right">
-          <div className="sidebar__search-area-button">area</div>
+          <div
+            className="sidebar__search-area-button"
+            onClick={toggleAreaSearching}
+          >
+            area
+          </div>
           <div className="sidebar__search-row-divider" />
           <div
             className="sidebar__toggle-button"
@@ -94,6 +100,8 @@ SidebarSearchBar.propTypes = {
   setTextSearch: PropTypes.func,
   /** callback to clear application search features */
   clearSearch: PropTypes.func,
+  /** turn on app area search mode */
+  toggleAreaSearching: PropTypes.func.isRequired,
   /** callback to close sidebar */
   toggleSidebar: PropTypes.func.isRequired,
 };

@@ -57,17 +57,19 @@ class Sidebar extends React.PureComponent {
 
   getSearchBar() {
     const {
+      clearSearch,
       searchView,
       searchByText,
+      toggleAreaSearching,
       toggleSidebar,
-      clearSearch,
     } = this.props;
 
     return (
       <SidebarSearchBar
-        searchView={searchView}
-        searchByText={searchByText}
         clearSearch={clearSearch}
+        searchByText={searchByText}
+        searchView={searchView}
+        toggleAreaSearching={toggleAreaSearching}
         toggleSidebar={toggleSidebar}
       />
     );
@@ -159,6 +161,8 @@ Sidebar.propTypes = {
   setRaster: PropTypes.func.isRequired,
   /** If sidebar is open or collapsed */
   sidebarOpen: PropTypes.bool.isRequired,
+  /** turn on app area search mode */
+  toggleAreaSearching: PropTypes.func.isRequired,
   /** callback to toggle layers */
   toggleLayerVisibility: PropTypes.func.isRequired,
   /** callback to close sidebar */
