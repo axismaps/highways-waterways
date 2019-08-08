@@ -82,15 +82,12 @@ class App extends React.Component {
         { name: 'overlay2', id: 2 },
         { name: 'overlay3', id: 3 },
       ],
-      
-      
       /** mapbox-gl features */
       searchFeatures: [],
       /** null, text, or atlas */
       searchView: null,
       /** mapbox-gl style object */
       style: null,
-      
       tileRanges: null,
       viewsData: [
         { name: 'placeholder1', id: 1 },
@@ -156,6 +153,27 @@ class App extends React.Component {
         setSearchFeatures={this.setSearchFeatures}
         
         year={year}
+      />
+    );
+  }
+
+  getHeader() {
+    const {
+      yearRange,
+      mobile,
+      year,
+      tileRanges,
+    } = this.state;
+    if (yearRange === null) return null;
+
+    return (
+      <Header
+        mobile={mobile}
+        yearRange={yearRange}
+        year={year}
+        setYear={this.setYear}
+        tileRanges={tileRanges}
+        toggleSidebar={this.toggleSidebar}
       />
     );
   }
@@ -333,6 +351,7 @@ class App extends React.Component {
 
     if (this.currentTileRange === null) return;
     const { tileRanges } = this.state;
+    console.log('tileRanges', tileRanges);
     const newTileRange = App.getCurrentTileRange({
       year: newYear,
       tileRanges,
@@ -443,21 +462,13 @@ class App extends React.Component {
       searchFeatures,
       searchView,
       sidebarOpen,
-      tileRanges,
       views,
       viewsData,
-      year,
     } = this.state;
 
     return (
       <div className="app">
-        <Header
-          mobile={mobile}
-          year={year}
-          setYear={this.setYear}
-          tileRanges={tileRanges}
-          toggleSidebar={this.toggleSidebar}
-        />
+        {this.getHeader()}
         <div className="app__body">
           <Sidebar
             choroplethData={choroplethData}
@@ -479,6 +490,7 @@ class App extends React.Component {
             setHighlightedLayer={this.setHighlightedLayer}
             setRaster={this.setRaster}
             sidebarOpen={sidebarOpen}
+            toggleAreaSearching={this.toggleAreaSearching}
             toggleLayerVisibility={this.toggleLayerVisibility}
             toggleSidebar={this.toggleSidebar}
             views={views}

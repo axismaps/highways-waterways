@@ -52,6 +52,7 @@ class HeaderTimeline extends React.PureComponent {
       year,
       setYear,
       mobile,
+      yearRange,
     } = this.props;
 
 
@@ -73,7 +74,7 @@ class HeaderTimeline extends React.PureComponent {
         timelineNode: this.sliderRef.current,
         // value range, current value
         currentValue: year,
-        valueRange: [1800, 2010],
+        valueRange: yearRange,
         setYear,
         axisOn: true,
         mobile,
@@ -138,11 +139,14 @@ HeaderTimeline.defaultProps = {
 };
 
 HeaderTimeline.propTypes = {
+  /** if app is running on mobile device */
   mobile: PropTypes.bool,
-  /** Current year */
-  year: PropTypes.number.isRequired,
-  /** Sets current year */
+  /** sets current year */
   setYear: PropTypes.func.isRequired,
+  /** current year */
+  year: PropTypes.number.isRequired,
+  /** range of available years */
+  yearRange: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
 
 export default HeaderTimeline;

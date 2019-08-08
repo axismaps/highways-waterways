@@ -36,6 +36,7 @@ class Header extends React.PureComponent {
       year,
       setYear,
       mobile,
+      yearRange,
     } = this.props;
 
     return (
@@ -43,6 +44,7 @@ class Header extends React.PureComponent {
         year={year}
         setYear={setYear}
         mobile={mobile}
+        yearRange={yearRange}
       />
     );
   }
@@ -85,6 +87,8 @@ Header.propTypes = {
   mobile: PropTypes.bool.isRequired,
   /** Current year */
   year: PropTypes.number.isRequired,
+  /** range of available years */
+  yearRange: PropTypes.arrayOf(PropTypes.number).isRequired,
   /** Sets application year */
   setYear: PropTypes.func.isRequired,
   // /** Sets year range to load in Atlas tiles */

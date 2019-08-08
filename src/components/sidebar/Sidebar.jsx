@@ -90,9 +90,6 @@ class Sidebar extends React.PureComponent {
 
   render() {
     const {
-      // setView,
-      // currentView,
-      // availableViews,
       sidebarOpen,
       mobile,
     } = this.props;
@@ -117,62 +114,57 @@ Sidebar.defaultProps = {
   searchFeatures: [],
   legendData: null,
   highlightedLayer: null,
-  currentRaster: null,
   searchView: null,
 };
 
 Sidebar.propTypes = {
-  mobile: PropTypes.bool.isRequired,
-  /** all layers and swatches */
-  legendData: PropTypes.arrayOf(PropTypes.object),
-  /** if sidebar is currently displaying search results */
-  searchView: PropTypes.string,
-  /** All views for selected year */
-  viewsData: PropTypes.arrayOf(PropTypes.object).isRequired,
-  /** All overlays for selected year */
-  overlaysData: PropTypes.arrayOf(PropTypes.object).isRequired,
-  /** all hydro rasters (SLR) for selected year */
-  hydroRasterData: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /** callback to clear application search features */
+  clearSearch: PropTypes.func.isRequired,
   /** All choropleth layers for selected year */
   choroplethData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /** Current range slider values for available choropleths */
   choroplethValues: PropTypes.instanceOf(Map).isRequired,
+  /** layer ids of all layers currently off */
+  hiddenLayers: PropTypes.arrayOf(PropTypes.string).isRequired,
+  /** currently highlighted layer id */
+  highlightedLayer: PropTypes.string,
+  /** all hydro rasters (SLR) for selected year */
+  hydroRasterData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /** Current slider values for hydro raster layers */
   hydroRasterValues: PropTypes.instanceOf(Map).isRequired,
-  /** Selected view */
-  currentRaster: PropTypes.shape({
-    type: PropTypes.string,
-    raster: PropTypes.object,
-  }),
+  /** all layers and swatches */
+  legendData: PropTypes.arrayOf(PropTypes.object),
+  /** if app is on mobile device */
+  mobile: PropTypes.bool.isRequired,
+  /** All overlays for selected year */
+  overlaysData: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /** callback to set text search value */
+  searchByText: PropTypes.func.isRequired,
+  /** Results from Atlas search */
+  searchFeatures: PropTypes.arrayOf(PropTypes.object),
+  /** if sidebar is currently displaying search results */
+  searchView: PropTypes.string,
+  /** Sets choropleth filter values */
+  setChoroplethValue: PropTypes.func.isRequired,
+  /** Sets hydroRaster filter values */
+  // setHydroRasterValue: PropTypes.func.isRequired,
+  /** callback to highlight feature (GeoJSON feature object) */
+  // setHighlightedFeature: PropTypes.func.isRequired,
+  /** callback to set highlightedLayer (layer id/name) */
+  setHighlightedLayer: PropTypes.func.isRequired,
   /**
    * Set app `currentRaster` state.
    * @param {Object} raster A raster object
    * */
   setRaster: PropTypes.func.isRequired,
-  /** Sets hydroRaster filter values */
-  setHydroRasterValue: PropTypes.func,
-  /** Sets choropleth filter values */
-  setChoroplethValue: PropTypes.func.isRequired,
   /** If sidebar is open or collapsed */
   sidebarOpen: PropTypes.bool.isRequired,
-  /** layer ids of all layers currently off */
-  hiddenLayers: PropTypes.arrayOf(PropTypes.string),
   /** callback to toggle layers */
-  toggleLayerVisibility: PropTypes.func,
-  /** currently highlighted layer id */
-  highlightedLayer: PropTypes.string,
-  /** callback to set highlightedLayer (layer id/name) */
-  setHighlightedLayer: PropTypes.func.isRequired,
-  /** callback to highlight feature (GeoJSON feature object) */
-  setHighlightedFeature: PropTypes.func,
-  /** Results from Atlas search */
-  searchFeatures: PropTypes.arrayOf(PropTypes.object),
-  /** callback to clear application search features */
-  clearSearch: PropTypes.func.isRequired,
-  /** callback to set text search value */
-  searchByText: PropTypes.func.isRequired,
+  toggleLayerVisibility: PropTypes.func.isRequired,
   /** callback to close sidebar */
   toggleSidebar: PropTypes.func.isRequired,
+  /** All views for selected year */
+  viewsData: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default Sidebar;
