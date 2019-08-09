@@ -6,17 +6,23 @@ const searchMethods = {
   onAreaMouseDown(e) {
     const {
       areaSearching,
-      toggleAreaBox,
+      // toggleAreaBox,
       setAreaBoxStart,
     } = this.props;
     if (!areaSearching) return;
-    toggleAreaBox(true);
+    // toggleAreaBox(true);
     const rect = this.canvas.getBoundingClientRect();
     const start = [
       e.clientX - rect.left - this.canvas.clientLeft,
       e.clientY - rect.top - this.canvas.clientTop,
     ];
     setAreaBoxStart(start);
+  },
+  onAreaMouseMove(e) {
+    // setAreaBoxEnd
+  },
+  onAreaMouseEnd(e) {
+    // resetAreaBox, turn off area box, perform search
   },
 };
 

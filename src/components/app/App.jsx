@@ -32,7 +32,7 @@ class App extends React.Component {
     this.state = {
       /** if area search button has been clicked but search has not yet been performed */
       areaSearching: false,
-      areaBoxOn: true,
+      areaBoxOn: false,
       areaBox: {
         start: [0, 0],
         end: [0, 0],
@@ -290,6 +290,7 @@ class App extends React.Component {
     const newBox = Object.assign({}, areaBox, { start: pos });
     console.log('set box start', newBox);
     this.setState({
+      areaBoxOn: true,
       areaBox: newBox,
     });
   }

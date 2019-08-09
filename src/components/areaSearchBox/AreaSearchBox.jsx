@@ -11,12 +11,20 @@ class AreaSearchBox extends React.PureComponent {
       end,
     } = areaBox;
 
-    const boxStyle = {
+    console.log('start', start);
+    console.log('end', end);
 
+    const boxStyle = {
+      position: 'absolute',
+      left: `${start[0]}px`,
+      top: `${start[1]}px`,
+      width: '-50px',
+      height: '50px',
+      background: 'rgba(0, 0, 0, 0.9)',
     };
 
     return (
-      <div className="area-box" />
+      <div style={boxStyle} className="area-box" />
     );
   }
 }
