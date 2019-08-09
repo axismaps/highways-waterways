@@ -161,6 +161,7 @@ class App extends React.Component {
         sidebarOpen={sidebarOpen}
         style={style}
         toggleAreaBox={this.toggleAreaBox}
+        toggleAreaSearching={this.toggleAreaSearching}
         toggleSidebar={this.toggleSidebar}
         views={views}
         year={year}
@@ -287,8 +288,8 @@ class App extends React.Component {
 
   setAreaBoxStart(pos) {
     const { areaBox } = this.state;
-    const newBox = Object.assign({}, areaBox, { start: pos });
-    console.log('set box start', newBox);
+    const newBox = Object.assign({}, areaBox, { start: pos, end: pos });
+
     this.setState({
       areaBoxOn: true,
       areaBox: newBox,

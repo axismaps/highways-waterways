@@ -41,7 +41,10 @@ class Atlas extends React.PureComponent {
         start: 0,
         end: 0,
       },
-    }
+    };
+    this.onAreaMouseDown = this.onAreaMouseDown.bind(this);
+    this.onAreaMouseMove = this.onAreaMouseMove.bind(this);
+    this.onAreaMouseUp = this.onAreaMouseUp.bind(this);
   }
 
   componentDidMount() {
@@ -163,7 +166,7 @@ class Atlas extends React.PureComponent {
   }
 
   setAreaSearchListener() {
-    this.canvas.addEventListener('mousedown', this.onAreaMouseDown.bind(this), true);
+    this.canvas.addEventListener('mousedown', this.onAreaMouseDown, true);
   }
 
   setHighlightedLayer() {
