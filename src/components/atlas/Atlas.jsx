@@ -144,25 +144,31 @@ class Atlas extends React.PureComponent {
 
   setClickSearchListener() {
     const {
-      setSearchFeatures,
+      searchByArea,
+      // setSearchFeatures,
     } = this.props;
 
     this.mbMap.on('click', (e) => {
-      const { year } = this.props;
-      const bbox = [[e.point.x - 5, e.point.y - 5], [e.point.x + 5, e.point.y + 5]];
+      searchByArea([
+        this.mbMap.unproject(new mapboxgl.Point(e.point.x - 5, e.point.y - 5)),
+        this.mbMap.unproject(new mapboxgl.Point(e.point.x + 5, e.point.y + 5)),
+      ]);
+      // const { year } = this.props;
+      // const bbox = [[e.point.x - 5, e.point.y - 5], [e.point.x + 5, e.point.y + 5]];
+   
 
-      const features = this.mbMap.queryRenderedFeatures(bbox, {
-        filter: [
-          'all',
-          ['<=', 'firstyear', year],
-          ['>=', 'lastyear', year],
-        ],
-      });
-        // .filter(d => )
-      setSearchFeatures({
-        features,
-        view: 'atlas',
-      });
+      // const features = this.mbMap.queryRenderedFeatures(bbox, {
+      //   filter: [
+      //     'all',
+      //     ['<=', 'firstyear', year],
+      //     ['>=', 'lastyear', year],
+      //   ],
+      // });
+
+      // setSearchFeatures({
+      //   features,
+      //   view: 'atlas',
+      // });
     });
   }
 
