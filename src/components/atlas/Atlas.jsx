@@ -30,6 +30,7 @@ class Atlas extends React.PureComponent {
     super(props);
     this.atlasRef = React.createRef();
     this.logged = {
+      areaSearching: null,
       style: null,
       year: null,
       highlightedLayer: null,
@@ -56,6 +57,7 @@ class Atlas extends React.PureComponent {
 
     this.mbMap = mbMap;
     this.canvas = mbMap.getCanvasContainer();
+    this.logAreaSearching();
     this.logStyle();
     this.logLayerOpacityProps();
     this.logYear();
@@ -68,6 +70,7 @@ class Atlas extends React.PureComponent {
 
   componentDidUpdate() {
     const {
+      areaSearching,
       style,
       year,
       highlightedLayer,
@@ -94,6 +97,10 @@ class Atlas extends React.PureComponent {
     if (this.logged.sidebarOpen !== sidebarOpen) {
       this.logSidebarOpen();
       this.mbMap.resize();
+    }
+    if (this.logged.areaSearching !== areaSearching) {
+      this.logAreaSearching();
+      this.setAtlasAreaSearching();
     }
   }
 
@@ -169,6 +176,17 @@ class Atlas extends React.PureComponent {
     this.canvas.addEventListener('mousedown', this.onAreaMouseDown, true);
   }
 
+  setAtlasAreaSearching() {
+    const { areaSearching } = this.props;
+    if (areaSearching) {
+      this.mbMap.dragPan.disable();
+      this.mbMap.scrollZoom.disable();
+    } else {
+      this.mbMap.dragPan.enable();
+      this.mbMap.scrollZoom.enable();
+    }
+  }
+
   setHighlightedLayer() {
     const { highlightedLayer } = this.props;
     const { layers } = this.mbMap.getStyle();
@@ -237,6 +255,11 @@ class Atlas extends React.PureComponent {
       };
       return accumulator;
     }, {});
+  }
+
+  logAreaSearching() {
+    const { areaSearching } = this.props;
+    this.logged.areaSearching = areaSearching;
   }
 
   logStyle() {

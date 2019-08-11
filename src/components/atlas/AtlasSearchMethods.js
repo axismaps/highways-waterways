@@ -20,7 +20,7 @@ const searchMethods = {
     document.addEventListener('mousemove', this.onAreaMouseMove);
     document.addEventListener('mouseup', this.onAreaMouseUp);
     console.log('e', e);
-    e.stopPropagation();
+    // e.stopPropagation();
     
   },
   onAreaMouseMove(e) {
