@@ -1,4 +1,4 @@
-// on mouse up, convert box to coords and query API (or map)
+import * as mapboxgl from 'mapbox-gl';
 
 const searchMethods = {
   getMousePos(e) {
@@ -11,7 +11,6 @@ const searchMethods = {
   onAreaMouseDown(e) {
     const {
       areaSearching,
-      // toggleAreaBox,
       setAreaBoxStart,
     } = this.props;
     if (!areaSearching) return;
@@ -19,9 +18,6 @@ const searchMethods = {
     setAreaBoxStart(pos);
     document.addEventListener('mousemove', this.onAreaMouseMove);
     document.addEventListener('mouseup', this.onAreaMouseUp);
-    console.log('e', e);
-    // e.stopPropagation();
-    
   },
   onAreaMouseMove(e) {
     const {
@@ -29,17 +25,21 @@ const searchMethods = {
     } = this.props;
     const pos = this.getMousePos(e);
     setAreaBoxEnd(pos);
-    // setAreaBoxEnd
-    
   },
   onAreaMouseUp() {
     const {
+      areaBox,
+      searchByArea,
       toggleAreaBox,
       toggleAreaSearching,
     } = this.props;
     /** combine these two methods into one to avoid unnecessary renders */
     toggleAreaBox();
     toggleAreaSearching();
+
+    const startCoords = this.mbMap.unproject(new mapboxgl.Point(...areaBox.start));
+    const endCoords = this.mbMap.unproject(new mapboxgl.Point(...areaBox.end));
+    searchByArea([startCoords, endCoords]);
     document.removeEventListener('mousemove', this.onAreaMouseMove);
     document.removeEventListener('mouseup', this.onAreaMouseUp);
     /** perform search here */

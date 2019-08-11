@@ -112,6 +112,7 @@ class App extends React.Component {
     this.currentTileRange = null;
     this.nextRaster = this.nextRaster.bind(this);
     this.prevRaster = this.prevRaster.bind(this);
+    this.searchByArea = this.searchByArea.bind(this);
     this.searchByText = this.searchByText.bind(this);
     this.setAreaBoxEnd = this.setAreaBoxEnd.bind(this);
     this.setAreaBoxStart = this.setAreaBoxStart.bind(this);
@@ -134,6 +135,7 @@ class App extends React.Component {
 
   getAtlas() {
     const {
+      areaBox,
       areaSearching,
       currentFilters,
       currentRaster,
@@ -149,12 +151,14 @@ class App extends React.Component {
 
     return (
       <Atlas
+        areaBox={areaBox}
         areaSearching={areaSearching}
         currentFilters={currentFilters}
         currentRaster={currentRaster}
         hiddenLayers={hiddenLayers}
         highlightedFeature={highlightedFeature}
         highlightedLayer={highlightedLayer}
+        searchByArea={this.searchByArea}
         setAreaBoxEnd={this.setAreaBoxEnd}
         setAreaBoxStart={this.setAreaBoxStart}
         setSearchFeatures={this.setSearchFeatures}
@@ -409,7 +413,7 @@ class App extends React.Component {
 
     if (this.currentTileRange === null) return;
     const { tileRanges } = this.state;
-    console.log('tileRanges', tileRanges);
+
     const newTileRange = App.getCurrentTileRange({
       year: newYear,
       tileRanges,
@@ -486,7 +490,7 @@ class App extends React.Component {
   }
 
   searchByText(input) {
-    console.log('input', input);
+    console.log('search text', input);
     const featureResults = null;
     if (featureResults) {
       this.setSearchFeatures(featureResults);
@@ -495,7 +499,11 @@ class App extends React.Component {
 
   searchByArea(area) {
     // query API here
-    console.log('area');
+    console.log('search area', area);
+    const featureResults = null;
+    if (featureResults) {
+      this.setSearchFeatures(featureResults);
+    }
   }
 
   rasterize() {

@@ -36,13 +36,7 @@ class Atlas extends React.PureComponent {
       highlightedLayer: null,
       layerOpacityProps: {},
     };
-    this.state = {
-      areaBoxOn: true,
-      areaBox: {
-        start: 0,
-        end: 0,
-      },
-    };
+
     this.onAreaMouseDown = this.onAreaMouseDown.bind(this);
     this.onAreaMouseMove = this.onAreaMouseMove.bind(this);
     this.onAreaMouseUp = this.onAreaMouseUp.bind(this);
@@ -319,6 +313,11 @@ Atlas.defaultProps = {
 };
 
 Atlas.propTypes = {
+  /** pixel position of current area search box */
+  areaBox: PropTypes.shape({
+    end: PropTypes.arrayOf(PropTypes.number),
+    start: PropTypes.arrayOf(PropTypes.number),
+  }).isRequired,
   /** if area search is on */
   areaSearching: PropTypes.bool.isRequired,
   /** Current raster overlay/view/choropleth/hydroRaster */
@@ -332,6 +331,8 @@ Atlas.propTypes = {
   highlightedLayer: PropTypes.string,
   /** List of layer paint properties that affect opacity */
   layerOpacityFields: PropTypes.arrayOf(PropTypes.string),
+  /** callback to search by coordinate area */
+  searchByArea: PropTypes.func.isRequired,
   /** Callback to set application search feature results */
   setSearchFeatures: PropTypes.func.isRequired,
   /** If sidebar is current open */

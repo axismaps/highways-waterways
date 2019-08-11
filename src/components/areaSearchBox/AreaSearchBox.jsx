@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 
+import './AreaSearchBox.scss';
+
 class AreaSearchBox extends React.PureComponent {
   render() {
     const {
@@ -23,8 +25,6 @@ class AreaSearchBox extends React.PureComponent {
       top: `${top}px`,
       width: `${width}px`,
       height: `${height}px`,
-      background: 'rgba(0, 0, 0, 0.9)',
-      pointerEvents: 'none',
     };
 
     return (
