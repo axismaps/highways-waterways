@@ -10,27 +10,49 @@ import SidebarBlock from './SidebarBlock';
  */
 
 class SidebarSearchResults extends React.PureComponent {
-  getResultsBlock() {
+  static getResultFeatureRows(features) {
+    return features
+      .map(d => (
+        <div
+          key={d.ids[0]}
+          className="sidebar__search-feature-row"
+        >
+          <div className="sidebar__search-feature-button">
+            <div className="sidebar__search-feature-button-text">
+              {d.name}
+            </div>
+          </div>
+        </div>
+      ));
+  }
+
+  getResultsByLayer() {
     const { searchFeatures } = this.props;
-    // console.log('searchFeatures', searchFeatures);
-    // console.log('all', searchFeatures.length);
-    // console.log('id', [...new Set(searchFeatures.map(d => d.properties.id))].map(d => searchFeatures.filter(dd => dd.properties.id === d)));
-    const uniqueFeatures = [...new Set(searchFeatures.map(d => d.properties.id))].map(d => searchFeatures.find(dd => dd.properties.id === d));
-    return uniqueFeatures.map(d => (
-      <div
-        key={d.properties.id}
-        className="sidebar__search-results-row"
-      >
-        {d.properties.name}
-      </div>
-    ));
+
+    return searchFeatures.map((d, i) => {
+      let groupClass = 'sidebar__search-layer-group';
+      if (i === 0) {
+        groupClass += ` ${groupClass}--first`;
+      }
+      return (
+        <div
+          key={d.id}
+          className={groupClass}
+        >
+          <div className="sidebar__search-layer-title-row">
+            {d.title}
+          </div>
+          {SidebarSearchResults.getResultFeatureRows(d.features)}
+        </div>
+      );
+    });
   }
 
   render() {
     return (
       <div className="sidebar__search-results">
         <SidebarBlock>
-          {this.getResultsBlock()}
+          {this.getResultsByLayer()}
         </SidebarBlock>
       </div>
     );

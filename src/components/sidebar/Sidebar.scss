@@ -105,17 +105,20 @@
   cursor: pointer;
 }
 
-.sidebar__layers-block {
+.sidebar__layers-block,
+.sidebar__search-layer-group {
   margin-top: 20px;
 }
 
-.sidebar__layers-block--first {
+.sidebar__layers-block--first,
+.sidebar__search-layer-group--first {
   margin-top: 0px;
 }
 
 .sidebar__layers-title-left,
 .sidebar__layers-title-right,
-.sidebar__layers-title-row {
+.sidebar__layers-title-row,
+.sidebar__search-layer-title-row {
   display: flex;
 }
 
@@ -128,18 +131,19 @@
   cursor: pointer;
 }
 
-.sidebar__layers-title-row {
+.sidebar__layers-title-row,
+.sidebar__search-layer-title-row {
   justify-content: space-between;
   align-items: center;
   margin-bottom : 10px;
-  // margin-top: 20px;
 }
 
 .sidebar__layers-title {
   margin-left: 8px;
 }
 
-.sidebar__layer-row {
+.sidebar__layer-row,
+.sidebar__search-feature-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -147,13 +151,16 @@
   margin-bottom: 5px;
 }
 
-.sidebar__layer-button {
-  height: 30px;
+.sidebar__layer-button,
+.sidebar__search-feature-button {
+  min-height: 20px;
   width: 180px;
   display: flex;
   align-items: center;
   background: #EEEEEE;
   border-radius: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   cursor: pointer;
 }
 
@@ -162,7 +169,8 @@
   background: rgb(221, 221, 221);
 }
 
-.sidebar__layer-button-inner {
+.sidebar__layer-button-inner,
+.sidebar__search-feature-button-text {
   padding-left: 10px;
   padding-right: 10px;
 }

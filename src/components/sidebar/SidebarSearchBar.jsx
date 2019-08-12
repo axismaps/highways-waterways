@@ -43,9 +43,11 @@ class SidebarSearchBar extends React.PureComponent {
 
   getSearchBar() {
     const {
+      searchByText,
       toggleSidebar,
       toggleAreaSearching,
     } = this.props;
+
 
     return (
       <div className="sidebar__search-row sidebar__search-row--search">
@@ -53,6 +55,7 @@ class SidebarSearchBar extends React.PureComponent {
           type="text"
           className="sidebar__text-input"
           placeholder="Search this year..."
+          onChange={searchByText}
         />
         <div className="sidebar__search-row-right">
           <div

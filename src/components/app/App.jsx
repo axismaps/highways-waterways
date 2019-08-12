@@ -106,6 +106,8 @@ class App extends React.Component {
       yearRange: null,
     };
 
+    this.searchTimer = null;
+
     this.clearLightbox = this.clearLightbox.bind(this);
     this.clearRaster = this.clearRaster.bind(this);
     this.clearSearch = this.clearSearch.bind(this);
@@ -489,11 +491,56 @@ class App extends React.Component {
     });
   }
 
-  searchByText(input) {
-    console.log('search text', input);
-    const featureResults = null;
-    if (featureResults) {
-      this.setSearchFeatures(featureResults);
+  searchByText(e) {
+    const {
+      searchView,
+      year,
+      legendData,
+    } = this.state;
+    const { value } = e.target;
+
+    const getUniqueFeatures = (features) => {
+      // get unique ids
+      // unique.map((d) => ({ name, ids array }))
+      const uniqueNames = [...new Set(features.map(d => d.name))];
+      return uniqueNames.map(name => ({
+        name,
+        ids: features.filter(d => d.name === name).map(d => d.id),
+      }));
+    };
+
+    if (value.length < 3) {
+      if (searchView !== null) {
+        this.setState({
+          searchView: null,
+          searchFeatures: [],
+        });
+      }
+    } else {
+      d3.json(`http://highways.axismaps.io/api/v1/search/${value}?start=${year}`)
+        .then((results) => {
+          const searchResults = Object.keys(results.response)
+            .map((key) => {
+              const layer = legendData.find(d => d.id === key);
+              const features = results.response[key];
+              const uniqueFeatures = getUniqueFeatures(features);
+              return {
+                id: key,
+                title: layer.title,
+                // combine features w/ same names?
+                // single name, array of ids?
+                features: uniqueFeatures,
+              };
+            });
+          this.setState({
+            searchView: 'text',
+            searchFeatures: searchResults,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      
     }
   }
 
@@ -532,6 +579,8 @@ class App extends React.Component {
       views,
       viewsData,
     } = this.state;
+
+    console.log('legend data', legendData);
 
     return (
       <div className="app">
