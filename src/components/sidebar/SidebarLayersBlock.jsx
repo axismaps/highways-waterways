@@ -24,7 +24,7 @@ class SidebarLayersBlock extends React.PureComponent {
     const {
       hidden,
       toggleLayerVisibility,
-      groupName,
+      groupId,
     } = this.props;
 
     const icon = hidden
@@ -33,7 +33,7 @@ class SidebarLayersBlock extends React.PureComponent {
     return (
       <FontAwesomeIcon
         icon={icon}
-        onClick={() => toggleLayerVisibility(groupName)}
+        onClick={() => toggleLayerVisibility(groupId)}
       />
     );
   }
@@ -45,17 +45,17 @@ class SidebarLayersBlock extends React.PureComponent {
     } = this.props;
 
     let buttonClass = 'sidebar__layer-button';
-    if (highlightedLayer === layer.name) {
+    if (highlightedLayer === layer.id) {
       buttonClass += ` ${buttonClass}--highlighted`;
     }
     return (
       <div
         className="sidebar__layer-row"
-        key={layer.name}
+        key={layer.id}
       >
         <div
           className={buttonClass}
-          onClick={() => setHighlightedLayer(layer.name)}
+          onClick={() => setHighlightedLayer(layer.id)}
         >
           <div className="sidebar__layer-button-inner">
             {layer.title}
@@ -125,7 +125,7 @@ SidebarLayersBlock.propTypes = {
   /** layer group display name */
   groupTitle: PropTypes.string.isRequired,
   /** layer group mapbox (id) name */
-  groupName: PropTypes.string.isRequired,
+  groupId: PropTypes.string.isRequired,
   /** map layers to be rendered in block */
   mapLayers: PropTypes.arrayOf(PropTypes.object),
   /** callback to toggle layers */

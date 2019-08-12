@@ -71,6 +71,7 @@ class SidebarLegend extends React.PureComponent {
       setHighlightedLayer,
     } = this.props;
     if (legendData.length === 0) return null;
+
     const layerBlocks = legendData.map((legendGroup, i) => (
       <SidebarLayersBlock
         firstBlock={i === 0}
@@ -79,9 +80,9 @@ class SidebarLegend extends React.PureComponent {
         key={legendGroup.id}
         mapLayers={legendGroup.Types}
         groupTitle={legendGroup.title}
-        groupName={legendGroup.name}
+        groupId={legendGroup.id}
         toggleLayerVisibility={toggleLayerVisibility}
-        hidden={hiddenLayers.includes(legendGroup.name)}
+        hidden={hiddenLayers.includes(legendGroup.id)}
       />
     ));
     // this block should be split into categories
