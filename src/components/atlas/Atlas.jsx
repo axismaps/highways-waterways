@@ -50,11 +50,14 @@ class Atlas extends React.PureComponent {
     });
 
     this.mbMap = mbMap;
+
+
     this.canvas = mbMap.getCanvasContainer();
     this.logAreaSearching();
     this.logStyle();
     this.logLayerOpacityProps();
     this.logYear();
+    this.logHighlightedFeature();
     this.logHighlightedLayer();
     this.logHiddenLayers();
     this.logSidebarOpen();
@@ -67,10 +70,12 @@ class Atlas extends React.PureComponent {
       areaSearching,
       style,
       year,
+      highlightedFeature,
       highlightedLayer,
       hiddenLayers,
       sidebarOpen,
     } = this.props;
+
     if (style.sources.composite.url !== this.logged.style.sources.composite.url) {
       this.logStyle();
       this.logLayerOpacityProps();
@@ -95,6 +100,10 @@ class Atlas extends React.PureComponent {
     if (this.logged.areaSearching !== areaSearching) {
       this.logAreaSearching();
       this.setAtlasAreaSearching();
+    }
+    if (this.logged.highlightedFeature !== highlightedFeature) {
+      this.logHighlightedFeature();
+      this.setHighlightedFeature();
     }
   }
 
@@ -145,7 +154,6 @@ class Atlas extends React.PureComponent {
   setClickSearchListener() {
     const {
       searchByArea,
-      // setSearchFeatures,
     } = this.props;
 
     this.mbMap.on('click', (e) => {
@@ -153,22 +161,6 @@ class Atlas extends React.PureComponent {
         this.mbMap.unproject(new mapboxgl.Point(e.point.x - 5, e.point.y - 5)),
         this.mbMap.unproject(new mapboxgl.Point(e.point.x + 5, e.point.y + 5)),
       ]);
-      // const { year } = this.props;
-      // const bbox = [[e.point.x - 5, e.point.y - 5], [e.point.x + 5, e.point.y + 5]];
-   
-
-      // const features = this.mbMap.queryRenderedFeatures(bbox, {
-      //   filter: [
-      //     'all',
-      //     ['<=', 'firstyear', year],
-      //     ['>=', 'lastyear', year],
-      //   ],
-      // });
-
-      // setSearchFeatures({
-      //   features,
-      //   view: 'atlas',
-      // });
     });
   }
 
@@ -226,6 +218,18 @@ class Atlas extends React.PureComponent {
     });
   }
 
+  setHighlightedFeature() {
+    const {
+      highlightedFeature,
+    } = this.props;
+    console.log('highlgihtedFeature', highlightedFeature);
+    if (highlightedFeature === null) return;
+    const highlightedLayers = this.mbMap.getStyle().layers
+      .filter(d => d['source-layer'] === highlightedFeature.source);
+    console.log('highlightedLayers', highlightedLayers);
+  }
+
+
   logLayerOpacityProps() {
     const {
       layerOpacityFields,
@@ -277,6 +281,10 @@ class Atlas extends React.PureComponent {
     this.logged.sidebarOpen = sidebarOpen;
   }
 
+  logHighlightedFeature() {
+    const { highlightedFeature } = this.props;
+    this.logged.highlightedFeature = highlightedFeature;
+  }
 
   logHighlightedLayer() {
     const { highlightedLayer } = this.props;
@@ -306,8 +314,9 @@ class Atlas extends React.PureComponent {
 Object.assign(Atlas.prototype, searchMethods);
 
 Atlas.defaultProps = {
-  views: null,
+  currentRaster: null,
   hiddenLayers: [],
+  highlightedFeature: null,
   highlightedLayer: null,
   layerOpacityFields: [
     'fill-opacity',
@@ -315,7 +324,7 @@ Atlas.defaultProps = {
     'text-opacity',
     'icon-opacity',
   ],
-  currentRaster: null,
+  views: null,
 };
 
 Atlas.propTypes = {
@@ -335,6 +344,9 @@ Atlas.propTypes = {
   hiddenLayers: PropTypes.arrayOf(PropTypes.string),
   /** Currently highlighted layer id */
   highlightedLayer: PropTypes.string,
+  highlightedFeature: PropTypes.shape({
+    id: PropTypes.string,
+  }),
   /** List of layer paint properties that affect opacity */
   layerOpacityFields: PropTypes.arrayOf(PropTypes.string),
   /** callback to search by coordinate area */

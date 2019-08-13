@@ -77,6 +77,7 @@ class App extends React.Component {
        * raster object to be displayed in lightbox
        */
       lightbox: null,
+
       /** if app is running on mobile device */
       mobile,
       rasterOpacity: 1,
@@ -88,6 +89,7 @@ class App extends React.Component {
         { name: 'overlay2', id: 2 },
         { name: 'overlay3', id: 3 },
       ],
+      searchFeatureGeojson: [],
       /** mapbox-gl features */
       searchFeatures: [],
       /** null, text, or atlas */
@@ -144,6 +146,7 @@ class App extends React.Component {
       hiddenLayers,
       highlightedFeature,
       highlightedLayer,
+      searchFeatures,
       sidebarOpen,
       style,
       views,
@@ -161,6 +164,7 @@ class App extends React.Component {
         highlightedFeature={highlightedFeature}
         highlightedLayer={highlightedLayer}
         searchByArea={this.searchByArea}
+        searchFeatures={searchFeatures}
         setAreaBoxEnd={this.setAreaBoxEnd}
         setAreaBoxStart={this.setAreaBoxStart}
         setSearchFeatures={this.setSearchFeatures}
@@ -210,15 +214,25 @@ class App extends React.Component {
   }
 
   setYear(newYear) {
-    this.setState({
+    const {
+      hiddenLayers,
+      searchFeatures,
+    } = this.state;
+
+    const changeState = {
       currentRaster: null,
-      hiddenLayers: [],
       highlightedFeature: null,
       highlightedLayer: null,
-      searchFeatures: [],
       searchView: null,
       year: newYear,
-    });
+    };
+    if (hiddenLayers.length > 0) {
+      changeState.hiddenLayers = [];
+    }
+    if (searchFeatures.length > 0) {
+      changeState.searchFeatures = [];
+    }
+    this.setState(changeState);
     // combine these, where possible
     this.updateStyle(newYear);
     this.updateLegendData(newYear);
@@ -253,9 +267,17 @@ class App extends React.Component {
   }
 
   setHighlightedFeature(newFeature) {
-    this.setState({
-      highlightedFeature: newFeature,
-    });
+    const { highlightedFeature } = this.state;
+    if (highlightedFeature !== null
+      && highlightedFeature.feature.name === newFeature.feature.name) {
+      this.setState({
+        highlightedFeature: null,
+      });
+    } else {
+      this.setState({
+        highlightedFeature: newFeature,
+      });
+    }
   }
 
   setChoroplethValue(key, value) {
@@ -496,8 +518,10 @@ class App extends React.Component {
       searchView,
       year,
       legendData,
+
     } = this.state;
     const { value } = e.target;
+    
 
     const getUniqueFeatures = (features) => {
       // get unique ids
@@ -517,6 +541,7 @@ class App extends React.Component {
         });
       }
     } else {
+
       d3.json(`http://highways.axismaps.io/api/v1/search/${value}?start=${year}`)
         .then((results) => {
           const searchResults = Object.keys(results.response)
@@ -527,8 +552,6 @@ class App extends React.Component {
               return {
                 id: key,
                 title: layer.title,
-                // combine features w/ same names?
-                // single name, array of ids?
                 features: uniqueFeatures,
               };
             });
@@ -540,7 +563,6 @@ class App extends React.Component {
         .catch((err) => {
           console.log(err);
         });
-      
     }
   }
 
@@ -579,8 +601,6 @@ class App extends React.Component {
       views,
       viewsData,
     } = this.state;
-
-    console.log('legend data', legendData);
 
     return (
       <div className="app">

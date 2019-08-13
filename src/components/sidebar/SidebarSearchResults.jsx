@@ -10,14 +10,33 @@ import SidebarBlock from './SidebarBlock';
  */
 
 class SidebarSearchResults extends React.PureComponent {
-  static getResultFeatureRows(features) {
+  getResultFeatureRows({ features, id }) {
+    const {
+      highlightedFeature,
+      setHighlightedFeature,
+    } = this.props;
+
+    const getButtonClass = (feature) => {
+      let buttonClass = 'sidebar__search-feature-button';
+      if (highlightedFeature !== null
+        && feature.name === highlightedFeature.feature.name) {
+        buttonClass += ` ${buttonClass}--highlighted`;
+      }
+
+      return buttonClass;
+    };
+    
+
     return features
       .map(d => (
         <div
           key={d.ids[0]}
           className="sidebar__search-feature-row"
         >
-          <div className="sidebar__search-feature-button">
+          <div
+            className={getButtonClass(d)}
+            onClick={() => setHighlightedFeature({ feature: d, source: id })}
+          >
             <div className="sidebar__search-feature-button-text">
               {d.name}
             </div>
@@ -42,7 +61,7 @@ class SidebarSearchResults extends React.PureComponent {
           <div className="sidebar__search-layer-title-row">
             {d.title}
           </div>
-          {SidebarSearchResults.getResultFeatureRows(d.features)}
+          {this.getResultFeatureRows(d)}
         </div>
       );
     });
@@ -59,9 +78,20 @@ class SidebarSearchResults extends React.PureComponent {
   }
 }
 
+SidebarSearchResults.defaultProps = {
+  highlightedFeature: null,
+  searchFeatures: [],
+};
+
 SidebarSearchResults.propTypes = {
-  /** Results from Atlas search */
+  highlightedFeature: PropTypes.shape({
+    ids: PropTypes.arrayOf(PropTypes.string),
+    name: PropTypes.string,
+  }),
+  /** results from Atlas search */
   searchFeatures: PropTypes.arrayOf(PropTypes.object),
+  /** callback to set highlighted map feature */
+  setHighlightedFeature: PropTypes.func.isRequired,
 };
 
 export default SidebarSearchResults;

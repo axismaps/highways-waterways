@@ -165,7 +165,9 @@
 }
 
 .sidebar__layer-button--highlighted,
-.sidebar__layer-button:hover {
+.sidebar__layer-button:hover,
+.sidebar__search-feature-button:hover,
+.sidebar__search-feature-button--highlighted {
   background: rgb(221, 221, 221);
 }
 

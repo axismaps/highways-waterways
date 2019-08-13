@@ -77,15 +77,19 @@ class Sidebar extends React.PureComponent {
 
   getSearchResults() {
     const {
+      highlightedFeature,
       searchView,
       searchFeatures,
+      setHighlightedFeature,
     } = this.props;
 
     if (searchView === null) return null;
 
     return (
       <SidebarSearchResults
+        highlightedFeature={highlightedFeature}
         searchFeatures={searchFeatures}
+        setHighlightedFeature={setHighlightedFeature}
       />
     );
   }
@@ -113,9 +117,10 @@ class Sidebar extends React.PureComponent {
 }
 
 Sidebar.defaultProps = {
-  searchFeatures: [],
   legendData: null,
+  highlightedFeature: null,
   highlightedLayer: null,
+  searchFeatures: [],
   searchView: null,
 };
 
@@ -128,6 +133,10 @@ Sidebar.propTypes = {
   choroplethValues: PropTypes.instanceOf(Map).isRequired,
   /** layer ids of all layers currently off */
   hiddenLayers: PropTypes.arrayOf(PropTypes.string).isRequired,
+  highlightedFeature: PropTypes.shape({
+    ids: PropTypes.arrayOf(PropTypes.string),
+    name: PropTypes.string,
+  }),
   /** currently highlighted layer id */
   highlightedLayer: PropTypes.string,
   /** all hydro rasters (SLR) for selected year */
@@ -151,7 +160,7 @@ Sidebar.propTypes = {
   /** Sets hydroRaster filter values */
   // setHydroRasterValue: PropTypes.func.isRequired,
   /** callback to highlight feature (GeoJSON feature object) */
-  // setHighlightedFeature: PropTypes.func.isRequired,
+  setHighlightedFeature: PropTypes.func.isRequired,
   /** callback to set highlightedLayer (layer id/name) */
   setHighlightedLayer: PropTypes.func.isRequired,
   /**
