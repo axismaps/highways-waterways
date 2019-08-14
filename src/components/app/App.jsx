@@ -150,7 +150,6 @@ class App extends React.Component {
     this.setHighlightedLayer = this.setHighlightedLayer.bind(this);
     this.setLightbox = this.setLightbox.bind(this);
     this.setRaster = this.setRaster.bind(this);
-    this.setSearchFeatures = this.setSearchFeatures.bind(this);
     this.setYear = this.setYear.bind(this);
     this.toggleAreaBox = this.toggleAreaBox.bind(this);
     this.toggleAreaSearching = this.toggleAreaSearching.bind(this);
@@ -195,7 +194,6 @@ class App extends React.Component {
         searchFeatures={searchFeatures}
         setAreaBoxEnd={this.setAreaBoxEnd}
         setAreaBoxStart={this.setAreaBoxStart}
-        setSearchFeatures={this.setSearchFeatures}
         sidebarOpen={sidebarOpen}
         style={style}
         toggleAreaBox={this.toggleAreaBox}
@@ -264,20 +262,6 @@ class App extends React.Component {
     // combine these, where possible
     this.updateStyle(newYear);
     this.updateLegendData(newYear);
-  }
-
-  /**
-   * Sets application `searchFeatures`
-   * @param {array} newFeatures
-   * @public
-   */
-
-  setSearchFeatures({ view, features }) {
-    this.setState({
-      sidebarOpen: true,
-      searchFeatures: features,
-      searchView: view,
-    });
   }
 
   setHighlightedLayer(layerId) {
@@ -577,12 +561,28 @@ class App extends React.Component {
   }
 
   searchByArea(area) {
-    // query API here
-    console.log('search area', area);
-    const featureResults = null;
-    if (featureResults) {
-      this.setSearchFeatures(featureResults);
-    }
+    const { legendData } = this.state;
+
+    const xMin = d3.min([area[0].lng, area[1].lng]);
+    const yMin = d3.min([area[0].lat, area[1].lat]);
+    const xMax = d3.max([area[0].lng, area[1].lng]);
+    const yMax = d3.max([area[0].lat, area[1].lat]);
+
+    d3.json(`http://highways.axismaps.io/api/v1/probe/[${xMin},${yMin},${xMax},${yMax}]`)
+      .then((results) => {
+        const searchResults = App.getCleanSearchResults({
+          results,
+          legendData,
+        });
+        this.setState({
+          highlightedFeature: null,
+          searchView: 'atlas',
+          searchFeatures: searchResults,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   searchByPoint(point) {

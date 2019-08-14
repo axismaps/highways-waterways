@@ -350,8 +350,6 @@ Atlas.propTypes = {
   searchByArea: PropTypes.func.isRequired,
   /** callback to search by point (click) */
   searchByPoint: PropTypes.func.isRequired,
-  /** Callback to set application search feature results */
-  setSearchFeatures: PropTypes.func.isRequired,
   /** If sidebar is current open */
   sidebarOpen: PropTypes.bool.isRequired,
   /** mapbox-gl style object */
