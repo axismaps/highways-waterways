@@ -25,6 +25,30 @@ class App extends React.Component {
     return tileRanges.find(d => roundYear >= d[0] && roundYear <= d[1]);
   }
 
+  static getCleanSearchResults({
+    legendData,
+    results,
+  }) {
+    const getUniqueFeatures = (features) => {
+      const uniqueNames = [...new Set(features.map(d => d.name))];
+      return uniqueNames.map(name => ({
+        name,
+        ids: features.filter(d => d.name === name).map(d => d.id),
+      }));
+    };
+    return Object.keys(results.response)
+      .map((key) => {
+        const layer = legendData.find(d => d.id === key);
+        const features = results.response[key];
+        const uniqueFeatures = getUniqueFeatures(features);
+        return {
+          id: key,
+          title: layer.title,
+          features: uniqueFeatures,
+        };
+      });
+  }
+
   constructor(props) {
     super(props);
     const year = 1950;
@@ -117,6 +141,7 @@ class App extends React.Component {
     this.nextRaster = this.nextRaster.bind(this);
     this.prevRaster = this.prevRaster.bind(this);
     this.searchByArea = this.searchByArea.bind(this);
+    this.searchByPoint = this.searchByPoint.bind(this);
     this.searchByText = this.searchByText.bind(this);
     this.setAreaBoxEnd = this.setAreaBoxEnd.bind(this);
     this.setAreaBoxStart = this.setAreaBoxStart.bind(this);
@@ -136,6 +161,8 @@ class App extends React.Component {
   componentDidMount() {
     this.loadInitialData();
   }
+
+
 
   getAtlas() {
     const {
@@ -164,6 +191,7 @@ class App extends React.Component {
         highlightedFeature={highlightedFeature}
         highlightedLayer={highlightedLayer}
         searchByArea={this.searchByArea}
+        searchByPoint={this.searchByPoint}
         searchFeatures={searchFeatures}
         setAreaBoxEnd={this.setAreaBoxEnd}
         setAreaBoxStart={this.setAreaBoxStart}
@@ -521,17 +549,6 @@ class App extends React.Component {
 
     } = this.state;
     const { value } = e.target;
-    
-
-    const getUniqueFeatures = (features) => {
-      // get unique ids
-      // unique.map((d) => ({ name, ids array }))
-      const uniqueNames = [...new Set(features.map(d => d.name))];
-      return uniqueNames.map(name => ({
-        name,
-        ids: features.filter(d => d.name === name).map(d => d.id),
-      }));
-    };
 
     if (value.length < 3) {
       if (searchView !== null) {
@@ -541,21 +558,14 @@ class App extends React.Component {
         });
       }
     } else {
-
       d3.json(`http://highways.axismaps.io/api/v1/search/${value}?start=${year}`)
         .then((results) => {
-          const searchResults = Object.keys(results.response)
-            .map((key) => {
-              const layer = legendData.find(d => d.id === key);
-              const features = results.response[key];
-              const uniqueFeatures = getUniqueFeatures(features);
-              return {
-                id: key,
-                title: layer.title,
-                features: uniqueFeatures,
-              };
-            });
+          const searchResults = App.getCleanSearchResults({
+            results,
+            legendData,
+          });
           this.setState({
+            highlightedFeature: null,
             searchView: 'text',
             searchFeatures: searchResults,
           });
@@ -573,6 +583,25 @@ class App extends React.Component {
     if (featureResults) {
       this.setSearchFeatures(featureResults);
     }
+  }
+
+  searchByPoint(point) {
+    const { legendData } = this.state;
+    d3.json(`http://highways.axismaps.io/api/v1/probe/[${point.lng},${point.lat}]`)
+      .then((results) => {
+        const searchResults = App.getCleanSearchResults({
+          results,
+          legendData,
+        });
+        this.setState({
+          highlightedFeature: null,
+          searchView: 'atlas',
+          searchFeatures: searchResults,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   rasterize() {

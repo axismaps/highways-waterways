@@ -153,14 +153,11 @@ class Atlas extends React.PureComponent {
 
   setClickSearchListener() {
     const {
-      searchByArea,
+      searchByPoint,
     } = this.props;
 
     this.mbMap.on('click', (e) => {
-      searchByArea([
-        this.mbMap.unproject(new mapboxgl.Point(e.point.x - 5, e.point.y - 5)),
-        this.mbMap.unproject(new mapboxgl.Point(e.point.x + 5, e.point.y + 5)),
-      ]);
+      searchByPoint(this.mbMap.unproject(new mapboxgl.Point(e.point.x, e.point.y)));
     });
   }
 
@@ -351,6 +348,8 @@ Atlas.propTypes = {
   layerOpacityFields: PropTypes.arrayOf(PropTypes.string),
   /** callback to search by coordinate area */
   searchByArea: PropTypes.func.isRequired,
+  /** callback to search by point (click) */
+  searchByPoint: PropTypes.func.isRequired,
   /** Callback to set application search feature results */
   setSearchFeatures: PropTypes.func.isRequired,
   /** If sidebar is current open */
