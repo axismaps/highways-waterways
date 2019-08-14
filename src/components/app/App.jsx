@@ -37,6 +37,7 @@ class App extends React.Component {
       }));
     };
     return Object.keys(results.response)
+      .filter(d => d !== undefined)
       .map((key) => {
         const layer = legendData.find(d => d.id === key);
         const features = results.response[key];
