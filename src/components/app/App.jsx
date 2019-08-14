@@ -9,6 +9,7 @@ import Lightbox from '../lightbox/Lightbox';
 import MobileMenu from '../mobileMenu/MobileMenu';
 import exportMethods from './appExport';
 import AreaSearchBox from '../areaSearchBox/AreaSearchBox';
+import Loader from '../loader/Loader';
 
 import './App.scss';
 /**
@@ -42,11 +43,7 @@ class App extends React.Component {
       .map((key) => {
         const layer = legendData.find(d => d.id === key);
         if (layer === undefined) {
-          return {
-            id: key,
-            title: '',
-            features: [],
-          };
+          return null;
         }
         const features = results.response[key];
         const uniqueFeatures = getUniqueFeatures(features);
@@ -56,7 +53,7 @@ class App extends React.Component {
           features: uniqueFeatures,
         };
       })
-      .filter(d => d.features.length > 0);
+      .filter(d => d !== null && d.features.length > 0);
   }
 
   constructor(props) {
@@ -107,6 +104,7 @@ class App extends React.Component {
       highlightedFeature: null,
       hydroRasterData: [],
       hydroRasterValues: new Map([]),
+      loading: false,
       /**
        * raster object to be displayed in lightbox
        */
@@ -425,6 +423,12 @@ class App extends React.Component {
     );
   }
 
+  getLoader() {
+    const { loading } = this.state;
+    if (!loading) return null;
+    return <Loader />;
+  }
+
   toggleAreaBox(bool) {
     const {
       areaBoxOn,
@@ -578,6 +582,7 @@ class App extends React.Component {
     const xMax = d3.max([area[0].lng, area[1].lng]);
     const yMax = d3.max([area[0].lat, area[1].lat]);
 
+    this.setState({ loading: true });
     d3.json(`http://highways.axismaps.io/api/v1/probe/[${xMin},${yMin},${xMax},${yMax}]`)
       .then((results) => {
         const searchResults = App.getCleanSearchResults({
@@ -585,12 +590,14 @@ class App extends React.Component {
           legendData,
         });
         this.setState({
+          loading: false,
           highlightedFeature: null,
           searchView: 'atlas',
           searchFeatures: searchResults,
         });
       })
       .catch((err) => {
+        this.setState({ loading: false });
         console.log(err);
       });
   }
@@ -679,6 +686,7 @@ class App extends React.Component {
           </div>
         </div>
         {this.getLightbox()}
+        {this.getLoader()}
       </div>
     );
   }
