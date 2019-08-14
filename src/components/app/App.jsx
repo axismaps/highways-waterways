@@ -30,7 +30,8 @@ class App extends React.Component {
     results,
   }) {
     const getUniqueFeatures = (features) => {
-      const uniqueNames = [...new Set(features.map(d => d.name))];
+      const uniqueNames = [...new Set(features.map(d => d.name))]
+        .filter(d => d !== ' ');
       return uniqueNames.map(name => ({
         name,
         ids: features.filter(d => d.name === name).map(d => d.id),
@@ -40,6 +41,13 @@ class App extends React.Component {
       .filter(d => d !== undefined)
       .map((key) => {
         const layer = legendData.find(d => d.id === key);
+        if (layer === undefined) {
+          return {
+            id: key,
+            title: '',
+            features: [],
+          };
+        }
         const features = results.response[key];
         const uniqueFeatures = getUniqueFeatures(features);
         return {
@@ -47,7 +55,8 @@ class App extends React.Component {
           title: layer.title,
           features: uniqueFeatures,
         };
-      });
+      })
+      .filter(d => d.features.length > 0);
   }
 
   constructor(props) {
