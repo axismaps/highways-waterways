@@ -9,7 +9,7 @@ import {
 function Loader() {
   return (
     <div className="loader">
-      <FontAwesomeIcon icon={faSpinner} />
+      <FontAwesomeIcon icon={faSpinner} className="fa-spin" />
     </div>
   );
 }
