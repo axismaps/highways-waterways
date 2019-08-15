@@ -548,14 +548,8 @@ class App extends React.Component {
     } = this.state;
     const { value } = e.target;
 
-    if (value.length < 3) {
-      if (searchView !== null) {
-        this.setState({
-          searchView: null,
-          searchFeatures: [],
-        });
-      }
-    } else {
+    const doSearch = () => {
+      this.setState({ loading: true });
       d3.json(`http://highways.axismaps.io/api/v1/search/${value}?start=${year}`)
         .then((results) => {
           const searchResults = App.getCleanSearchResults({
@@ -563,14 +557,35 @@ class App extends React.Component {
             legendData,
           });
           this.setState({
+            loading: false,
             highlightedFeature: null,
             searchView: 'text',
             searchFeatures: searchResults,
           });
         })
         .catch((err) => {
+          this.setState({ loading: false });
           console.log(err);
         });
+      this.searchTimer = null;
+    };
+
+    if (value.length < 3) {
+      if (this.searchTimer !== null) {
+        clearTimeout(this.searchTimer);
+      }
+      if (searchView !== null) {
+        this.setState({
+          loading: false,
+          searchView: null,
+          searchFeatures: [],
+        });
+      }
+    } else if (this.searchTimer === null) {
+      this.searchTimer = setTimeout(doSearch, 500);
+    } else {
+      clearTimeout(this.searchTimer);
+      this.searchTimer = setTimeout(doSearch, 500);
     }
   }
 
