@@ -141,6 +141,7 @@ class App extends React.Component {
     };
 
     this.searchTimer = null;
+    this.dataTimer = null;
 
     this.clearLightbox = this.clearLightbox.bind(this);
     this.clearRaster = this.clearRaster.bind(this);
@@ -268,9 +269,33 @@ class App extends React.Component {
     }
     this.setState(changeState);
     // combine these, where possible
-    this.updateStyle(newYear);
-    this.updateLegendData(newYear);
+
+    const updateData = () => {
+      console.log('update data');
+      this.updateStyle(newYear);
+      this.updateLegendData(newYear);
+      this.dataTimer = null;
+    };
+    if (this.dataTimer === null) {
+      this.dataTimer = setTimeout(updateData, 500);
+    } else {
+      clearTimeout(this.dataTimer);
+      this.dataTimer = setTimeout(updateData, 500);
+    }
   }
+
+  // setYearDebounced(newYear) {
+  //   const setYear = () => {
+  //     this.setYear(newYear);
+  //     this.yearTimer = null;
+  //   };
+  //   if (this.yearTimer === null) {
+  //     this.yearTimer = setTimeout(setYear, 500);
+  //   } else {
+  //     clearTimeout(setYear);
+  //     this.yearTimer = setTimeout(setYear, 500);
+  //   }
+  // }
 
   setHighlightedLayer(layerId) {
     const { highlightedLayer } = this.state;
