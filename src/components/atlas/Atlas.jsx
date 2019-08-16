@@ -37,6 +37,8 @@ class Atlas extends React.PureComponent {
       layerOpacityProps: {},
     };
 
+    this.styleTimer = null;
+
     this.onAreaMouseDown = this.onAreaMouseDown.bind(this);
     this.onAreaMouseMove = this.onAreaMouseMove.bind(this);
     this.onAreaMouseUp = this.onAreaMouseUp.bind(this);
@@ -76,14 +78,32 @@ class Atlas extends React.PureComponent {
       sidebarOpen,
     } = this.props;
 
+    const updateYear = () => {
+      this.logYear();
+      this.mbMap.setStyle(this.getFilteredStyle());
+      this.styleTimer = null;
+    };
+
+    const updateYearDebounced = () => {
+      if (this.styleTimer === null) {
+        this.styleTimer = setTimeout(updateYear, 500);
+      } else {
+        clearTimeout(this.styleTimer);
+        this.styleTimer = setTimeout(updateYear, 500);
+      }
+    };
+
     if (style.sources.composite.url !== this.logged.style.sources.composite.url) {
       this.logStyle();
       this.logLayerOpacityProps();
-      this.logYear();
-      this.mbMap.setStyle(this.getFilteredStyle());
+      updateYearDebounced();
     } else if (year !== this.logged.year) {
-      this.logYear();
-      this.mbMap.setStyle(this.getFilteredStyle());
+      const { url } = style.sources.composite;
+      const tileStart = url.slice(url.indexOf('start=') + 6, url.indexOf('start=') + 10);
+      const tileEnd = url.slice(url.indexOf('end=') + 4, url.indexOf('end=') + 8);
+      if (year >= tileStart && year <= tileEnd) {
+        updateYearDebounced();
+      }
     }
     if (this.logged.highlightedLayer !== highlightedLayer) {
       this.logHighlightedLayer();
@@ -360,6 +380,7 @@ Atlas.propTypes = {
   views: PropTypes.arrayOf(PropTypes.object),
   /** Current year */
   year: PropTypes.number.isRequired,
+  yearRange: PropTypes.arrayOf(PropTypes.number),
 };
 
 export default Atlas;

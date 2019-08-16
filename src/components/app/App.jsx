@@ -268,10 +268,8 @@ class App extends React.Component {
       changeState.searchFeatures = [];
     }
     this.setState(changeState);
-    // combine these, where possible
 
     const updateData = () => {
-      console.log('update data');
       this.updateStyle(newYear);
       this.updateLegendData(newYear);
       this.dataTimer = null;
