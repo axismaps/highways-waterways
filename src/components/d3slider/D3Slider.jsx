@@ -2,7 +2,9 @@ import * as d3 from 'd3';
 
 class D3Slider {
   constructor(props) {
-    const defaultProps = {};
+    const defaultProps = {
+      trackCornerRadius: 10,
+    };
     this.props = Object.assign(defaultProps, props);
     this.components = {};
   }
@@ -64,6 +66,7 @@ class D3Slider {
       padding,
       height,
       trackHeight,
+      trackCornerRadius,
     } = this.props;
     const { svg } = this.components;
 
@@ -71,7 +74,7 @@ class D3Slider {
       .attr('class', 'timeline__track')
       .attr('x', padding.left)
       .attr('y', (height / 2) - (trackHeight / 2))
-      .attr('rx', 10)
+      .attr('rx', trackCornerRadius)
       .attr('height', trackHeight);
   }
 
