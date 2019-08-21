@@ -108,7 +108,7 @@ class SidebarLegend extends React.PureComponent {
         id,
         minValue,
         maxValue,
-        
+        colorRamp,
       } = d;
 
       return (
@@ -120,6 +120,7 @@ class SidebarLegend extends React.PureComponent {
           minValue={minValue}
           maxValue={maxValue}
           value={choroplethValues.get(id)}
+          colorRamp={colorRamp}
         />
       );
     });

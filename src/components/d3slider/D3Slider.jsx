@@ -25,11 +25,11 @@ class D3Slider {
     this.setSVGWidth();
     this.drawTrack();
     this.setTrackWidth();
+    this.drawColorRamp();
     this.setScale();
     this.drawAxis();
     this.updateAxisWidth();
     this.drawHandle();
-    
     this.setHandlePosition();
     this.setDrag();
   }
@@ -77,6 +77,33 @@ class D3Slider {
       .attr('y', (height / 2) - (trackHeight / 2))
       .attr('rx', trackCornerRadius)
       .attr('height', trackHeight);
+  }
+
+  drawColorRamp() {
+    const {
+      colorRamp,
+      padding,
+      width,
+      height,
+      trackHeight,
+    } = this.props;
+
+    if (colorRamp === null) return;
+
+    const { svg } = this.components;
+
+    const rectWidth = (width - padding.left - padding.right) / colorRamp.length;
+    this.components.ramp = svg.selectAll('.timeline__ramp-rect')
+      .data(colorRamp)
+      .enter()
+      .append('rect')
+      .attr('class', 'timeline__ramp-rect')
+      .attr('pointer-events', 'none')
+      .attr('width', rectWidth)
+      .attr('height', trackHeight)
+      .attr('y', (height / 2) - (trackHeight / 2))
+      .attr('x', (d, i) => padding.left + (i * rectWidth))
+      .attr('fill', d => d);
   }
 
   setTrackWidth() {
