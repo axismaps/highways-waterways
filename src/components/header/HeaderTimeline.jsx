@@ -70,6 +70,7 @@ class HeaderTimeline extends React.PureComponent {
         },
         handleCornerRadius: 5,
         handleHeight,
+        handleLineOffset: 15,
         handleWidth: 20,
         timelineNode: this.sliderRef.current,
         // value range, current value

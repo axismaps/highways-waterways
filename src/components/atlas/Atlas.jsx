@@ -101,6 +101,10 @@ class Atlas extends React.PureComponent {
       const { url } = style.sources.composite;
       const tileStart = url.slice(url.indexOf('start=') + 6, url.indexOf('start=') + 10);
       const tileEnd = url.slice(url.indexOf('end=') + 4, url.indexOf('end=') + 8);
+      /**
+       * do not update style year filters if style object is not update
+       * instead, wait for style object to update (above)
+       */
       if (year >= tileStart && year <= tileEnd) {
         updateYearDebounced();
       }

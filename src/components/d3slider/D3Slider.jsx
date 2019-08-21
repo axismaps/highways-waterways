@@ -5,6 +5,7 @@ class D3Slider {
     const defaultProps = {
       trackCornerRadius: 10,
       colorRamp: null,
+      handleLineOffset: 8,
     };
     this.props = Object.assign(defaultProps, props);
     this.components = {};
@@ -174,8 +175,11 @@ class D3Slider {
       handleHeight,
       handleCornerRadius,
       height,
+      handleLineOffset,
     } = this.props;
     const { svg } = this.components;
+
+    const handleY = (height / 2) - (handleHeight / 2);
 
     this.components.handle = svg.append('rect')
       .attr('class', 'timeline__handle')
@@ -183,7 +187,14 @@ class D3Slider {
       .attr('height', handleHeight)
       .attr('rx', handleCornerRadius)
       .attr('x', 0)
-      .attr('y', (height / 2) - (handleHeight / 2));
+      .attr('y', handleY);
+
+    this.components.handleLine = svg.append('line')
+      .attr('class', 'timeline__handle-line')
+      .attr('stroke-width', 1)
+      .attr('stroke', 'white')
+      .attr('y1', handleY + handleLineOffset)
+      .attr('y2', (handleY + handleHeight) - handleLineOffset);
   }
 
   setHandlePosition() {
@@ -194,11 +205,19 @@ class D3Slider {
 
     const {
       handle,
+      handleLine,
       xScale,
     } = this.components;
 
+    const handlePos = xScale.invert(currentValue) - (handleWidth / 2);
+    const handleLinePos = handlePos + (handleWidth / 2);
+
     handle
-      .attr('x', xScale.invert(currentValue) - (handleWidth / 2));
+      .attr('x', handlePos);
+
+    handleLine
+      .attr('x1', handleLinePos)
+      .attr('x2', handleLinePos);
   }
 
   setDrag() {
