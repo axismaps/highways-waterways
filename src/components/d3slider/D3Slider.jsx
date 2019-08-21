@@ -4,6 +4,7 @@ class D3Slider {
   constructor(props) {
     const defaultProps = {
       trackCornerRadius: 10,
+      colorRamp: null,
     };
     this.props = Object.assign(defaultProps, props);
     this.components = {};
