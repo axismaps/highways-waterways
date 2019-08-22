@@ -99,7 +99,9 @@ class SidebarLegend extends React.PureComponent {
     const {
       choroplethData,
       choroplethValues,
+      hiddenLayers,
       setChoroplethValue,
+      toggleLayerVisibility,
     } = this.props;
 
     const choroplethBlocks = choroplethData.map((d) => {
@@ -113,14 +115,16 @@ class SidebarLegend extends React.PureComponent {
 
       return (
         <SidebarVulnerabilityLayer
+          colorRamp={colorRamp}
+          hidden={hiddenLayers.includes(id)}
+          id={id}
           key={id}
           setChoroplethValue={setChoroplethValue}
-          id={id}
           name={name}
           minValue={minValue}
           maxValue={maxValue}
           value={choroplethValues.get(id)}
-          colorRamp={colorRamp}
+          toggleLayerVisibility={toggleLayerVisibility}
         />
       );
     });

@@ -73,7 +73,7 @@ class App extends React.Component {
       choroplethData: [
         {
           name: 'choropleth placeholder 1',
-          id: 1,
+          id: '1',
           minValue: 2,
           maxValue: 20,
           // colorRamp: d3.scaleQuantize()
@@ -83,7 +83,7 @@ class App extends React.Component {
         },
         {
           name: 'choropleth placeholder 2',
-          id: 2,
+          id: '2',
           minValue: 5,
           maxValue: 60,
           // colorRamp: d3.scaleQuantize()
@@ -97,16 +97,15 @@ class App extends React.Component {
        * keys correspond to layer ids
        */
       choroplethValues: new Map([
-        [1, 15],
-        [2, 53],
+        ['1', 15],
+        ['2', 53],
       ]),
-      /** List of layer ids for layers to be hidden */
-      currentFilters: [],
       /**
        * raster currently displayed in probe
        * view or overlay
        */
       currentRaster: null,
+      /** List of layer ids for layers to be hidden */
       hiddenLayers: [],
       /** layer id for isolated layer */
       highlightedLayer: null,
@@ -180,13 +179,10 @@ class App extends React.Component {
     this.loadInitialData();
   }
 
-
-
   getAtlas() {
     const {
       areaBox,
       areaSearching,
-      currentFilters,
       currentRaster,
       hiddenLayers,
       highlightedFeature,
@@ -203,7 +199,6 @@ class App extends React.Component {
       <Atlas
         areaBox={areaBox}
         areaSearching={areaSearching}
-        currentFilters={currentFilters}
         currentRaster={currentRaster}
         hiddenLayers={hiddenLayers}
         highlightedFeature={highlightedFeature}
