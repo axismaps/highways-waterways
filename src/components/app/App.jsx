@@ -114,7 +114,7 @@ class App extends React.Component {
       highlightedFeature: null,
       hydroRasterData: [],
       hydroRasterValues: new Map([]),
-      loading: false,
+      loading: true,
       /**
        * raster object to be displayed in lightbox
        */
@@ -537,6 +537,7 @@ class App extends React.Component {
     const style = await stylePromise;
 
     this.setState({
+      loading: false,
       style,
       tileRanges,
       yearRange,
