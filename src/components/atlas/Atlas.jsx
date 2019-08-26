@@ -37,7 +37,7 @@ class Atlas extends React.PureComponent {
       layerOpacityProps: {},
     };
 
-    this.bottomHighlightLayerIds = [];
+    this.highlightLayerIds = [];
     this.styleTimer = null;
 
     this.onAreaMouseDown = this.onAreaMouseDown.bind(this);
@@ -252,6 +252,8 @@ class Atlas extends React.PureComponent {
 
 
     const bottomHighlightBaseId = 'highlighted-feature-outline-bottom';
+    const topHighlightBaseId = 'highlighted-feature-outline-top';
+    const fillHighlightBaseId = 'highlighted-feature-fill';
     // setTimeout(() => {
     //   this.mbMap.removeLayer('highlighted-feature-outline-bottom');
     // }, 3000);
@@ -262,21 +264,23 @@ class Atlas extends React.PureComponent {
       idsFilter.push(['==', 'id', id]);
     });
 
-    const highlightedLayers = this.mbMap.getStyle().layers
+    this.mbMap.getStyle().layers
       .filter(d => d['source-layer'] === highlightedFeature.source)
       .forEach((layer, i) => {
+        const yearFilter = layer.filter;
+        const newFilter = [
+          'all',
+          yearFilter,
+          idsFilter,
+        ];
+        const highlightColor = 'rgb(50, 50, 50)';
         if (layer.type === 'line') {
-          const yearFilter = layer.filter;
-          // add idsFilter to this
-          const newFilter = [
-            'all',
-            yearFilter,
-            idsFilter,
-          ];
-          const id = `${bottomHighlightBaseId}--${i}`;
-          this.bottomHighlightLayerIds.push(id);
+          const bottomId = `${bottomHighlightBaseId}--${i}`;
+          const topId = `${topHighlightBaseId}--${i}`;
+          this.highlightLayerIds.push(bottomId);
+          this.highlightLayerIds.push(topId);
           const outlineLayerBottom = {
-            id,
+            id: bottomId,
             type: 'line',
             filter: newFilter,
             source: 'composite',
@@ -286,23 +290,52 @@ class Atlas extends React.PureComponent {
             },
             paint: {
               'line-width': 8,
-              'line-color': '#ff0000',
+              'line-color': highlightColor,
               'line-opacity': 0.5,
       
             },
           };
+          const outlineLayerTop = {
+            id: topId,
+            type: 'line',
+            filter: newFilter,
+            source: 'composite',
+            'source-layer': layer['source-layer'],
+            layout: {
+              'line-join': 'round',
+            },
+            paint: {
+              'line-width': 2,
+              'line-color': '#000',
+            },
+          };
           this.mbMap.addLayer(outlineLayerBottom);
-          console.log('oldFilter', newFilter);
+          this.mbMap.addLayer(outlineLayerTop);
+        } else if (layer.type === 'fill') {
+          const id = `${fillHighlightBaseId}--${i}`;
+          this.highlightLayerIds.push(id);
+          const fillLayer = {
+            id,
+            type: 'fill',
+            filter: newFilter,
+            source: 'composite',
+            'source-layer': layer['source-layer'],
+            layout: {},
+            paint: {
+              'fill-color': highlightColor,
+              'fill-opacity': 0.2,
+            },
+          };
+          this.mbMap.addLayer(fillLayer);
         }
       });
-    console.log('highlightedLayers', highlightedLayers);
   }
 
   clearHighlightedFeatures() {
-    this.bottomHighlightLayerIds.forEach((id) => {
+    this.highlightLayerIds.forEach((id) => {
       this.mbMap.removeLayer(id);
     });
-    this.bottomHighlightLayerIds = [];
+    this.highlightLayerIds = [];
   }
 
 
