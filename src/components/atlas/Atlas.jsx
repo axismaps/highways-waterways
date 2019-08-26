@@ -274,7 +274,23 @@ class Atlas extends React.PureComponent {
           idsFilter,
         ];
         const highlightColor = 'rgb(50, 50, 50)';
-        if (layer.type === 'line') {
+        if (layer.type === 'fill') {
+          const id = `${fillHighlightBaseId}--${i}`;
+          this.highlightLayerIds.push(id);
+          const fillLayer = {
+            id,
+            type: 'fill',
+            filter: newFilter,
+            source: 'composite',
+            'source-layer': layer['source-layer'],
+            layout: {},
+            paint: {
+              'fill-color': highlightColor,
+              'fill-opacity': 0.2,
+            },
+          };
+          this.mbMap.addLayer(fillLayer);
+        } else if (layer.type === 'line') {
           const bottomId = `${bottomHighlightBaseId}--${i}`;
           const topId = `${topHighlightBaseId}--${i}`;
           this.highlightLayerIds.push(bottomId);
@@ -311,22 +327,6 @@ class Atlas extends React.PureComponent {
           };
           this.mbMap.addLayer(outlineLayerBottom);
           this.mbMap.addLayer(outlineLayerTop);
-        } else if (layer.type === 'fill') {
-          const id = `${fillHighlightBaseId}--${i}`;
-          this.highlightLayerIds.push(id);
-          const fillLayer = {
-            id,
-            type: 'fill',
-            filter: newFilter,
-            source: 'composite',
-            'source-layer': layer['source-layer'],
-            layout: {},
-            paint: {
-              'fill-color': highlightColor,
-              'fill-opacity': 0.2,
-            },
-          };
-          this.mbMap.addLayer(fillLayer);
         }
       });
   }
