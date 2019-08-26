@@ -37,6 +37,7 @@ class Atlas extends React.PureComponent {
       layerOpacityProps: {},
     };
 
+    this.bottomHighlightLayerIds = [];
     this.styleTimer = null;
 
     this.onAreaMouseDown = this.onAreaMouseDown.bind(this);
@@ -127,6 +128,7 @@ class Atlas extends React.PureComponent {
     }
     if (this.logged.highlightedFeature !== highlightedFeature) {
       this.logHighlightedFeature();
+      this.clearHighlightedFeatures();
       this.setHighlightedFeature();
     }
   }
@@ -239,15 +241,68 @@ class Atlas extends React.PureComponent {
     });
   }
 
+
+
   setHighlightedFeature() {
     const {
       highlightedFeature,
     } = this.props;
-    console.log('highlgihtedFeature', highlightedFeature);
+    
     if (highlightedFeature === null) return;
+
+
+    const bottomHighlightBaseId = 'highlighted-feature-outline-bottom';
+    // setTimeout(() => {
+    //   this.mbMap.removeLayer('highlighted-feature-outline-bottom');
+    // }, 3000);
+
+    // this.mbMap.addLayer(outlineLayerBottom);
+    const idsFilter = ['any'];
+    highlightedFeature.feature.ids.forEach((id) => {
+      idsFilter.push(['==', 'id', id]);
+    });
+
     const highlightedLayers = this.mbMap.getStyle().layers
-      .filter(d => d['source-layer'] === highlightedFeature.source);
+      .filter(d => d['source-layer'] === highlightedFeature.source)
+      .forEach((layer, i) => {
+        if (layer.type === 'line') {
+          const yearFilter = layer.filter;
+          // add idsFilter to this
+          const newFilter = [
+            'all',
+            yearFilter,
+            idsFilter,
+          ];
+          const id = `${bottomHighlightBaseId}--${i}`;
+          this.bottomHighlightLayerIds.push(id);
+          const outlineLayerBottom = {
+            id,
+            type: 'line',
+            filter: newFilter,
+            source: 'composite',
+            'source-layer': layer['source-layer'],
+            layout: {
+              'line-join': 'round',
+            },
+            paint: {
+              'line-width': 8,
+              'line-color': '#ff0000',
+              'line-opacity': 0.5,
+      
+            },
+          };
+          this.mbMap.addLayer(outlineLayerBottom);
+          console.log('oldFilter', newFilter);
+        }
+      });
     console.log('highlightedLayers', highlightedLayers);
+  }
+
+  clearHighlightedFeatures() {
+    this.bottomHighlightLayerIds.forEach((id) => {
+      this.mbMap.removeLayer(id);
+    });
+    this.bottomHighlightLayerIds = [];
   }
 
 

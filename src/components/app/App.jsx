@@ -633,6 +633,7 @@ class App extends React.Component {
           results,
           legendData,
         });
+        console.log('clean results', searchResults);
         this.setState({
           loading: false,
           highlightedFeature: null,
