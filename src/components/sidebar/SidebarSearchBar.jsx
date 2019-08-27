@@ -7,7 +7,7 @@ import {
 import {
   faArrowCircleLeft,
 } from '@fortawesome/pro-solid-svg-icons';
-
+import AreaIcon from './SidebarAreaIcon';
 
 /**
 
@@ -62,7 +62,7 @@ class SidebarSearchBar extends React.PureComponent {
             className="sidebar__search-area-button"
             onClick={toggleAreaSearching}
           >
-            area
+            <AreaIcon />
           </div>
           <div className="sidebar__search-row-divider" />
           <div

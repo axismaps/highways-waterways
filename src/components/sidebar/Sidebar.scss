@@ -105,6 +105,15 @@
   cursor: pointer;
 }
 
+.sidebar__search-area-button {
+  width: 20px;
+  height: 20px;
+}
+
+.sidebar__area-icon {
+  fill: $dark-grey;
+}
+
 .sidebar__layers-block,
 .sidebar__search-layer-group {
   margin-top: 20px;
@@ -127,6 +136,7 @@
 }
 
 .sidebar__layers-title-right {
+  color: $dark-grey;
   font-size: 24px;
   cursor: pointer;
 }

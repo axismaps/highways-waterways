@@ -241,24 +241,17 @@ class Atlas extends React.PureComponent {
     });
   }
 
-
-
   setHighlightedFeature() {
     const {
       highlightedFeature,
     } = this.props;
-    
-    if (highlightedFeature === null) return;
 
+    if (highlightedFeature === null) return;
 
     const bottomHighlightBaseId = 'highlighted-feature-outline-bottom';
     const topHighlightBaseId = 'highlighted-feature-outline-top';
     const fillHighlightBaseId = 'highlighted-feature-fill';
-    // setTimeout(() => {
-    //   this.mbMap.removeLayer('highlighted-feature-outline-bottom');
-    // }, 3000);
 
-    // this.mbMap.addLayer(outlineLayerBottom);
     const idsFilter = ['any'];
     highlightedFeature.feature.ids.forEach((id) => {
       idsFilter.push(['==', 'id', id]);
