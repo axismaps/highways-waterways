@@ -36,7 +36,7 @@ $header-padding: 20px;
 
 .header__top-right {
   display: flex;
-  margin-right: 30px;
+  margin-right: 10px;
 }
 
 .header__top-button {
@@ -102,8 +102,8 @@ $header-padding: 20px;
 .timeline__slider {
   height: 40px;
   flex-grow: 1;
-  margin-right: 20px;
-  margin-left: 20px;
+  // margin-right: 0px;
+  margin-left: 30px;
 }
 
 .timeline__track {
