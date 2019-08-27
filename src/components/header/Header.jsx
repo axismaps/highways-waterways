@@ -73,10 +73,19 @@ class Header extends React.PureComponent {
     return (
       <div className={containerName}>
         <div className="header__inner">
-          {this.getStepper()}
-          {this.getTimeline()}
+          <div className="header__top">
+            <div className="header__top-title">
+              Highways + Waterways
+            </div>
+            <div className="header__top-right">
+            </div>
+          </div>
+          <div className="header__timeline-row">
+            {this.getStepper()}
+            {this.getTimeline()}
+          </div>
+          {this.getSidebarButton()}
         </div>
-        {this.getSidebarButton()}
       </div>
     );
   }

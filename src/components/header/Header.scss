@@ -2,6 +2,7 @@
 
 $stepper-width: 230px;
 $stepper-button-size: 36px;
+$header-padding: 20px;
 
 .header {
   width: 100%;
@@ -13,8 +14,29 @@ $stepper-button-size: 36px;
 
 .header__inner {
   height: 100%;
-  padding-left: 20px;
-  padding-right: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header__top {
+  padding-left: $header-padding;
+  padding-right: $header-padding;
+  height: 30px;
+  align-items: flex-end;
+  display: flex;
+  flex-shrink: 0;
+}
+
+.header__top-title {
+  color: #002469;
+  font-weight: bold;
+}
+
+.header__timeline-row {
+  height: 100%;
+  padding-left: $header-padding;
+  padding-right: $header-padding;
   display: flex;
 }
 
