@@ -35,10 +35,23 @@ class App extends React.Component {
     const getUniqueFeatures = (features) => {
       const uniqueNames = [...new Set(features.map(d => d.name))]
         .filter(d => d !== ' ');
-      return uniqueNames.map(name => ({
-        name,
-        ids: features.filter(d => d.name === name).map(d => d.id),
-      }));
+    
+
+      return uniqueNames.map((name) => {
+        const featuresOfName = features.filter(d => d.name === name);
+        const allCoords = featuresOfName.reduce((accumulator, d) => {
+          const { bbox } = d;
+          return [...accumulator, ...bbox];
+        }, []);
+        const lngExtent = d3.extent(allCoords.map(d => d[0]));
+        const latExtent = d3.extent(allCoords.map(d => d[1]));
+
+        return {
+          name,
+          ids: featuresOfName.map(d => d.id),
+          bbox: [[lngExtent[1], latExtent[1]], [lngExtent[0], latExtent[0]]],
+        };
+      });
     };
     return Object.keys(results.response)
       .filter(d => d !== undefined)

@@ -128,7 +128,8 @@ class Atlas extends React.PureComponent {
     }
     if (this.logged.highlightedFeature !== highlightedFeature) {
       this.logHighlightedFeature();
-      this.clearHighlightedFeatures();
+      this.clearHighlightedFeature();
+      this.zoomToHighlightedFeature();
       this.setHighlightedFeature();
     }
   }
@@ -257,6 +258,7 @@ class Atlas extends React.PureComponent {
       idsFilter.push(['==', 'id', id]);
     });
 
+
     this.mbMap.getStyle().layers
       .filter(d => d['source-layer'] === highlightedFeature.source)
       .forEach((layer, i) => {
@@ -324,13 +326,21 @@ class Atlas extends React.PureComponent {
       });
   }
 
-  clearHighlightedFeatures() {
+  clearHighlightedFeature() {
     this.highlightLayerIds.forEach((id) => {
       this.mbMap.removeLayer(id);
     });
     this.highlightLayerIds = [];
   }
 
+  zoomToHighlightedFeature() {
+    const {
+      highlightedFeature,
+    } = this.props;
+    if (highlightedFeature === null) return;
+    console.log('highlighted', highlightedFeature);
+    this.mbMap.fitBounds(highlightedFeature.feature.bbox);
+  }
 
   logLayerOpacityProps() {
     const {
