@@ -78,6 +78,15 @@ class Header extends React.PureComponent {
               Highways + Waterways
             </div>
             <div className="header__top-right">
+              <div className="header__top-button">
+                x
+              </div>
+              <div className="header__top-button">
+                x
+              </div>
+              <div className="header__top-button">
+                x
+              </div>
             </div>
           </div>
           <div className="header__timeline-row">

@@ -22,9 +22,10 @@ $header-padding: 20px;
 .header__top {
   padding-left: $header-padding;
   padding-right: $header-padding;
-  height: 30px;
+  height: 40px;
   align-items: flex-end;
   display: flex;
+  justify-content: space-between;
   flex-shrink: 0;
 }
 
@@ -33,8 +34,27 @@ $header-padding: 20px;
   font-weight: bold;
 }
 
+.header__top-right {
+  display: flex;
+  margin-right: 30px;
+}
+
+.header__top-button {
+  width: 25px;
+  height: 25px;
+  background: $light-grey;
+  margin-left: 10px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $dark-grey;
+}
+
 .header__timeline-row {
-  height: 100%;
+  // height: 100%;
+  align-items: center;
+  flex-grow: 1;
   padding-left: $header-padding;
   padding-right: $header-padding;
   display: flex;
