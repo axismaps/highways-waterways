@@ -228,7 +228,6 @@ class Atlas extends React.PureComponent {
 
 
     layers.forEach((layer) => {
-
       const visible = this.mbMap.getLayoutProperty(layer.id, 'visibility') === 'visible';
 
       const shouldBeHidden = hiddenLayers
@@ -257,7 +256,6 @@ class Atlas extends React.PureComponent {
     highlightedFeature.feature.ids.forEach((id) => {
       idsFilter.push(['==', 'id', id]);
     });
-
 
     this.mbMap.getStyle().layers
       .filter(d => d['source-layer'] === highlightedFeature.source)
@@ -303,7 +301,6 @@ class Atlas extends React.PureComponent {
               'line-width': 8,
               'line-color': highlightColor,
               'line-opacity': 0.5,
-      
             },
           };
           const outlineLayerTop = {
@@ -458,6 +455,8 @@ Atlas.propTypes = {
   highlightedLayer: PropTypes.string,
   highlightedFeature: PropTypes.shape({
     id: PropTypes.string,
+    feature: PropTypes.object,
+    source: PropTypes.string,
   }),
   /** List of layer paint properties that affect opacity */
   layerOpacityFields: PropTypes.arrayOf(PropTypes.string),

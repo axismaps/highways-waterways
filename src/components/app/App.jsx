@@ -35,7 +35,6 @@ class App extends React.Component {
     const getUniqueFeatures = (features) => {
       const uniqueNames = [...new Set(features.map(d => d.name))]
         .filter(d => d !== ' ');
-    
 
       return uniqueNames.map((name) => {
         const featuresOfName = features.filter(d => d.name === name);
@@ -169,8 +168,8 @@ class App extends React.Component {
     this.clearRaster = this.clearRaster.bind(this);
     this.clearSearch = this.clearSearch.bind(this);
     this.currentTileRange = null;
-    this.nextRaster = this.nextRaster.bind(this);
-    this.prevRaster = this.prevRaster.bind(this);
+    // this.nextRaster = this.nextRaster.bind(this);
+    // this.prevRaster = this.prevRaster.bind(this);
     this.searchByArea = this.searchByArea.bind(this);
     this.searchByPoint = this.searchByPoint.bind(this);
     this.searchByText = this.searchByText.bind(this);
@@ -427,28 +426,18 @@ class App extends React.Component {
     });
   }
 
-  prevRaster() {
-    console.log('prev raster');
-  }
+  // prevRaster() {
+  //   console.log('prev raster');
+  // }
 
-  nextRaster() {
-    console.log('next raster');
-  }
+  // nextRaster() {
+  //   console.log('next raster');
+  // }
 
   setLightbox(raster) {
     this.setState({
       lightbox: raster,
     });
-  }
-
-  clearLightbox() {
-    this.setState({
-      lightbox: null,
-    });
-  }
-
-  clearRaster() {
-    this.setRaster(null);
   }
 
   getLightbox() {
@@ -468,6 +457,16 @@ class App extends React.Component {
     const { loading } = this.state;
     if (!loading) return null;
     return <Loader />;
+  }
+
+  clearLightbox() {
+    this.setState({
+      lightbox: null,
+    });
+  }
+
+  clearRaster() {
+    this.setRaster(null);
   }
 
   toggleAreaBox(bool) {
@@ -501,7 +500,6 @@ class App extends React.Component {
   }
 
   async updateStyle(newYear) {
-
     if (this.currentTileRange === null) return;
     const { tileRanges } = this.state;
 
@@ -662,6 +660,7 @@ class App extends React.Component {
 
   searchByPoint(point) {
     const { legendData } = this.state;
+    this.setState({ loading: true });
     d3.json(`http://highways.axismaps.io/api/v1/probe/[${point.lng},${point.lat}]`)
       .then((results) => {
         const searchResults = App.getCleanSearchResults({
@@ -669,6 +668,7 @@ class App extends React.Component {
           legendData,
         });
         this.setState({
+          loading: false,
           highlightedFeature: null,
           searchView: 'atlas',
           searchFeatures: searchResults,
@@ -676,6 +676,7 @@ class App extends React.Component {
       })
       .catch((err) => {
         console.log(err);
+        this.setState({ loading: false });
       });
   }
 

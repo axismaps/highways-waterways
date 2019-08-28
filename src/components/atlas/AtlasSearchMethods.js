@@ -42,7 +42,6 @@ const searchMethods = {
     searchByArea([startCoords, endCoords]);
     document.removeEventListener('mousemove', this.onAreaMouseMove);
     document.removeEventListener('mouseup', this.onAreaMouseUp);
-    /** perform search here */
   },
 };
 

@@ -40,10 +40,6 @@ const getHeaderTop = () => (
 
 
 class Header extends React.PureComponent {
-  getHeaderTop() {
-
-  }
-
   getStepper() {
     const {
       year,
