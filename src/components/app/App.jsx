@@ -486,6 +486,7 @@ class App extends React.Component {
 
   clearSearch() {
     this.setState({
+      highlightedFeature: null,
       searchFeatures: [],
       searchView: null,
     });

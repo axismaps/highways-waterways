@@ -168,10 +168,9 @@ class Atlas extends React.PureComponent {
 
   getFilteredStyle() {
     const {
-      // year,
       style,
     } = this.props;
-    // console.log('style', style);
+
     const styleCopy = JSON.parse(JSON.stringify(style));
     styleCopy.layers = styleCopy.layers.map(layer => this.getFilteredLayer(layer));
 
@@ -335,7 +334,7 @@ class Atlas extends React.PureComponent {
       highlightedFeature,
     } = this.props;
     if (highlightedFeature === null) return;
-    console.log('highlighted', highlightedFeature);
+
     this.mbMap.fitBounds(highlightedFeature.feature.bbox);
   }
 

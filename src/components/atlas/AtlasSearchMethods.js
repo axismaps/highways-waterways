@@ -1,11 +1,14 @@
 import * as mapboxgl from 'mapbox-gl';
 
 const searchMethods = {
-  getMousePos(e) {
-    const rect = this.canvas.getBoundingClientRect();
+  getMousePos({
+    e,
+    canvas,
+  }) {
+    const rect = canvas.getBoundingClientRect();
     return [
-      e.clientX - rect.left - this.canvas.clientLeft,
-      e.clientY - rect.top - this.canvas.clientTop,
+      e.clientX - rect.left - canvas.clientLeft,
+      e.clientY - rect.top - canvas.clientTop,
     ];
   },
   onAreaMouseDown(e) {
@@ -13,8 +16,9 @@ const searchMethods = {
       areaSearching,
       setAreaBoxStart,
     } = this.props;
+    const { canvas } = this;
     if (!areaSearching) return;
-    const pos = this.getMousePos(e);
+    const pos = this.getMousePos({ e, canvas });
     setAreaBoxStart(pos);
     document.addEventListener('mousemove', this.onAreaMouseMove);
     document.addEventListener('mouseup', this.onAreaMouseUp);
@@ -23,7 +27,8 @@ const searchMethods = {
     const {
       setAreaBoxEnd,
     } = this.props;
-    const pos = this.getMousePos(e);
+    const { canvas } = this;
+    const pos = this.getMousePos({ e, canvas });
     setAreaBoxEnd(pos);
   },
   onAreaMouseUp() {
