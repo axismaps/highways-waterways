@@ -1,0 +1,17 @@
+.tooltip {
+  // min-width: 200px;
+  // max-width: 400px;
+  position: fixed;
+  background: rgba(0, 0, 0, .8);
+  color: white;
+  pointer-events: none;
+  border: 1px solid #999999;
+  border-radius: 5px;
+  z-index: 2000;
+  margin: 15px;
+  padding: 5px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

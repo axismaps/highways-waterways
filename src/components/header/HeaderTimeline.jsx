@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import * as d3 from 'd3';
 import D3Slider from '../d3slider/D3Slider';
+import Tooltip from '../tooltip/Tooltip';
 
 /**
  * This is the timeline slider component.
@@ -22,6 +23,7 @@ class HeaderTimeline extends React.PureComponent {
     this.state = {
       containerWidth: null,
       containerHeight: null,
+      tooltip: null,
     };
     this.logged = {
       containerWidth: null,
@@ -29,6 +31,8 @@ class HeaderTimeline extends React.PureComponent {
       year: null,
     };
     this.d3Slider = null;
+    this.setTooltip = this.setTooltip.bind(this);
+    this.removeTooltip = this.removeTooltip.bind(this);
   }
 
   componentDidMount() {
@@ -79,6 +83,9 @@ class HeaderTimeline extends React.PureComponent {
         setYear,
         axisOn: true,
         mobile,
+        tooltip: true,
+        setTooltip: this.setTooltip,
+        removeTooltip: this.removeTooltip,
       });
       this.d3Slider.init();
     }
@@ -103,6 +110,39 @@ class HeaderTimeline extends React.PureComponent {
         containerHeight: bounds.height,
       });
     }
+  }
+
+  setTooltip({
+    x,
+    y,
+    value,
+    width,
+  }) {
+    const tooltip = (
+      <Tooltip
+        x={x}
+        y={y}
+        width={width}
+      >
+        <div>{value}</div>
+      </Tooltip>
+    );
+
+    this.setState({
+      tooltip,
+    });
+  }
+
+  removeTooltip() {
+    this.setState({ tooltip: null });
+  }
+
+  drawTooltip() {
+    const {
+      tooltip,
+    } = this.state;
+    if (tooltip === null) return null;
+    return tooltip;
   }
 
   listenForResize() {
@@ -130,6 +170,7 @@ class HeaderTimeline extends React.PureComponent {
     return (
       <div className="header__timeline" ref={this.containerRef}>
         <div className="timeline__slider" ref={this.sliderRef} />
+        {this.drawTooltip()}
       </div>
     );
   }

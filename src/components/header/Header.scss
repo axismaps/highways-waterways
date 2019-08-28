@@ -118,6 +118,9 @@ $header-padding: 20px;
   cursor: pointer;
   pointer-events: none;
 }
+.timeline__handle-line {
+  pointer-events: none;
+}
 
 .timeline__slider-svg {
   path {
@@ -134,4 +137,8 @@ $header-padding: 20px;
       font-size: 13px;
     }
   }
+}
+
+.timeline__axis {
+  pointer-events: none;
 }

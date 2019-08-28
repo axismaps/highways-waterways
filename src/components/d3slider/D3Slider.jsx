@@ -6,8 +6,11 @@ class D3Slider {
       trackCornerRadius: 10,
       colorRamp: null,
       handleLineOffset: 8,
+      tooltip: false,
     };
     this.props = Object.assign(defaultProps, props);
+    this.dragging = false;
+    this.hovering = false;
     this.components = {};
   }
 
@@ -33,6 +36,7 @@ class D3Slider {
     this.drawHandle();
     this.setHandlePosition();
     this.setDrag();
+    this.setTooltipListener();
   }
 
   updateSize() {
@@ -221,17 +225,82 @@ class D3Slider {
   }
 
   setDrag() {
-    const { setYear } = this.props;
+    const {
+      setYear,
+      tooltip,
+      setTooltip,
+      removeTooltip
+    } = this.props;
     const {
       track,
       // xScale,
+      svg,
     } = this.components;
-
+    const svgRect = svg.node().getBoundingClientRect();
+    const y = svgRect.top - svgRect.height;
+    const width = 40;
+    const getX = eventX => svgRect.left + (eventX - (width / 2) - 20);
     track.call(d3.drag()
-      .on('start drag', () => {
+      .on('start', () => {
+        this.dragging = true;
+        this.hovering = true;
+      })
+      .on('drag', () => {
         const { xScale } = this.components;
         setYear(xScale(d3.event.x));
+        
+        if (tooltip) {
+          setTooltip({
+            x: getX(d3.event.x),
+            y,
+            value: Math.round(xScale(d3.event.x)),
+            width,
+          });
+        }
+      }).on('end', () => {
+        this.dragging = false;
+        if (tooltip && !this.hovering) {
+          removeTooltip();
+        }
       }));
+  }
+
+  setTooltipListener() {
+    const {
+      tooltip,
+      setTooltip,
+      removeTooltip,
+    } = this.props;
+    const {
+      track,
+      svg,
+      // xScale,
+    } = this.components;
+    if (!tooltip) return;
+    const svgRect = svg.node().getBoundingClientRect();
+    const y = svgRect.top - svgRect.height;
+    const width = 40;
+    const getX = eventX => eventX - (width / 2) - 20;
+    track
+      .on('mouseover', () => {
+        this.hovering = true;
+      })
+      .on('mousemove', () => {
+        this.hovering = true;
+        if (this.dragging) return;
+        const { xScale } = this.components;
+        setTooltip({
+          x: getX(d3.event.x),
+          y,
+          value: Math.round(xScale(d3.event.x - svgRect.left)),
+          width,
+        });
+      })
+      .on('mouseout', () => {
+        this.hovering = false;
+        if (this.dragging) return;
+        removeTooltip();
+      });
   }
 
   updateValue(newVal) {
