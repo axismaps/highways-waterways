@@ -2,7 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faDownload,
+  faInfo,
   faSearch,
+  faShare,
 } from '@fortawesome/pro-solid-svg-icons';
 import HeaderStepper from './HeaderStepper';
 import HeaderTimeline from './HeaderTimeline';
@@ -16,7 +19,31 @@ import './HeaderMobile.scss';
  * App -> Header
  */
 
+const getHeaderTop = () => (
+  <div className="header__top">
+    <div className="header__top-title">
+      Highways + Waterways
+    </div>
+    <div className="header__top-right">
+      <div className="header__top-button">
+        <FontAwesomeIcon icon={faShare} />
+      </div>
+      <div className="header__top-button">
+        <FontAwesomeIcon icon={faInfo} />
+      </div>
+      <div className="header__top-button">
+        <FontAwesomeIcon icon={faDownload} />
+      </div>
+    </div>
+  </div>
+);
+
+
 class Header extends React.PureComponent {
+  getHeaderTop() {
+
+  }
+
   getStepper() {
     const {
       year,
@@ -73,22 +100,7 @@ class Header extends React.PureComponent {
     return (
       <div className={containerName}>
         <div className="header__inner">
-          <div className="header__top">
-            <div className="header__top-title">
-              Highways + Waterways
-            </div>
-            <div className="header__top-right">
-              <div className="header__top-button">
-                x
-              </div>
-              <div className="header__top-button">
-                x
-              </div>
-              <div className="header__top-button">
-                x
-              </div>
-            </div>
-          </div>
+          {getHeaderTop()}
           <div className="header__timeline-row">
             {this.getStepper()}
             {this.getTimeline()}
