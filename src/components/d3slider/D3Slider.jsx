@@ -229,7 +229,9 @@ class D3Slider {
       setYear,
       tooltip,
       setTooltip,
-      removeTooltip
+      removeTooltip,
+      padding,
+      width,
     } = this.props;
     const {
       track,
@@ -238,8 +240,8 @@ class D3Slider {
     } = this.components;
     const svgRect = svg.node().getBoundingClientRect();
     const y = svgRect.top - svgRect.height;
-    const width = 40;
-    const getX = eventX => svgRect.left + (eventX - (width / 2) - 20);
+    const tooltipWidth = 40;
+    const getX = eventX => svgRect.left + (eventX - (tooltipWidth / 2) - 20);
     track.call(d3.drag()
       .on('start', () => {
         this.dragging = true;
@@ -247,14 +249,15 @@ class D3Slider {
       })
       .on('drag', () => {
         const { xScale } = this.components;
+        const outside = d3.event.x < (padding.left) || d3.event.x > width + padding.right;
         setYear(xScale(d3.event.x));
         
-        if (tooltip) {
+        if (tooltip && !outside) {
           setTooltip({
             x: getX(d3.event.x),
             y,
             value: Math.round(xScale(d3.event.x)),
-            width,
+            width: tooltipWidth,
           });
         }
       }).on('end', () => {
@@ -274,7 +277,6 @@ class D3Slider {
     const {
       track,
       svg,
-      // xScale,
     } = this.components;
     if (!tooltip) return;
     const svgRect = svg.node().getBoundingClientRect();
