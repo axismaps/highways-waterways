@@ -242,24 +242,30 @@ class D3Slider {
     const y = svgRect.top - svgRect.height;
     const tooltipWidth = 40;
     const getX = eventX => svgRect.left + (eventX - (tooltipWidth / 2) - 20);
+
+    const setYearAndTooltip = () => {
+      const { xScale } = this.components;
+      const outside = d3.event.x < (padding.left) || d3.event.x > width + padding.right;
+      setYear(xScale(d3.event.x));
+      
+      if (tooltip && !outside) {
+        setTooltip({
+          x: getX(d3.event.x),
+          y,
+          value: Math.round(xScale(d3.event.x)),
+          width: tooltipWidth,
+        });
+      }
+    };
+    
     track.call(d3.drag()
       .on('start', () => {
         this.dragging = true;
         this.hovering = true;
+        setYearAndTooltip();
       })
       .on('drag', () => {
-        const { xScale } = this.components;
-        const outside = d3.event.x < (padding.left) || d3.event.x > width + padding.right;
-        setYear(xScale(d3.event.x));
-        
-        if (tooltip && !outside) {
-          setTooltip({
-            x: getX(d3.event.x),
-            y,
-            value: Math.round(xScale(d3.event.x)),
-            width: tooltipWidth,
-          });
-        }
+        setYearAndTooltip();
       }).on('end', () => {
         this.dragging = false;
         if (tooltip && !this.hovering) {
