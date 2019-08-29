@@ -31,17 +31,28 @@
   cursor: pointer;
 }
 
+.sidebar__search-row-left,
 .sidebar__search-row-right {
   display: flex;
-  margin-right: 20px;
   height: 100%;
   align-items: center;
+}
+
+.sidebar__search-row-left {
+  padding-left: 20px;
+}
+
+.sidebar__search-row-right {
+  margin-right: 20px;
+}
+
+.sidebar__search-icon {
+  margin-right: 10px;
 }
 
 .sidebar__text-input {
   border: none;
   height: 95%;
-  padding-left: 20px;
 }
 
 .sidebar__search-row-divider {

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faAngleDoubleLeft,
+  faSearch,
 } from '@fortawesome/pro-regular-svg-icons';
 import {
   faArrowCircleLeft,
@@ -51,12 +52,17 @@ class SidebarSearchBar extends React.PureComponent {
 
     return (
       <div className="sidebar__search-row sidebar__search-row--search">
-        <input
-          type="text"
-          className="sidebar__text-input"
-          placeholder="Search this year..."
-          onChange={searchByText}
-        />
+        <div className="sidebar__search-row-left">
+          <div className="sidebar__search-icon">
+            <FontAwesomeIcon icon={faSearch} />
+          </div>
+          <input
+            type="text"
+            className="sidebar__text-input"
+            placeholder="Search this year..."
+            onChange={searchByText}
+          />
+        </div>
         <div className="sidebar__search-row-right">
           <div
             className="sidebar__search-area-button"
