@@ -31,7 +31,15 @@ class SidebarSearchBar extends React.PureComponent {
     this.inputRef = React.createRef();
   }
 
-
+  componentDidMount() {
+    const {
+      searchView,
+      initialText,
+    } = this.props;
+    if (this.inputRef.current !== undefined && searchView !== null) {
+      this.inputRef.current.value = initialText;
+    }
+  }
 
   getSearchIcon() {
     const {
@@ -90,6 +98,7 @@ class SidebarSearchBar extends React.PureComponent {
       toggleSidebar,
       toggleAreaSearching,
       searchView,
+      logInputText,
     } = this.props;
 
     return (
@@ -129,7 +138,10 @@ class SidebarSearchBar extends React.PureComponent {
           <div className="sidebar__search-row-divider" />
           <div
             className="sidebar__toggle-button"
-            onClick={toggleSidebar}
+            onClick={() => {
+              logInputText(this.inputRef.current.value);
+              toggleSidebar();
+            }}
           >
             <FontAwesomeIcon
               icon={faAngleDoubleLeft}

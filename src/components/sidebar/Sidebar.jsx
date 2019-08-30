@@ -15,6 +15,16 @@ import './Sidebar.scss';
  */
 
 class Sidebar extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.loggedInputText = '';
+    this.logInputText = this.logInputText.bind(this);
+  }
+
+  logInputText(inputText) {
+    this.loggedInputText = inputText;
+  }
+
   getLegend() {
     const {
       searchView,
@@ -66,6 +76,8 @@ class Sidebar extends React.PureComponent {
 
     return (
       <SidebarSearchBar
+        logInputText={this.logInputText}
+        initialText={this.loggedInputText}
         clearSearch={clearSearch}
         searchByText={searchByText}
         searchView={searchView}
