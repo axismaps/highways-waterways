@@ -28,16 +28,41 @@ class SidebarSearchBar extends React.PureComponent {
     this.state = {
       inputFocused: false,
     };
+    this.inputRef = React.createRef();
   }
+
+
 
   getSearchIcon() {
     const {
       searchView,
+      clearSearch,
     } = this.props;
-    if (searchView !== null) {
-      return <FontAwesomeIcon icon={faArrowCircleLeft} />;
+    const {
+      inputFocused,
+    } = this.state;
+    let searchIcon;
+    let iconClass = 'sidebar__search-icon';
+    if (searchView !== null || inputFocused) {
+      searchIcon = (
+        <FontAwesomeIcon
+          icon={faArrowCircleLeft}
+          onClick={() => {
+            this.clearSearchText();
+            clearSearch();
+          }}
+        />
+      );
+      iconClass += ` ${iconClass}--return`;
+    } else {
+      searchIcon = <FontAwesomeIcon icon={faSearch} />;
     }
-    return <FontAwesomeIcon icon={faSearch} />;
+
+    return (
+      <div className={iconClass}>
+        {searchIcon}
+      </div>
+    );
   }
 
   getReturnBar() {
@@ -64,20 +89,34 @@ class SidebarSearchBar extends React.PureComponent {
       searchByText,
       toggleSidebar,
       toggleAreaSearching,
+      searchView,
     } = this.props;
-
 
     return (
       <div className="sidebar__search-row sidebar__search-row--search">
         <div className="sidebar__search-row-left">
-          <div className="sidebar__search-icon">
-            {this.getSearchIcon()}
-          </div>
+          
+          {this.getSearchIcon()}
+
           <input
             type="text"
             className="sidebar__text-input"
             placeholder="Search this year..."
             onChange={searchByText}
+            onFocus={() => {
+              this.setState({
+                inputFocused: true,
+              });
+            }}
+            onBlur={() => {
+              if (searchView === null) {
+                this.clearSearchText();
+              }
+              this.setState({
+                inputFocused: false,
+              });
+            }}
+            ref={this.inputRef}
           />
         </div>
         <div className="sidebar__search-row-right">
@@ -99,6 +138,13 @@ class SidebarSearchBar extends React.PureComponent {
         </div>
       </div>
     );
+  }
+
+  clearSearchText() {
+    const inputNode = this.inputRef.current;
+    if (inputNode !== undefined) {
+      inputNode.value = '';
+    }
   }
 
   render() {
