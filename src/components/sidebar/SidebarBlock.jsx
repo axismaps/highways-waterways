@@ -32,7 +32,6 @@ class SidebarBlock extends React.PureComponent {
     const { collapsed } = this.state;
 
     const toggleBlock = () => {
-      
       this.setState({
         collapsed: !collapsed,
       });
@@ -41,7 +40,7 @@ class SidebarBlock extends React.PureComponent {
     const toggleIcon = collapsed
       ? faPlus
       : faMinus;
-    
+
     const iconBlock = icon === null
       ? null
       : (

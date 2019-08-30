@@ -23,6 +23,23 @@ import AreaIcon from './SidebarAreaIcon';
  */
 
 class SidebarSearchBar extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      inputFocused: false,
+    };
+  }
+
+  getSearchIcon() {
+    const {
+      searchView,
+    } = this.props;
+    if (searchView !== null) {
+      return <FontAwesomeIcon icon={faArrowCircleLeft} />;
+    }
+    return <FontAwesomeIcon icon={faSearch} />;
+  }
+
   getReturnBar() {
     const {
       clearSearch,
@@ -54,7 +71,7 @@ class SidebarSearchBar extends React.PureComponent {
       <div className="sidebar__search-row sidebar__search-row--search">
         <div className="sidebar__search-row-left">
           <div className="sidebar__search-icon">
-            <FontAwesomeIcon icon={faSearch} />
+            {this.getSearchIcon()}
           </div>
           <input
             type="text"
@@ -84,7 +101,6 @@ class SidebarSearchBar extends React.PureComponent {
     );
   }
 
-
   render() {
     const {
       searchView,
@@ -103,12 +119,10 @@ SidebarSearchBar.defaultProps = {
 SidebarSearchBar.propTypes = {
   /** Current search view (null, atlas, or text) */
   searchView: PropTypes.string,
-  /** callback to highlight feature */
-  highlightFeature: PropTypes.func,
   /** callback to set application text search value */
-  setTextSearch: PropTypes.func,
+  searchByText: PropTypes.func.isRequired,
   /** callback to clear application search features */
-  clearSearch: PropTypes.func,
+  clearSearch: PropTypes.func.isRequired,
   /** turn on app area search mode */
   toggleAreaSearching: PropTypes.func.isRequired,
   /** callback to close sidebar */

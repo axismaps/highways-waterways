@@ -55,6 +55,10 @@
   height: 95%;
 }
 
+.sidebar__text-input:focus {
+  outline: none;
+}
+
 .sidebar__search-row-divider {
   height: 26px;
   background: #CCCCCC;
