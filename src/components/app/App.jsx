@@ -168,8 +168,8 @@ class App extends React.Component {
     this.clearRaster = this.clearRaster.bind(this);
     this.clearSearch = this.clearSearch.bind(this);
     this.currentTileRange = null;
-    // this.nextRaster = this.nextRaster.bind(this);
-    // this.prevRaster = this.prevRaster.bind(this);
+    this.nextRaster = this.nextRaster.bind(this);
+    this.prevRaster = this.prevRaster.bind(this);
     this.searchByArea = this.searchByArea.bind(this);
     this.searchByPoint = this.searchByPoint.bind(this);
     this.searchByText = this.searchByText.bind(this);
@@ -426,13 +426,21 @@ class App extends React.Component {
     });
   }
 
-  // prevRaster() {
-  //   console.log('prev raster');
-  // }
+  getRastersByCurrentType() {
+    const {
+      currentRaster,
+      viewsData,
+      overlaysData,
+    } = this.state;
+    const { type } = currentRaster;
+    const allRasters = {
+      view: viewsData,
+      overlay: overlaysData,
+    };
+    return allRasters[type];
+  }
 
-  // nextRaster() {
-  //   console.log('next raster');
-  // }
+
 
   setLightbox(raster) {
     this.setState({
@@ -457,6 +465,55 @@ class App extends React.Component {
     const { loading } = this.state;
     if (!loading) return null;
     return <Loader />;
+  }
+
+  getCurrentRasterIndex() {
+    const { currentRaster } = this.state;
+    const rasters = this.getRastersByCurrentType();
+    const rasterIds = rasters.map(d => d.id);
+    return rasterIds.indexOf(currentRaster.raster.id);
+  }
+
+  prevRaster() {
+    const { currentRaster } = this.state;
+    const rasters = this.getRastersByCurrentType();
+    const { type } = currentRaster;
+    const currentIndex = this.getCurrentRasterIndex();
+
+    let prevRaster;
+
+    if (currentIndex === 0) {
+      prevRaster = rasters[rasters.length - 1];
+    } else {
+      prevRaster = rasters[currentIndex - 1];
+    }
+    this.setState({
+      currentRaster: {
+        type,
+        raster: prevRaster,
+      },
+    });
+  }
+
+  nextRaster() {
+    const { currentRaster } = this.state;
+    const rasters = this.getRastersByCurrentType();
+    const { type } = currentRaster;
+    const currentIndex = this.getCurrentRasterIndex();
+
+    let nextRaster;
+
+    if (currentIndex === rasters.length - 1) {
+      [nextRaster] = rasters;
+    } else {
+      nextRaster = rasters[currentIndex + 1];
+    }
+    this.setState({
+      currentRaster: {
+        type,
+        raster: nextRaster,
+      },
+    });
   }
 
   clearLightbox() {

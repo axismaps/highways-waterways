@@ -55,7 +55,6 @@ class SidebarViewFilmstrip extends React.PureComponent {
     } = this.props;
 
     return rasterData.map((view) => {
-
       return (
         <div
           className="filmstrip__thumbnail"
