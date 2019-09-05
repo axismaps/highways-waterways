@@ -9,6 +9,7 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import HeaderStepper from './HeaderStepper';
 import HeaderTimeline from './HeaderTimeline';
+import Dropdown from '../dropdown/Dropdown';
 import './Header.scss';
 import './HeaderMobile.scss';
 
@@ -19,27 +20,45 @@ import './HeaderMobile.scss';
  * App -> Header
  */
 
-const getHeaderTop = () => (
-  <div className="header__top">
-    <div className="header__top-title">
-      Highways + Waterways
-    </div>
-    <div className="header__top-right">
-      <div className="header__top-button">
-        <FontAwesomeIcon icon={faShare} />
-      </div>
-      <div className="header__top-button">
-        <FontAwesomeIcon icon={faInfo} />
-      </div>
-      <div className="header__top-button">
-        <FontAwesomeIcon icon={faDownload} />
-      </div>
-    </div>
-  </div>
-);
-
-
 class Header extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      dropdownOpen: true,
+      dropdownPos: null,
+    };
+
+    this.shareButtonRef = React.createRef();
+
+    this.toggleDropdown = this.toggleDropdown.bind(this);
+  }
+
+  getHeaderTop() {
+    return (
+      <div className="header__top">
+        <div className="header__top-title">
+          Highways + Waterways
+        </div>
+        <div className="header__top-right">
+          <div
+            className="header__top-button"
+            ref={this.shareButtonRef}
+            onClick={this.toggleDropdown}
+          >
+            <FontAwesomeIcon icon={faShare} />
+          </div>
+          <div className="header__top-button">
+            <FontAwesomeIcon icon={faInfo} />
+          </div>
+          <div className="header__top-button">
+            <FontAwesomeIcon icon={faDownload} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   getStepper() {
     const {
       year,
@@ -60,6 +79,7 @@ class Header extends React.PureComponent {
       setYear,
       mobile,
       yearRange,
+      screenWidth,
     } = this.props;
 
     return (
@@ -68,6 +88,7 @@ class Header extends React.PureComponent {
         setYear={setYear}
         mobile={mobile}
         yearRange={yearRange}
+        screenWidth={screenWidth}
       />
     );
   }
@@ -85,6 +106,39 @@ class Header extends React.PureComponent {
     );
   }
 
+  getDropdown() {
+    const {
+      dropdownPos,
+      dropdownOpen,
+    } = this.state;
+
+    if (!dropdownOpen || dropdownPos === null) return null;
+
+    const pos = {
+      left: 300,
+      top: 300,
+    };
+
+    const content = (
+      <div>asdfasdfasdf</div>
+    );
+
+    return (
+      <Dropdown
+        pos={pos}
+      >
+        {content}
+      </Dropdown>
+    );
+  }
+
+  toggleDropdown() {
+    const { dropdownOpen } = this.state;
+    this.setState({
+      dropdownOpen: !dropdownOpen,
+    });
+  }
+
   render() {
     const { mobile } = this.props;
 
@@ -96,13 +150,14 @@ class Header extends React.PureComponent {
     return (
       <div className={containerName}>
         <div className="header__inner">
-          {getHeaderTop()}
+          {this.getHeaderTop()}
           <div className="header__timeline-row">
             {this.getStepper()}
             {this.getTimeline()}
           </div>
           {this.getSidebarButton()}
         </div>
+        {this.getDropdown()}
       </div>
     );
   }

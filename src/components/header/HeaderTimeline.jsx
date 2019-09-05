@@ -21,14 +21,17 @@ class HeaderTimeline extends React.PureComponent {
     this.sliderRef = React.createRef();
     this.containerRef = React.createRef();
     this.state = {
-      containerWidth: null,
-      containerHeight: null,
+      // containerWidth: null,
+      // containerHeight: null,
       tooltip: null,
     };
+    this.containerWidth = null;
+    this.containerHeight = null;
     this.logged = {
       containerWidth: null,
       containerHeight: null,
       year: null,
+      screenWidth: null,
     };
     this.d3Slider = null;
     this.setTooltip = this.setTooltip.bind(this);
@@ -40,34 +43,33 @@ class HeaderTimeline extends React.PureComponent {
     this.containerNode = this.containerRef.current;
 
     this.setDimensions();
-    this.listenForResize();
+    // this.listenForResize();
 
     this.logYear();
     this.logDimensions();
+    this.logScreenWidth();
+
+    this.componentDidUpdate();
   }
 
   componentDidUpdate() {
-    const {
-      containerWidth,
-      containerHeight,
-    } = this.state;
-
     const {
       year,
       setYear,
       mobile,
       yearRange,
+      screenWidth,
     } = this.props;
 
 
     const trackHeight = 36;
 
-    const handleHeight = containerHeight;
+    const handleHeight = this.containerHeight;
     if (this.d3Slider === null) {
       this.d3Slider = new D3Slider({
         trackHeight,
-        width: containerWidth,
-        height: containerHeight,
+        width: this.containerWidth,
+        height: this.containerHeight,
         padding: {
           left: 10,
           right: 0,
@@ -93,10 +95,12 @@ class HeaderTimeline extends React.PureComponent {
       this.d3Slider.updateValue(year);
       this.logYear();
     }
-    if (this.logged.containerWidth !== containerWidth) {
-      this.d3Slider.config({ width: containerWidth })
+
+    if (this.logged.screenWidth !== screenWidth) {
+      this.setDimensions();
+      this.d3Slider.config({ width: this.containerWidth })
         .updateSize();
-      this.logDimensions();
+      this.logScreenWidth();
     }
   }
 
@@ -104,11 +108,12 @@ class HeaderTimeline extends React.PureComponent {
     if (this.timelineNode !== undefined) {
       const bounds = this.timelineNode.getBoundingClientRect();
       const containerBounds = this.containerNode.getBoundingClientRect();
-      this.setState({
-        containerWidth: containerBounds.width - 40,
-        // containerWidth: bounds.width,
-        containerHeight: bounds.height,
-      });
+      // this.setState({
+      //   containerWidth: containerBounds.width - 40,
+      //   containerHeight: bounds.height,
+      // });]
+      this.containerWidth = containerBounds.width - 40;
+      this.containerHeight = bounds.height;
     }
   }
 
@@ -145,11 +150,11 @@ class HeaderTimeline extends React.PureComponent {
     return tooltip;
   }
 
-  listenForResize() {
-    window.addEventListener('resize', () => {
-      this.setDimensions();
-    });
-  }
+  // listenForResize() {
+  //   window.addEventListener('resize', () => {
+  //     this.setDimensions();
+  //   });
+  // }
 
   logYear() {
     const { year } = this.props;
@@ -164,6 +169,11 @@ class HeaderTimeline extends React.PureComponent {
       containerHeight,
     } = this.state;
     Object.assign(this.logged, { containerWidth, containerHeight });
+  }
+
+  logScreenWidth() {
+    const { screenWidth } = this.props;
+    Object.assign(this.logged, { screenWidth });
   }
 
   render() {

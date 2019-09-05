@@ -142,6 +142,7 @@ class App extends React.Component {
         { name: 'overlay2', id: 2 },
         { name: 'overlay3', id: 3 },
       ],
+      screenWidth: window.innerWidth,
       searchFeatureGeojson: [],
       /** mapbox-gl features */
       searchFeatures: [],
@@ -189,6 +190,15 @@ class App extends React.Component {
 
   componentDidMount() {
     this.loadInitialData();
+    this.setResizeListener();
+  }
+
+  setResizeListener() {
+    window.addEventListener('resize', () => {
+      this.setState({
+        screenWidth: window.innerWidth,
+      });
+    });
   }
 
   getAtlas() {
@@ -250,6 +260,7 @@ class App extends React.Component {
       mobile,
       year,
       tileRanges,
+      screenWidth,
     } = this.state;
     if (yearRange === null) return null;
 
@@ -261,6 +272,7 @@ class App extends React.Component {
         setYear={this.setYear}
         tileRanges={tileRanges}
         toggleSidebar={this.toggleSidebar}
+        screenWidth={screenWidth}
       />
     );
   }
