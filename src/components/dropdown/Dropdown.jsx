@@ -26,11 +26,16 @@ class Dropdown extends React.PureComponent {
       open,
     } = this.props;
 
+    console.log('pos', pos);
     const style = {
-      left: `${pos.left}px`,
       top: `${pos.top}px`,
-      background: 'red',
     };
+
+    if ('left' in pos) {
+      style.left = `${pos.left}px`;
+    } else if ('right' in pos) {
+      style.right = `${pos.right}px`;
+    }
 
     const dropdown = (
       <div style={style} className="dropdown">

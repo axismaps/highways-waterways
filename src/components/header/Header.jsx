@@ -25,13 +25,17 @@ class Header extends React.PureComponent {
     super(props);
 
     this.state = {
-      dropdownOpen: true,
+      dropdownOpen: false,
       dropdownPos: null,
     };
 
     this.shareButtonRef = React.createRef();
 
     this.toggleDropdown = this.toggleDropdown.bind(this);
+  }
+
+  componentDidMount() {
+    this.setDropdownPos();
   }
 
   getHeaderTop() {
@@ -111,13 +115,9 @@ class Header extends React.PureComponent {
       dropdownPos,
       dropdownOpen,
     } = this.state;
-
+    console.log('open', dropdownOpen);
+    console.log('pos', dropdownPos);
     if (!dropdownOpen || dropdownPos === null) return null;
-
-    const pos = {
-      left: 300,
-      top: 300,
-    };
 
     const content = (
       <div>asdfasdfasdf</div>
@@ -125,11 +125,29 @@ class Header extends React.PureComponent {
 
     return (
       <Dropdown
-        pos={pos}
+        pos={dropdownPos}
       >
         {content}
       </Dropdown>
     );
+  }
+
+  setDropdownPos() {
+    const node = this.shareButtonRef.current;
+    if (node === undefined) return;
+    const {
+      top,
+      // left,
+      height,
+    } = node.getBoundingClientRect();
+    console.log('node', node.getBoundingClientRect());
+    this.setState({
+      dropdownPos: {
+        // left,
+        right: 15,
+        top: top + height + 20,
+      },
+    });
   }
 
   toggleDropdown() {
@@ -138,6 +156,8 @@ class Header extends React.PureComponent {
       dropdownOpen: !dropdownOpen,
     });
   }
+
+
 
   render() {
     const { mobile } = this.props;

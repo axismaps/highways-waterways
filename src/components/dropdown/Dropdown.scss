@@ -1,3 +1,11 @@
+@import '../../config';
+
 .dropdown {
   position: absolute;
+  z-index: 2000;
+  background: white;
+  border-radius: 5px;
+  padding: 10px;
+  width: 200px;
+  box-shadow: $main-shadow;
 }
