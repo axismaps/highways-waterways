@@ -126,6 +126,7 @@ class Header extends React.PureComponent {
     return (
       <Dropdown
         pos={dropdownPos}
+        toggleDropdown={this.toggleDropdown}
       >
         {content}
       </Dropdown>
@@ -150,14 +151,18 @@ class Header extends React.PureComponent {
     });
   }
 
-  toggleDropdown() {
+  toggleDropdown(status) {
     const { dropdownOpen } = this.state;
-    this.setState({
-      dropdownOpen: !dropdownOpen,
-    });
+    if (typeof status === 'boolean') {
+      this.setState({
+        dropdownOpen: status,
+      });
+    } else {
+      this.setState({
+        dropdownOpen: !dropdownOpen,
+      });
+    }
   }
-
-
 
   render() {
     const { mobile } = this.props;

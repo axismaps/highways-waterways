@@ -9,6 +9,7 @@ class Dropdown extends React.PureComponent {
   constructor(props) {
     super(props);
     this.el = document.createElement('div');
+    this.timer = null;
   }
 
   componentDidMount() {
@@ -24,6 +25,7 @@ class Dropdown extends React.PureComponent {
       children,
       pos,
       open,
+      toggleDropdown,
     } = this.props;
 
     console.log('pos', pos);
@@ -37,8 +39,29 @@ class Dropdown extends React.PureComponent {
       style.right = `${pos.right}px`;
     }
 
+    const setTimer = () => {
+      this.timer = setTimeout(() => {
+        this.timer = null;
+        toggleDropdown(false);
+      }, 1000);
+    };
+
+    const cancelTimer = () => {
+      if (this.timer !== null) {
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
+    };
+
     const dropdown = (
-      <div style={style} className="dropdown">
+      <div
+        style={style}
+        className="dropdown"
+        onMouseOver={cancelTimer}
+        onFocus={cancelTimer}
+        onMouseOut={setTimer}
+        onBlur={setTimer}
+      >
         <div className="dropdown__inner">
           {children}
         </div>
