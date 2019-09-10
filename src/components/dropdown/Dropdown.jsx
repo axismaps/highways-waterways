@@ -24,11 +24,9 @@ class Dropdown extends React.PureComponent {
     const {
       children,
       pos,
-      open,
       toggleDropdown,
     } = this.props;
 
-    console.log('pos', pos);
     const style = {
       top: `${pos.top}px`,
     };

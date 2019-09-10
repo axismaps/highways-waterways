@@ -115,12 +115,16 @@ class Header extends React.PureComponent {
       dropdownPos,
       dropdownOpen,
     } = this.state;
-    console.log('open', dropdownOpen);
-    console.log('pos', dropdownPos);
+
     if (!dropdownOpen || dropdownPos === null) return null;
 
     const content = (
-      <div>asdfasdfasdf</div>
+      <div>
+        <div className="dropdown__top-row">Choose a platform:</div>
+        <div className="dropdown__row">Facebook</div>
+        <div className="dropdown__row">Twitter</div>
+        <div className="dropdown__row">Instagram</div>
+      </div>
     );
 
     return (
@@ -141,7 +145,7 @@ class Header extends React.PureComponent {
       // left,
       height,
     } = node.getBoundingClientRect();
-    console.log('node', node.getBoundingClientRect());
+
     this.setState({
       dropdownPos: {
         // left,
