@@ -143,7 +143,16 @@ class D3Slider {
     const { axisScale } = this.components;
     if (!axisOn) return;
     this.axis = d3.axisBottom(axisScale)
-      .tickFormat(d => (mobile ? '' : d));
+      .ticks(40)
+      .tickFormat((d) => {
+        if (mobile) {
+          return '';
+        }
+        if ((d - 10) % 20 !== 0) {
+          return '';
+        }
+        return d;
+      });
 
     this.axisGroup.call(this.axis);
   }
