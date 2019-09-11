@@ -36,7 +36,7 @@ class SidebarSearchBar extends React.PureComponent {
       searchView,
       initialText,
     } = this.props;
-    if (this.inputRef.current !== undefined && searchView !== null) {
+    if (this.inputRef.current !== null && searchView !== null) {
       this.inputRef.current.value = initialText;
     }
   }

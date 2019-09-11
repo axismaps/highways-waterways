@@ -737,7 +737,9 @@ class App extends React.Component {
           results,
           legendData,
         });
+
         this.setState({
+          sidebarOpen: true,
           loading: false,
           highlightedFeature: null,
           searchView: 'atlas',
