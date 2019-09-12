@@ -58,7 +58,8 @@ $header-padding: 20px;
   align-items: center;
   flex-grow: 1;
   padding-left: $header-padding;
-  padding-right: $header-padding;
+  // padding-right: $header-padding;
+  padding-right: $header-padding - 10;
   display: flex;
 }
 

@@ -195,6 +195,7 @@ HeaderTimeline.propTypes = {
   mobile: PropTypes.bool,
   /** sets current year */
   setYear: PropTypes.func.isRequired,
+  screenWidth: PropTypes.number.isRequired,
   /** current year */
   year: PropTypes.number.isRequired,
   /** range of available years */

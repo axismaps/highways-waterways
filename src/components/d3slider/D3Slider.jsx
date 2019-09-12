@@ -267,7 +267,7 @@ class D3Slider {
       const { xScale } = this.components;
       const outside = d3.event.x < (padding.left) || d3.event.x > width + padding.right;
       setYear(xScale(d3.event.x));
-      
+
       if (tooltip && !outside) {
         setTooltip({
           x: getX(d3.event.x),
@@ -277,7 +277,7 @@ class D3Slider {
         });
       }
     };
-    
+
     track.call(d3.drag()
       .on('start', () => {
         this.dragging = true;
