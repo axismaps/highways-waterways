@@ -142,13 +142,24 @@ class D3Slider {
     const { mobile, axisOn } = this.props;
     const { axisScale } = this.components;
     if (!axisOn) return;
+
+    const domain = axisScale.domain();
+
+    const ticks = [domain[0]];
+    for (let i = domain[0]; i < domain[1]; i += 1) {
+      if (i % 5 === 0) {
+        ticks.push(i);
+      }
+    }
+    ticks.push(domain[1]);
+
     this.axis = d3.axisBottom(axisScale)
-      .ticks(40)
+      .tickValues(ticks)
       .tickFormat((d) => {
         if (mobile) {
           return '';
         }
-        if ((d - 10) % 20 !== 0) {
+        if ((d - 10) % 20 !== 0 && d !== domain[0] && d !== domain[1]) {
           return '';
         }
         return d;

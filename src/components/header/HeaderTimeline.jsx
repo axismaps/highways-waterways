@@ -72,7 +72,7 @@ class HeaderTimeline extends React.PureComponent {
         height: this.containerHeight,
         padding: {
           left: 10,
-          right: 0,
+          right: 10,
         },
         handleCornerRadius: 5,
         handleHeight,

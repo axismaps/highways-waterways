@@ -111,6 +111,7 @@ class Sidebar extends React.PureComponent {
       sidebarOpen,
       mobile,
     } = this.props;
+    console.log('render');
     if (!sidebarOpen) return null;
     let containerClass = 'sidebar';
     if (mobile) {
