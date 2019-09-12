@@ -48,6 +48,7 @@ class SidebarLayersBlock extends React.PureComponent {
     if (highlightedLayer === layer.id) {
       buttonClass += ` ${buttonClass}--highlighted`;
     }
+
     return (
       <div
         className="sidebar__layer-row"

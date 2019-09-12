@@ -53,6 +53,10 @@ $header-padding: 20px;
   font-size: 14px;
 }
 
+.header__top-button:hover {
+  background: $light-grey-hover;
+}
+
 .header__timeline-row {
   // height: 100%;
   align-items: center;
