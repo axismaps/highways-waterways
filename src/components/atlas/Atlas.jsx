@@ -170,7 +170,6 @@ class Atlas extends React.PureComponent {
     const {
       style,
     } = this.props;
-
     const styleCopy = JSON.parse(JSON.stringify(style));
     styleCopy.layers = styleCopy.layers.map(layer => this.getFilteredLayer(layer));
 
@@ -206,7 +205,7 @@ class Atlas extends React.PureComponent {
     const { highlightedLayer } = this.props;
     const { layers } = this.mbMap.getStyle();
     const { layerOpacityProps } = this.logged;
-
+    console.log('highlighted layer', highlightedLayer);
     layers.forEach((layer) => {
       const originalPaint = layerOpacityProps[layer.id];
       if (originalPaint !== null) {
@@ -432,7 +431,6 @@ Atlas.defaultProps = {
     'text-opacity',
     'icon-opacity',
   ],
-  views: null,
 };
 
 Atlas.propTypes = {
@@ -459,21 +457,26 @@ Atlas.propTypes = {
   }),
   /** List of layer paint properties that affect opacity */
   layerOpacityFields: PropTypes.arrayOf(PropTypes.string),
-  /** callback to search by coordinate area */
-  searchByArea: PropTypes.func.isRequired,
   /** callback to search by point (click) */
   searchByPoint: PropTypes.func.isRequired,
   /** If sidebar is current open */
   sidebarOpen: PropTypes.bool.isRequired,
   /** mapbox-gl style object */
-  style: PropTypes.object.isRequired,
-  /** Callback to toggle sidebar visibility */
-  toggleSidebar: PropTypes.func.isRequired,
-  /** Available view rasters */
-  views: PropTypes.arrayOf(PropTypes.object),
+  // style: PropTypes.object.isRequired,
+  style: PropTypes.shape({
+    bearing: PropTypes.number,
+    center: PropTypes.array,
+    glyphs: PropTypes.string,
+    layers: PropTypes.array,
+    name: PropTypes.string,
+    pitch: PropTypes.number,
+    sources: PropTypes.object,
+    sprite: PropTypes.string,
+    version: PropTypes.number,
+    zoom: PropTypes.number,
+  }).isRequired,
   /** Current year */
   year: PropTypes.number.isRequired,
-  yearRange: PropTypes.arrayOf(PropTypes.number),
 };
 
 export default Atlas;

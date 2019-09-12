@@ -21,10 +21,6 @@ class Sidebar extends React.PureComponent {
     this.logInputText = this.logInputText.bind(this);
   }
 
-  logInputText(inputText) {
-    this.loggedInputText = inputText;
-  }
-
   getLegend() {
     const {
       searchView,
@@ -106,12 +102,16 @@ class Sidebar extends React.PureComponent {
     );
   }
 
+  logInputText(inputText) {
+    this.loggedInputText = inputText;
+  }
+
   render() {
     const {
       sidebarOpen,
       mobile,
     } = this.props;
-    console.log('render');
+
     if (!sidebarOpen) return null;
     let containerClass = 'sidebar';
     if (mobile) {

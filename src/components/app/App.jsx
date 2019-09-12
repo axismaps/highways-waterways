@@ -364,12 +364,10 @@ class App extends React.Component {
   }
 
   getStylePromise() {
-    // return d3.json('temp/style.json');
     return d3.json(`http://highways.axismaps.io/api/v1/getStyle?start=${this.currentTileRange[0]}&end=${this.currentTileRange[1]}`);
   }
 
   static getLegendPromise(year) {
-    // return d3.json('temp/newlegend.json');
     return d3.json(`http://highways.axismaps.io/api/v1/getLegend?start=${year}&end=${year}`);
   }
 
@@ -451,8 +449,6 @@ class App extends React.Component {
     };
     return allRasters[type];
   }
-
-
 
   setLightbox(raster) {
     this.setState({
@@ -595,7 +591,6 @@ class App extends React.Component {
       legendData,
     ] = await Promise.all([
       d3.json('http://highways.axismaps.io/api/v1/getTimeline'),
-      // d3.json('temp/tileranges.json'),
       App.getLegendPromise(year),
     ]);
 
@@ -723,8 +718,8 @@ class App extends React.Component {
         });
       })
       .catch((err) => {
-        this.setState({ loading: false });
         console.log(err);
+        this.setState({ loading: false });
       });
   }
 
