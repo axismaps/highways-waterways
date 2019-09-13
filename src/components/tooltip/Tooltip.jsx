@@ -16,10 +16,7 @@ const tooltipRoot = document.getElementById('tooltip-root');
  * App -> Sidebar -> SidebarBlock -> SidebarViewFilmstrip -> Tooltip
  *
  * App -> Sidebar -> SidebarBlock -> SidebarLayersBlock
- * -> SidebarValueSliderLayer -> Tooltip
- *
- * App -> Sidebar -> SidebarBlock -> SidebarLayersBlock
- * -> SidebarRangeSliderLayer -> Tooltip
+ * -> SliderLayer -> Tooltip
  *
  * App -> Atlas -> Tooltip
  */
@@ -50,10 +47,7 @@ class Tooltip extends React.PureComponent {
       top: `${y}px`,
       left: `${x}px`,
     };
-    // if (x > window.innerWidth / 2) style.right = `${window.innerWidth - x}px`;
-    // else style.left = `${x}px`;
-    // if (y > 200) style.bottom = `${window.innerHeight - y}px`;
-    // else style.top = `${y}px`;
+
     const tooltip = (
       <div className="tooltip" style={style}>
         <div className="tooltip__inner">
@@ -70,8 +64,6 @@ class Tooltip extends React.PureComponent {
 }
 
 Tooltip.defaultProps = {
-  location: 'sidebar', // either sidebar or atlas
-  position: 'right',
   width: 100,
 };
 
@@ -82,8 +74,6 @@ Tooltip.propTypes = {
     PropTypes.arrayOf(PropTypes.object),
     PropTypes.object,
   ]).isRequired,
-  location: PropTypes.string,
-  position: PropTypes.string,
   width: PropTypes.number,
 };
 

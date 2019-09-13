@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import * as d3 from 'd3';
 import D3Slider from '../d3slider/D3Slider';
 import Tooltip from '../tooltip/Tooltip';
 
@@ -21,8 +20,6 @@ class HeaderTimeline extends React.PureComponent {
     this.sliderRef = React.createRef();
     this.containerRef = React.createRef();
     this.state = {
-      // containerWidth: null,
-      // containerHeight: null,
       tooltip: null,
     };
     this.containerWidth = null;
@@ -43,7 +40,6 @@ class HeaderTimeline extends React.PureComponent {
     this.containerNode = this.containerRef.current;
 
     this.setDimensions();
-    // this.listenForResize();
 
     this.logYear();
     this.logDimensions();
@@ -79,7 +75,6 @@ class HeaderTimeline extends React.PureComponent {
         handleLineOffset: 15,
         handleWidth: 20,
         timelineNode: this.sliderRef.current,
-        // value range, current value
         currentValue: year,
         valueRange: yearRange,
         setYear,
@@ -108,10 +103,6 @@ class HeaderTimeline extends React.PureComponent {
     if (this.timelineNode !== undefined) {
       const bounds = this.timelineNode.getBoundingClientRect();
       const containerBounds = this.containerNode.getBoundingClientRect();
-      // this.setState({
-      //   containerWidth: containerBounds.width - 40,
-      //   containerHeight: bounds.height,
-      // });]
       this.containerWidth = containerBounds.width - 40;
       this.containerHeight = bounds.height;
     }
@@ -149,12 +140,6 @@ class HeaderTimeline extends React.PureComponent {
     if (tooltip === null) return null;
     return tooltip;
   }
-
-  // listenForResize() {
-  //   window.addEventListener('resize', () => {
-  //     this.setDimensions();
-  //   });
-  // }
 
   logYear() {
     const { year } = this.props;

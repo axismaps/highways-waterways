@@ -25,7 +25,6 @@ class SidebarSearchResults extends React.PureComponent {
 
       return buttonClass;
     };
-    
 
     return features
       .map(d => (
@@ -85,8 +84,12 @@ SidebarSearchResults.defaultProps = {
 
 SidebarSearchResults.propTypes = {
   highlightedFeature: PropTypes.shape({
-    ids: PropTypes.arrayOf(PropTypes.string),
-    name: PropTypes.string,
+    feature: PropTypes.shape({
+      bbox: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
+      ids: PropTypes.arrayOf(PropTypes.string),
+      name: PropTypes.string,
+    }),
+    source: PropTypes.string,
   }),
   /** results from Atlas search */
   searchFeatures: PropTypes.arrayOf(PropTypes.object),

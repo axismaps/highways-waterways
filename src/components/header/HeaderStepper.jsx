@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import {
-//   faChevronCircleLeft,
-// } from '@fortawesome/pro-solid-svg-icons';
+
 import {
   faChevronLeft,
   faChevronRight,
@@ -51,7 +49,6 @@ class HeaderStepper extends React.PureComponent {
         >
           <FontAwesomeIcon
             icon={faChevronRight}
-            
           />
         </div>
       </div>
@@ -60,10 +57,10 @@ class HeaderStepper extends React.PureComponent {
 }
 
 HeaderStepper.propTypes = {
-  /** Current year */
-  year: PropTypes.number,
+  /** current year */
+  year: PropTypes.number.isRequired,
   /** Sets application year */
-  setYear: PropTypes.func,
+  setYear: PropTypes.func.isRequired,
 };
 
 export default HeaderStepper;

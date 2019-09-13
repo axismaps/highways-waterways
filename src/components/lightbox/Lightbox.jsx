@@ -26,7 +26,7 @@ class Lightbox extends React.PureComponent {
 }
 
 Lightbox.propTypes = {
-  /** Callback to close lightbox */
+  /** callback to close lightbox */
   clearLightbox: PropTypes.func.isRequired,
   lightboxRaster: PropTypes.shape({
     type: PropTypes.string,

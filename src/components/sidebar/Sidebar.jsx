@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import SidebarBlock from './SidebarBlock';
 import SidebarSearchBar from './SidebarSearchBar';
-// import SidebarViewFilmstrip from './SidebarViewFilmstrip';
 import SidebarLegend from './SidebarLegend';
 import SidebarSearchResults from './SidebarSearchResults';
 import './Sidebar.scss';
@@ -147,8 +145,12 @@ Sidebar.propTypes = {
   /** layer ids of all layers currently off */
   hiddenLayers: PropTypes.arrayOf(PropTypes.string).isRequired,
   highlightedFeature: PropTypes.shape({
-    ids: PropTypes.arrayOf(PropTypes.string),
-    name: PropTypes.string,
+    feature: PropTypes.shape({
+      bbox: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
+      ids: PropTypes.arrayOf(PropTypes.string),
+      name: PropTypes.string,
+    }),
+    source: PropTypes.string,
   }),
   /** currently highlighted layer id */
   highlightedLayer: PropTypes.string,
@@ -170,8 +172,6 @@ Sidebar.propTypes = {
   searchView: PropTypes.string,
   /** Sets choropleth filter values */
   setChoroplethValue: PropTypes.func.isRequired,
-  /** Sets hydroRaster filter values */
-  // setHydroRasterValue: PropTypes.func.isRequired,
   /** callback to highlight feature (GeoJSON feature object) */
   setHighlightedFeature: PropTypes.func.isRequired,
   /** callback to set highlightedLayer (layer id/name) */

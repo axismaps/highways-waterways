@@ -3,7 +3,6 @@
 .sidebar {
   background: #EEEEEE;
   display: flex;
-  // width: 310px;
   width: 320px;
   flex-direction: column;
   box-shadow: $main-shadow;
@@ -87,7 +86,6 @@
   padding-left: 20px;
   padding-right: 20px;
   overflow-y: auto;
-  // this needs to be changed...
   height: calc(100vh - 169px);
 }
 

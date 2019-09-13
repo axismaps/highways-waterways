@@ -104,7 +104,6 @@ class SidebarSearchBar extends React.PureComponent {
     return (
       <div className="sidebar__search-row sidebar__search-row--search">
         <div className="sidebar__search-row-left">
-          
           {this.getSearchIcon()}
 
           <input
@@ -185,6 +184,10 @@ SidebarSearchBar.propTypes = {
   toggleAreaSearching: PropTypes.func.isRequired,
   /** callback to close sidebar */
   toggleSidebar: PropTypes.func.isRequired,
+  /** callback to save current search text */
+  logInputText: PropTypes.func.isRequired,
+  /** default search input text */
+  initialText: PropTypes.string.isRequired,
 };
 
 export default SidebarSearchBar;

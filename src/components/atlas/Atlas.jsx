@@ -205,7 +205,7 @@ class Atlas extends React.PureComponent {
     const { highlightedLayer } = this.props;
     const { layers } = this.mbMap.getStyle();
     const { layerOpacityProps } = this.logged;
-    console.log('highlighted layer', highlightedLayer);
+
     layers.forEach((layer) => {
       const originalPaint = layerOpacityProps[layer.id];
       if (originalPaint !== null) {
@@ -451,8 +451,11 @@ Atlas.propTypes = {
   /** Currently highlighted layer id */
   highlightedLayer: PropTypes.string,
   highlightedFeature: PropTypes.shape({
-    id: PropTypes.string,
-    feature: PropTypes.object,
+    feature: PropTypes.shape({
+      bbox: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
+      ids: PropTypes.arrayOf(PropTypes.string),
+      name: PropTypes.string,
+    }),
     source: PropTypes.string,
   }),
   /** List of layer paint properties that affect opacity */
@@ -462,7 +465,6 @@ Atlas.propTypes = {
   /** If sidebar is current open */
   sidebarOpen: PropTypes.bool.isRequired,
   /** mapbox-gl style object */
-  // style: PropTypes.object.isRequired,
   style: PropTypes.shape({
     bearing: PropTypes.number,
     center: PropTypes.array,

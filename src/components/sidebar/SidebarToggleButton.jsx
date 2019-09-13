@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faAngleDoubleRight,
@@ -19,5 +20,10 @@ class SidebarToggleButton extends React.PureComponent {
     );
   }
 }
+
+SidebarToggleButton.propTypes = {
+  /** callback to toggle sidebar */
+  toggleSidebar: PropTypes.func.isRequired,
+};
 
 export default SidebarToggleButton;

@@ -255,7 +255,6 @@ class D3Slider {
     } = this.props;
     const {
       track,
-      // xScale,
       svg,
     } = this.components;
     const svgRect = svg.node().getBoundingClientRect();

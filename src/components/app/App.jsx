@@ -88,9 +88,6 @@ class App extends React.Component {
           id: '1',
           minValue: 2,
           maxValue: 20,
-          // colorRamp: d3.scaleQuantize()
-          //   .domain([2, 20])
-          //   .range(colors.Blues[5]),
           colorRamp: colors.Blues[5],
         },
         {
@@ -98,9 +95,6 @@ class App extends React.Component {
           id: '2',
           minValue: 5,
           maxValue: 60,
-          // colorRamp: d3.scaleQuantize()
-          //   .domain([5, 60])
-          //   .range(colors.Oranges[5]),
           colorRamp: colors.Oranges[5],
         },
       ],
@@ -310,19 +304,6 @@ class App extends React.Component {
       this.dataTimer = setTimeout(updateData, 500);
     }
   }
-
-  // setYearDebounced(newYear) {
-  //   const setYear = () => {
-  //     this.setYear(newYear);
-  //     this.yearTimer = null;
-  //   };
-  //   if (this.yearTimer === null) {
-  //     this.yearTimer = setTimeout(setYear, 500);
-  //   } else {
-  //     clearTimeout(setYear);
-  //     this.yearTimer = setTimeout(setYear, 500);
-  //   }
-  // }
 
   setHighlightedLayer(layerId) {
     const { highlightedLayer } = this.state;

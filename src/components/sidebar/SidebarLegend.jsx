@@ -8,7 +8,6 @@ import SidebarLayersBlock from './SidebarLayersBlock';
 import SidebarBlock from './SidebarBlock';
 import SidebarVulnerabilityLayer from './SidebarVulnerabilityLayer';
 
-// import SidebarFilmstrip from './SidebarFilmstrip';
 
 /**
  * This component displays the map legend--map layers,
@@ -17,19 +16,7 @@ import SidebarVulnerabilityLayer from './SidebarVulnerabilityLayer';
  * App -> Sidebar-> SidebarBlock -> SidebarLegend
  */
 
-// <SidebarBlock>
-// <SidebarViewFilmstrip
-//   setView={setView}
-//   currentView={currentView}
-//   availableViews={availableViews}
-// />
-// </SidebarBlock>
-
 class SidebarLegend extends React.PureComponent {
-  drawOverlayFilmstrip() {
-
-  }
-
   drawViewFilmstrip() {
     const {
       viewsData,
@@ -85,7 +72,7 @@ class SidebarLegend extends React.PureComponent {
         hidden={hiddenLayers.includes(legendGroup.id)}
       />
     ));
-    // this block should be split into categories
+
     return (
       <SidebarBlock
         title="Environment"
@@ -138,7 +125,6 @@ class SidebarLegend extends React.PureComponent {
   }
 
   render() {
-    // draw film strips, hydrolayers, etc.
     return (
       <div className="sidebar__legend">
         {this.drawVulnerability()}
@@ -159,13 +145,13 @@ SidebarLegend.propTypes = {
   /** All views for selected year */
   viewsData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /** All overlays for selected year */
-  overlaysData: PropTypes.arrayOf(PropTypes.object).isRequired,
+  // overlaysData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /** all hydro rasters (SLR) for selected year */
-  hydroRasterData: PropTypes.arrayOf(PropTypes.object).isRequired,
+  // hydroRasterData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /** All choropleth layers for selected year */
   choroplethData: PropTypes.arrayOf(PropTypes.object).isRequired,
   choroplethValues: PropTypes.instanceOf(Map).isRequired,
-  hydroRasterValues: PropTypes.instanceOf(Map).isRequired,
+  // hydroRasterValues: PropTypes.instanceOf(Map).isRequired,
   /** all layers and swatches */
   legendData: PropTypes.arrayOf(PropTypes.object).isRequired,
 

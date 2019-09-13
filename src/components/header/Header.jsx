@@ -142,13 +142,11 @@ class Header extends React.PureComponent {
     if (node === undefined) return;
     const {
       top,
-      // left,
       height,
     } = node.getBoundingClientRect();
 
     this.setState({
       dropdownPos: {
-        // left,
         right: 15,
         top: top + height + 20,
       },
@@ -194,17 +192,18 @@ class Header extends React.PureComponent {
 
 Header.propTypes = {
   toggleSidebar: PropTypes.func.isRequired,
+  /** if app is in mobile view or not */
   mobile: PropTypes.bool.isRequired,
-  /** Current year */
+  /** current year */
   year: PropTypes.number.isRequired,
   /** range of available years */
   yearRange: PropTypes.arrayOf(PropTypes.number).isRequired,
-  /** Sets application year */
+  /** sets application year */
   setYear: PropTypes.func.isRequired,
-  // /** Sets year range to load in Atlas tiles */
-  // setTileRange: PropTypes.func.isRequired,
-  // /** All tile ranges */
-  // tileRanges: PropTypes.arrayOf(PropTypes.array).isRequired,
+  /**
+   * current app screen width, used to trigger re-render on screen resize
+   */
+  screenWidth: PropTypes.number.isRequired,
 };
 
 export default Header;

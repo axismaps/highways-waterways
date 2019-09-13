@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 
 import './Dropdown.scss';
 
@@ -29,13 +30,8 @@ class Dropdown extends React.PureComponent {
 
     const style = {
       top: `${pos.top}px`,
+      right: `${pos.right}px`,
     };
-
-    if ('left' in pos) {
-      style.left = `${pos.left}px`;
-    } else if ('right' in pos) {
-      style.right = `${pos.right}px`;
-    }
 
     const setTimer = () => {
       this.timer = setTimeout(() => {
@@ -74,3 +70,15 @@ class Dropdown extends React.PureComponent {
 }
 
 export default Dropdown;
+
+Dropdown.propTypes = {
+  /** dropdown html content */
+  children: PropTypes.node.isRequired,
+  /** dropdown absolute position */
+  pos: PropTypes.shape({
+    top: PropTypes.number,
+    right: PropTypes.number,
+  }).isRequired,
+  /** callback to set dropdown visibility */
+  toggleDropdown: PropTypes.func.isRequired,
+};

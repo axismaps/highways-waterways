@@ -58,11 +58,9 @@ $header-padding: 20px;
 }
 
 .header__timeline-row {
-  // height: 100%;
   align-items: center;
   flex-grow: 1;
   padding-left: $header-padding;
-  // padding-right: $header-padding;
   padding-right: $header-padding - 10;
   display: flex;
 }
@@ -109,7 +107,6 @@ $header-padding: 20px;
 .timeline__slider {
   height: 40px;
   flex-grow: 1;
-  // margin-right: 0px;
   margin-left: 30px;
 }
 

@@ -54,16 +54,14 @@ class SidebarViewFilmstrip extends React.PureComponent {
       setRaster,
     } = this.props;
 
-    return rasterData.map((view) => {
-      return (
-        <div
-          className="filmstrip__thumbnail"
-          onClick={() => setRaster(view)}
-        >
-          {view.name}
-        </div>
-      );
-    });
+    return rasterData.map(view => (
+      <div
+        className="filmstrip__thumbnail"
+        onClick={() => setRaster(view)}
+      >
+        {view.name}
+      </div>
+    ));
   }
 
   getCountDisplay() {

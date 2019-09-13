@@ -41,4 +41,3 @@ AreaSearchBox.propTypes = {
 };
 
 export default AreaSearchBox;
-
