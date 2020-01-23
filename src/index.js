@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import '@babel/polyfill';
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 import './index.scss';
 import App from './components/app/App';
 
