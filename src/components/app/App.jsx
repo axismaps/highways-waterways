@@ -345,11 +345,11 @@ class App extends React.Component {
   }
 
   getStylePromise() {
-    return d3.json(`http://highways.axismaps.io/api/v1/getStyle?start=${this.currentTileRange[0]}&end=${this.currentTileRange[1]}`);
+    return d3.json(`http://highways.axismaps.io/api/v1/get/style?start=${this.currentTileRange[0]}&end=${this.currentTileRange[1]}`);
   }
 
   static getLegendPromise(year) {
-    return d3.json(`http://highways.axismaps.io/api/v1/getLegend?start=${year}&end=${year}`);
+    return d3.json(`http://highways.axismaps.io/api/v1/get/legend?start=${year}&end=${year}`);
   }
 
   getSidebarToggleButton() {
@@ -571,7 +571,7 @@ class App extends React.Component {
       tileRangesData,
       legendData,
     ] = await Promise.all([
-      d3.json('http://highways.axismaps.io/api/v1/getTimeline'),
+      d3.json('http://highways.axismaps.io/api/v1/get/timeline'),
       App.getLegendPromise(year),
     ]);
 
