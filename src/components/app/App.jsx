@@ -345,11 +345,11 @@ class App extends React.Component {
   }
 
   getStylePromise() {
-    return d3.json(`http://highways.axismaps.io/api/v1/get/style?start=${this.currentTileRange[0]}&end=${this.currentTileRange[1]}`);
+    return d3.json(`http://138.197.102.252/api/v1/get/style?start=${this.currentTileRange[0]}&end=${this.currentTileRange[1]}`);
   }
 
   static getLegendPromise(year) {
-    return d3.json(`http://highways.axismaps.io/api/v1/get/legend?start=${year}&end=${year}`);
+    return d3.json(`http://138.197.102.252/api/v1/get/legend?start=${year}&end=${year}`);
   }
 
   getSidebarToggleButton() {
@@ -571,7 +571,7 @@ class App extends React.Component {
       tileRangesData,
       legendData,
     ] = await Promise.all([
-      d3.json('http://highways.axismaps.io/api/v1/get/timeline'),
+      d3.json('http://138.197.102.252/api/v1/get/timeline'),
       App.getLegendPromise(year),
     ]);
 
@@ -636,7 +636,7 @@ class App extends React.Component {
 
     const doSearch = () => {
       this.setState({ loading: true });
-      d3.json(`http://highways.axismaps.io/api/v1/search/${value}?start=${year}`)
+      d3.json(`http://138.197.102.252/api/v1/search/${value}?start=${year}`)
         .then((results) => {
           const searchResults = App.getCleanSearchResults({
             results,
@@ -684,7 +684,7 @@ class App extends React.Component {
     const yMax = d3.max([area[0].lat, area[1].lat]);
 
     this.setState({ loading: true });
-    d3.json(`http://highways.axismaps.io/api/v1/probe/[${xMin},${yMin},${xMax},${yMax}]`)
+    d3.json(`http://138.197.102.252/api/v1/probe/[${xMin},${yMin},${xMax},${yMax}]`)
       .then((results) => {
         const searchResults = App.getCleanSearchResults({
           results,
@@ -707,7 +707,7 @@ class App extends React.Component {
   searchByPoint(point) {
     const { legendData } = this.state;
     this.setState({ loading: true });
-    d3.json(`http://highways.axismaps.io/api/v1/probe/[${point.lng},${point.lat}]`)
+    d3.json(`http://138.197.102.252/api/v1/probe/[${point.lng},${point.lat}]`)
       .then((results) => {
         const searchResults = App.getCleanSearchResults({
           results,
