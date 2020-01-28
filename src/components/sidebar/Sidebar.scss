@@ -1,13 +1,12 @@
-@import '../../config';
+@import "../../config";
 
 .sidebar {
-  background: #EEEEEE;
+  background: #eeeeee;
   display: flex;
   width: 320px;
   flex-direction: column;
   box-shadow: $main-shadow;
   flex-shrink: 0;
-
 }
 
 .sidebar__search-row {
@@ -16,7 +15,7 @@
   display: flex;
   height: 60px;
   align-items: center;
-  
+
   color: $dark-grey;
   font-size: 15px;
   box-shadow: $main-shadow;
@@ -65,14 +64,13 @@
 
 .sidebar__search-row-divider {
   height: 26px;
-  background: #CCCCCC;
+  background: #cccccc;
   width: 1px;
   margin-right: 10px;
   margin-left: 10px;
 }
 
 .sidebar__search-back-icon {
-  
   font-size: 30px;
   margin-left: 20px;
   margin-right: 6px;
@@ -146,6 +144,7 @@
 .sidebar__layers-title-right,
 .sidebar__layers-title-row,
 .sidebar__search-layer-title-row {
+  text-transform: capitalize;
   display: flex;
 }
 
@@ -163,7 +162,7 @@
 .sidebar__search-layer-title-row {
   justify-content: space-between;
   align-items: center;
-  margin-bottom : 10px;
+  margin-bottom: 10px;
 }
 
 .sidebar__layers-title {
@@ -185,7 +184,7 @@
   width: 180px;
   display: flex;
   align-items: center;
-  background: #EEEEEE;
+  background: #eeeeee;
   border-radius: 5px;
   padding-top: 5px;
   padding-bottom: 5px;
