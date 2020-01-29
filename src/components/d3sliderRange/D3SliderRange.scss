@@ -1,0 +1,11 @@
+@import "../../config";
+
+.range__track {
+  fill: lightgrey;
+  // cursor: pointer;
+}
+
+.range__handle {
+  fill: $dark-grey;
+  cursor: pointer;
+}
