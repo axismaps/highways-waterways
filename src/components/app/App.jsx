@@ -88,11 +88,19 @@ class App extends React.Component {
           id: '1',
           minValue: 2,
           maxValue: 20,
-          colorRamp: colors.Blues[5],
+          colorRamp: colors.Blues[9],
         },
         {
           name: 'choropleth placeholder 2',
           id: '2',
+          minValue: 5,
+          maxValue: 60,
+          colorRamp: colors.Oranges[5],
+        },
+        ,
+        {
+          name: 'choropleth placeholder 2',
+          id: '3',
           minValue: 5,
           maxValue: 60,
           colorRamp: colors.Oranges[5],
@@ -103,8 +111,9 @@ class App extends React.Component {
        * keys correspond to layer ids
        */
       choroplethValues: new Map([
-        ['1', 15],
-        ['2', 53],
+        ['1', [2, 7]],
+        ['2', [2, 5]],
+        ['3', [2, 3]],
       ]),
       /**
        * raster currently displayed in probe
@@ -295,6 +304,7 @@ class App extends React.Component {
     const updateData = () => {
       this.updateStyle(newYear);
       this.updateLegendData(newYear);
+      this.updateLegendThematicData(newYear);
       this.dataTimer = null;
     };
     if (this.dataTimer === null) {
@@ -308,7 +318,7 @@ class App extends React.Component {
   setHighlightedLayer(layerId) {
     const { highlightedLayer } = this.state;
     if (highlightedLayer === layerId
-    || layerId === null) {
+      || layerId === null) {
       this.setState({
         highlightedLayer: null,
       });
@@ -350,6 +360,10 @@ class App extends React.Component {
 
   static getLegendPromise(year) {
     return d3.json(`http://138.197.102.252/api/v1/get/legend?start=${year}&end=${year}`);
+  }
+
+  static getLegendThematicPromise(year) {
+    return d3.json(`http://138.197.102.252/api/v1/get/legend/thematic?start=${year}&end=${year}`)
   }
 
   getSidebarToggleButton() {
@@ -544,6 +558,26 @@ class App extends React.Component {
     this.setState({
       legendData: legendData.response.legend,
     });
+  }
+
+  async updateLegendThematicData(newYear) {
+    const thematicData = await App.getLegendThematicPromise(newYear);
+    const choroplethData = thematicData.response.legend.map(choropleth => {
+
+      return {
+        name: choropleth.title,
+        id: choropleth.id,
+        minValue: 2,
+        maxValue: 20,
+        colorRamp: choropleth.Types.map(type => {
+          return type.swatch
+        }),
+      }
+    })
+
+    this.setState({
+      choroplethData: choroplethData
+    })
   }
 
   async updateStyle(newYear) {
