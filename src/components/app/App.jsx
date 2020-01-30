@@ -349,10 +349,15 @@ class App extends React.Component {
     } = this.state;
     const newChoroplethValues = new Map(choroplethValues);
     newChoroplethValues.set(key, value);
+    // console.log('newChoroplethValues', newChoroplethValues)
     this.setState({
       choroplethValues: newChoroplethValues,
     });
   }
+
+  // toggleChoroplethLayers(range) {
+  //   console.log('range')
+  // }
 
   getStylePromise() {
     return d3.json(`http://138.197.102.252/api/v1/get/style?start=${this.currentTileRange[0]}&end=${this.currentTileRange[1]}`);
@@ -567,8 +572,8 @@ class App extends React.Component {
       return {
         name: choropleth.title,
         id: choropleth.id,
-        minValue: 2,
-        maxValue: 20,
+        minValue: 0,
+        maxValue: choropleth.Types.length,
         colorRamp: choropleth.Types.map(type => {
           return type.swatch
         }),
@@ -604,11 +609,25 @@ class App extends React.Component {
     const [
       tileRangesData,
       legendData,
+      thematicData
     ] = await Promise.all([
       d3.json('http://138.197.102.252/api/v1/get/timeline'),
       App.getLegendPromise(year),
+      App.getLegendThematicPromise(year)
     ]);
 
+    const choroplethData = thematicData.response.legend.map(choropleth => {
+
+      return {
+        name: choropleth.title,
+        id: choropleth.id,
+        minValue: 0,
+        maxValue: choropleth.Types.length,
+        colorRamp: choropleth.Types.map(type => {
+          return type.swatch
+        }),
+      }
+    })
 
     const tileRanges = tileRangesData.response;
 
@@ -627,11 +646,13 @@ class App extends React.Component {
       style,
       tileRanges,
       yearRange,
+      choroplethData,
       legendData: legendData.response.legend,
     });
   }
 
   toggleLayerVisibility(layerId) {
+    // console.log('toggle visibility', layerId);
     const { hiddenLayers } = this.state;
 
     if (!hiddenLayers.includes(layerId)) {
