@@ -82,39 +82,12 @@ class App extends React.Component {
         start: [0, 0],
         end: [0, 0],
       },
-      choroplethData: [
-        {
-          name: 'choropleth placeholder 1',
-          id: '1',
-          minValue: 2,
-          maxValue: 20,
-          colorRamp: colors.Blues[9],
-        },
-        {
-          name: 'choropleth placeholder 2',
-          id: '2',
-          minValue: 5,
-          maxValue: 60,
-          colorRamp: colors.Oranges[5],
-        },
-        ,
-        {
-          name: 'choropleth placeholder 2',
-          id: '3',
-          minValue: 5,
-          maxValue: 60,
-          colorRamp: colors.Oranges[5],
-        },
-      ],
+      choroplethData: [],
       /**
        * choropleth layer values
        * keys correspond to layer ids
        */
-      choroplethValues: new Map([
-        ['1', [2, 7]],
-        ['2', [2, 5]],
-        ['3', [2, 3]],
-      ]),
+      choroplethValues: new Map([]),
       /**
        * raster currently displayed in probe
        * view or overlay
@@ -167,6 +140,7 @@ class App extends React.Component {
 
     this.searchTimer = null;
     this.dataTimer = null;
+    this.choroplethTimer = null;
 
     this.clearLightbox = this.clearLightbox.bind(this);
     this.clearRaster = this.clearRaster.bind(this);
@@ -293,9 +267,12 @@ class App extends React.Component {
       searchView: null,
       year: newYear,
     };
-    if (hiddenLayers.length > 0) {
-      changeState.hiddenLayers = [];
-    }
+
+
+    // some layers need to be hidden by default... 
+    // if (hiddenLayers.length > 0) {
+    //   changeState.hiddenLayers = [];
+    // }
     if (searchFeatures.length > 0) {
       changeState.searchFeatures = [];
     }
@@ -349,15 +326,91 @@ class App extends React.Component {
     } = this.state;
     const newChoroplethValues = new Map(choroplethValues);
     newChoroplethValues.set(key, value);
-    // console.log('newChoroplethValues', newChoroplethValues)
     this.setState({
       choroplethValues: newChoroplethValues,
     });
+
+    const setLayerVisibility = () => {
+      this.setLayerVisibilityByChoroplethId(key)
+      this.choroplethTimer = null;
+    }
+
+    if (this.choroplethTimer === null) {
+      this.choroplethTimer = setTimeout(setLayerVisibility, 1);
+    } else {
+      clearTimeout(this.choroplethTimer);
+      this.choroplethTimer = setTimeout(setLayerVisibility, 1);
+    }
   }
 
-  // toggleChoroplethLayers(range) {
-  //   console.log('range')
-  // }
+  setLayerVisibilityByChoroplethId(choroplethId) {
+    const {
+      hiddenLayers,
+      style: { layers }
+    } = this.state;
+
+
+    const choroplethLayerIds = layers.filter(layer => layer['source-layer'] === choroplethId).map(layer => layer.id)
+    const activeTypesIds = this.getChoroplethActiveTypesIds(choroplethId)
+
+    const layersIdToActive = activeTypesIds.map(typeId => {
+      return this.getLayersIdByTypeId(typeId)
+    }).flat()
+
+
+
+    const layersIdToHide = choroplethLayerIds.filter(id => !layersIdToActive.includes(id));
+
+    let newHiddenLayers = hiddenLayers.filter(id => !choroplethLayerIds.includes(id))
+
+    newHiddenLayers = [...newHiddenLayers, ...layersIdToHide]
+
+
+    this.setState({
+      hiddenLayers: newHiddenLayers
+    })
+  }
+
+  getChoroplethActiveTypesIds(choroplethId) {
+    const {
+      choroplethValues,
+      choroplethData,
+    } = this.state;
+
+    const choropleth = choroplethData.filter(item => { return item.id === choroplethId; })[0];
+    const choroplethValue = choroplethValues.get(choroplethId)
+
+    const start = Math.floor(choroplethValue[0])
+    const end = Math.floor(choroplethValue[1])
+
+
+    let ids = []
+    for (let i = start; i < end; i++) {
+      const layerId = choropleth.types[i].id
+      ids.push(layerId)
+    }
+
+    return ids
+
+  }
+
+  getLayersIdByTypeId(typeId) {
+    const {
+      style: { layers }
+    } = this.state;
+
+    let layerIds = [];
+    for (let i = 0; i < layers.length; i++) {
+      const layer = layers[i];
+      if (layer.filter && layer.filter[3])
+        if (layer.filter[3][2] === typeId) {
+          layerIds.push(layer.id);
+        }
+    }
+    return layerIds;
+  }
+
+
 
   getStylePromise() {
     return d3.json(`http://138.197.102.252/api/v1/get/style?start=${this.currentTileRange[0]}&end=${this.currentTileRange[1]}`);
@@ -572,6 +625,7 @@ class App extends React.Component {
       return {
         name: choropleth.title,
         id: choropleth.id,
+        types: choropleth.Types,
         minValue: 0,
         maxValue: choropleth.Types.length,
         colorRamp: choropleth.Types.map(type => {
@@ -584,6 +638,8 @@ class App extends React.Component {
       choroplethData: choroplethData
     })
   }
+
+
 
   async updateStyle(newYear) {
     if (this.currentTileRange === null) return;
@@ -621,6 +677,7 @@ class App extends React.Component {
       return {
         name: choropleth.title,
         id: choropleth.id,
+        types: choropleth.Types,
         minValue: 0,
         maxValue: choropleth.Types.length,
         colorRamp: choropleth.Types.map(type => {
@@ -639,7 +696,31 @@ class App extends React.Component {
     });
 
     const stylePromise = this.getStylePromise();
-    const style = await stylePromise;
+    // const style = await stylePromise;
+
+
+
+    // carregando todas as camadas inicialmente como invisiveis
+    let style = await stylePromise;
+
+    for (let i = 0; i < style.layers.length; i++) {
+      if (style.layers[i].source === 'd6d18b6d-9589-40e6-9c19-ec16bc56c404' || style.layers[i].source === '773468e7-b57c-4179-95a6-118aad7c2598') {
+
+        style.layers[i].layout = {
+          "visibility": "none"
+        }
+      }
+    }
+    // remover esse bloco de cima
+
+
+
+    const hiddenLayers = style.layers.filter(layer => {
+      if (layer.layout && layer.layout.visibility === 'none') {
+        return layer
+      }
+    }).map(layer => layer.id)
+
 
     this.setState({
       loading: false,
@@ -647,12 +728,12 @@ class App extends React.Component {
       tileRanges,
       yearRange,
       choroplethData,
+      hiddenLayers,
       legendData: legendData.response.legend,
     });
   }
 
   toggleLayerVisibility(layerId) {
-    // console.log('toggle visibility', layerId);
     const { hiddenLayers } = this.state;
 
     if (!hiddenLayers.includes(layerId)) {
