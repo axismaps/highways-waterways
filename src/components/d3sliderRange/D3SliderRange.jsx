@@ -267,10 +267,12 @@ class D3Slider {
 
     const rightHandlePos = xScale.invert(currentValue[1]);
 
+    if (rightHandlePos > leftHandlePos) {
 
-    leftHandle.attr('x', leftHandlePos);
+      leftHandle.attr('x', leftHandlePos);
 
-    rightHandle.attr('x', rightHandlePos);
+      rightHandle.attr('x', rightHandlePos);
+    }
 
 
   }
