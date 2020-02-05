@@ -229,7 +229,7 @@ class Atlas extends React.PureComponent {
       const visible = this.mbMap.getLayoutProperty(layer.id, 'visibility') === 'visible';
 
       const shouldBeHidden = hiddenLayers
-        .includes(layer['source-layer']);
+        .includes(layer.id);
 
       if (visible && shouldBeHidden) {
         this.mbMap.setLayoutProperty(layer.id, 'visibility', 'none');
