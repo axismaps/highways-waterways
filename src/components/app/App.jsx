@@ -255,9 +255,8 @@ class App extends React.Component {
 
   setYear(newYear) {
     const {
-      hiddenLayers,
       searchFeatures,
-      choroplethValues
+
     } = this.state;
 
     const changeState = {
@@ -278,12 +277,13 @@ class App extends React.Component {
     }
     this.setState(changeState);
 
-    const updateData = () => {
+    const updateData = async () => {
       this.updateStyle(newYear);
       this.updateLegendData(newYear);
-      this.updateLegendThematicData(newYear);
-      for (const choropleth of choroplethValues) {
-        this.setLayerVisibilityByChoroplethId(choropleth[0])
+      const choroplethData = await this.updateLegendThematicData(newYear);
+      for (const choropleth of choroplethData) {
+        console.log(choropleth)
+        // this.setLayerVisibilityByChoroplethId(choropleth.id)
       }
       this.dataTimer = null;
     };
@@ -622,12 +622,12 @@ class App extends React.Component {
 
   async updateLegendThematicData(newYear) {
     const thematicData = await App.getLegendThematicPromise(newYear);
-
     const choroplethData = thematicData.response.legend.map(choropleth => {
       return {
         name: choropleth.title,
         id: choropleth.id,
         types: choropleth.Types,
+        slider: choropleth.slider,
         minValue: 0,
         maxValue: choropleth.Types.length,
         colorRamp: choropleth.Types.map(type => {
@@ -639,6 +639,7 @@ class App extends React.Component {
     this.setState({
       choroplethData: choroplethData
     })
+    return choroplethData
   }
 
 
@@ -667,26 +668,13 @@ class App extends React.Component {
     const [
       tileRangesData,
       legendData,
-      thematicData
+      choroplethData
     ] = await Promise.all([
       d3.json('http://138.197.102.252/api/v1/get/timeline'),
       App.getLegendPromise(year),
-      App.getLegendThematicPromise(year)
+      this.updateLegendThematicData(year)
     ]);
 
-    const choroplethData = thematicData.response.legend.map(choropleth => {
-
-      return {
-        name: choropleth.title,
-        id: choropleth.id,
-        types: choropleth.Types,
-        minValue: 0,
-        maxValue: choropleth.Types.length,
-        colorRamp: choropleth.Types.map(type => {
-          return type.swatch
-        }),
-      }
-    })
 
     const tileRanges = tileRangesData.response;
 
@@ -710,7 +698,7 @@ class App extends React.Component {
 
     for (const chropleth of choroplethData) {
       this.setChoroplethValue(chropleth.id, [0, 0])
-
+      console.log(chropleth)
     }
 
 
