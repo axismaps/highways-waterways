@@ -257,6 +257,7 @@ class App extends React.Component {
     const {
       hiddenLayers,
       searchFeatures,
+      choroplethValues
     } = this.state;
 
     const changeState = {
@@ -281,6 +282,9 @@ class App extends React.Component {
       this.updateStyle(newYear);
       this.updateLegendData(newYear);
       this.updateLegendThematicData(newYear);
+      for (const choropleth of choroplethValues) {
+        this.setLayerVisibilityByChoroplethId(choropleth[0])
+      }
       this.dataTimer = null;
     };
     if (this.dataTimer === null) {
@@ -379,7 +383,6 @@ class App extends React.Component {
 
     const choropleth = choroplethData.filter(item => { return item.id === choroplethId; })[0];
     const choroplethValue = choroplethValues.get(choroplethId)
-
     const start = Math.floor(choroplethValue[0])
     const end = Math.floor(choroplethValue[1])
 
@@ -620,8 +623,8 @@ class App extends React.Component {
 
   async updateLegendThematicData(newYear) {
     const thematicData = await App.getLegendThematicPromise(newYear);
-    const choroplethData = thematicData.response.legend.map(choropleth => {
 
+    const choroplethData = thematicData.response.legend.map(choropleth => {
       return {
         name: choropleth.title,
         id: choropleth.id,
