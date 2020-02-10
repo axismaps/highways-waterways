@@ -1,6 +1,5 @@
 import React from 'react';
 import * as d3 from 'd3';
-import colors from 'colorbrewer';
 import Sidebar from '../sidebar/Sidebar';
 import SidebarToggleButton from '../sidebar/SidebarToggleButton';
 import RasterProbe from '../rasterProbe/RasterProbe';
@@ -324,6 +323,7 @@ class App extends React.Component {
     const {
       choroplethValues,
     } = this.state;
+    console.log('setChoroplethValue', key, value);
     const newChoroplethValues = new Map(choroplethValues);
     newChoroplethValues.set(key, value);
     this.setState({
@@ -696,23 +696,7 @@ class App extends React.Component {
     });
 
     const stylePromise = this.getStylePromise();
-    // const style = await stylePromise;
-
-
-
-    // carregando todas as camadas inicialmente como invisiveis
-    let style = await stylePromise;
-
-    for (let i = 0; i < style.layers.length; i++) {
-      if (style.layers[i].source === 'd6d18b6d-9589-40e6-9c19-ec16bc56c404' || style.layers[i].source === '773468e7-b57c-4179-95a6-118aad7c2598') {
-
-        style.layers[i].layout = {
-          "visibility": "none"
-        }
-      }
-    }
-    // remover esse bloco de cima
-
+    const style = await stylePromise;
 
 
     const hiddenLayers = style.layers.filter(layer => {
@@ -720,6 +704,12 @@ class App extends React.Component {
         return layer
       }
     }).map(layer => layer.id)
+
+
+    for (const chropleth of choroplethData) {
+      this.setChoroplethValue(chropleth.id, [0, 0])
+
+    }
 
 
     this.setState({
