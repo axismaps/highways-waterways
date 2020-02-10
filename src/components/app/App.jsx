@@ -327,7 +327,6 @@ class App extends React.Component {
     const {
       choroplethValues,
     } = this.state;
-    console.log('setChoroplethValue', key, value);
     const newChoroplethValues = new Map(choroplethValues);
     newChoroplethValues.set(key, value);
     this.setState({
