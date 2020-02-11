@@ -205,19 +205,24 @@ class D3Slider {
       handleCornerRadius,
       height,
       handleLineOffset,
+      slider,
     } = this.props;
     const { svg } = this.components;
 
-    const handleY = (height / 2) - (handleHeight / 2);
+    if (slider === 'single') {
+      this.components.leftHandle = svg.append('rect')
+        .attr('x', 0)
+    } else {
+      const handleY = (height / 2) - (handleHeight / 2);
+      this.components.leftHandle = svg.append('rect')
+        .attr('class', 'range__handle')
+        .attr('width', handleWidth)
+        .attr('height', handleHeight)
+        .attr('rx', handleCornerRadius)
+        .attr('x', 0)
+        .attr('y', handleY);
 
-    this.components.leftHandle = svg.append('rect')
-      .attr('class', 'range__handle')
-      .attr('width', handleWidth)
-      .attr('height', handleHeight)
-      .attr('rx', handleCornerRadius)
-      .attr('x', 0)
-      .attr('y', handleY);
-
+    }
     // this.components.handleLine = svg.append('line')
     //   .attr('class', 'range__handle-line')
     //   .attr('stroke-width', 1)

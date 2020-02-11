@@ -97,6 +97,7 @@ class SidebarLegend extends React.PureComponent {
         id,
         minValue,
         maxValue,
+        slider,
         colorRamp,
       } = d;
 
@@ -110,6 +111,7 @@ class SidebarLegend extends React.PureComponent {
           name={name}
           minValue={minValue}
           maxValue={maxValue}
+          slider={slider}
           value={choroplethValues.get(id)}
           toggleLayerVisibility={toggleLayerVisibility}
         />
