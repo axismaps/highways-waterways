@@ -256,7 +256,7 @@ class App extends React.Component {
   setYear(newYear) {
     const {
       searchFeatures,
-
+      choroplethValues
     } = this.state;
 
     const changeState = {
@@ -282,8 +282,11 @@ class App extends React.Component {
       this.updateLegendData(newYear);
       const choroplethData = await this.updateLegendThematicData(newYear);
       for (const choropleth of choroplethData) {
-        console.log(choropleth)
-        // this.setLayerVisibilityByChoroplethId(choropleth.id)
+        if (choroplethValues.get(choropleth.id)) {
+          this.setLayerVisibilityByChoroplethId(choropleth.id)
+        } else {
+          this.setChoroplethValue(choropleth.id, [choropleth.minValue, choropleth.maxValue])
+        }
       }
       this.dataTimer = null;
     };
@@ -693,12 +696,11 @@ class App extends React.Component {
       if (layer.layout && layer.layout.visibility === 'none') {
         return layer
       }
-    }).map(layer => layer.id)
+    }).map(layer => layer.source)
 
 
     for (const chropleth of choroplethData) {
-      this.setChoroplethValue(chropleth.id, [0, 0])
-      console.log(chropleth)
+      this.setChoroplethValue(chropleth.id, [0, chropleth.maxValue])
     }
 
 
