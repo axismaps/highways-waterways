@@ -35,6 +35,7 @@ class Sidebar extends React.PureComponent {
       setHighlightedLayer,
       highlightedLayer,
       setRaster,
+      setSelectedThematicLayer
     } = this.props;
 
 
@@ -46,6 +47,7 @@ class Sidebar extends React.PureComponent {
         setRaster={setRaster}
         viewsData={viewsData}
         overlaysData={overlaysData}
+        setSelectedThematicLayer={setSelectedThematicLayer}
         choroplethData={choroplethData}
         hydroRasterData={hydroRasterData}
         choroplethValues={choroplethValues}
@@ -138,6 +140,8 @@ Sidebar.defaultProps = {
 Sidebar.propTypes = {
   /** callback to clear application search features */
   clearSearch: PropTypes.func.isRequired,
+  /** Callbak to set app `hiddenLayers` state field */
+  setSelectedThematicLayer: PropTypes.func.isRequired,
   /** All choropleth layers for selected year */
   choroplethData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /** Current range slider values for available choropleths */

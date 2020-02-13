@@ -162,6 +162,7 @@ class App extends React.Component {
     this.toggleAreaSearching = this.toggleAreaSearching.bind(this);
     this.toggleLayerVisibility = this.toggleLayerVisibility.bind(this);
     this.toggleSidebar = this.toggleSidebar.bind(this);
+    this.setSelectedThematicLayer = this.setSelectedThematicLayer.bind(this);
   }
 
   componentDidMount() {
@@ -268,7 +269,7 @@ class App extends React.Component {
     };
 
 
-    // some layers need to be hidden by default... 
+    // some layers need to be hidden by default...
     // if (hiddenLayers.length > 0) {
     //   changeState.hiddenLayers = [];
     // }
@@ -326,6 +327,26 @@ class App extends React.Component {
     }
   }
 
+  // For [1,2,3] [2,3] it will yield [1]. On the other hand, for [1,2,3] [2,3,5] will return the same thing.
+  diferenceBetweenAandB(arrayA, arrayB) {
+    return arrayA.filter(id => !arrayB.includes(id))
+  }
+
+  setSelectedThematicLayer(thematicLayerId) {
+    const {
+      choroplethData,
+      hiddenLayers
+    } = this.state;
+
+    const choroplethDataIds = choroplethData.map(layer => layer.id)
+    const layersToHide = choroplethDataIds.filter(id => id !== thematicLayerId)
+
+    this.setState({
+      selectedThematicLayer: thematicLayerId,
+      hiddenLayers: [...this.diferenceBetweenAandB(hiddenLayers, choroplethDataIds), ...layersToHide]
+    })
+  }
+
   setChoroplethValue(key, value) {
     const {
       choroplethValues,
@@ -363,14 +384,10 @@ class App extends React.Component {
       return this.getLayersIdByTypeId(typeId)
     }).flat()
 
-
-
-    const layersIdToHide = choroplethLayerIds.filter(id => !layersIdToActive.includes(id));
-
-    let newHiddenLayers = hiddenLayers.filter(id => !choroplethLayerIds.includes(id))
+    const layersIdToHide = this.diferenceBetweenAandB(choroplethLayerIds, layersIdToActive)
+    let newHiddenLayers = this.diferenceBetweenAandB(hiddenLayers, choroplethLayerIds)
 
     newHiddenLayers = [...newHiddenLayers, ...layersIdToHide]
-
 
     this.setState({
       hiddenLayers: newHiddenLayers
@@ -880,6 +897,7 @@ class App extends React.Component {
           <Sidebar
             choroplethData={choroplethData}
             choroplethValues={choroplethValues}
+            setSelectedThematicLayer={this.setSelectedThematicLayer}
             clearSearch={this.clearSearch}
             hiddenLayers={hiddenLayers}
             highlightedFeature={highlightedFeature}

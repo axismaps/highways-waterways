@@ -90,7 +90,8 @@ class SidebarLegend extends React.PureComponent {
       setChoroplethValue,
       toggleLayerVisibility,
       highlightedLayer,
-      setHighlightedLayer
+      setHighlightedLayer,
+      setSelectedThematicLayer
     } = this.props;
 
     const choroplethBlocks = choroplethData.map((d) => {
@@ -112,6 +113,7 @@ class SidebarLegend extends React.PureComponent {
           id={id}
           key={id}
           setChoroplethValue={setChoroplethValue}
+          setSelectedThematicLayer={setSelectedThematicLayer}
           name={name}
           minValue={minValue}
           maxValue={maxValue}
@@ -149,6 +151,8 @@ SidebarLegend.defaultProps = {
 SidebarLegend.propTypes = {
   /** Sets choropleth filter values */
   setChoroplethValue: PropTypes.func.isRequired,
+  /** Callbak to set app `hiddenLayers` state field */
+  setSelectedThematicLayer: PropTypes.func.isRequired,
   /** All views for selected year */
   viewsData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /** All overlays for selected year */
