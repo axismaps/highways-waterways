@@ -208,12 +208,16 @@ class D3Slider {
       slider,
     } = this.props;
     const { svg } = this.components;
+    const handleY = (height / 2) - (handleHeight / 2);
 
     if (slider === 'single') {
       this.components.leftHandle = svg.append('rect')
         .attr('x', 0)
+
+      this.components.leftHandleLine = svg.append('line')
+
     } else {
-      const handleY = (height / 2) - (handleHeight / 2);
+
       this.components.leftHandle = svg.append('rect')
         .attr('class', 'range__handle')
         .attr('width', handleWidth)
@@ -222,13 +226,13 @@ class D3Slider {
         .attr('x', 0)
         .attr('y', handleY);
 
+      this.components.leftHandleLine = svg.append('line')
+        .attr('class', 'timeline__handle-line')
+        .attr('stroke-width', 1)
+        .attr('stroke', 'white')
+        .attr('y1', handleY + handleLineOffset)
+        .attr('y2', (handleY + handleHeight) - handleLineOffset);
     }
-    // this.components.handleLine = svg.append('line')
-    //   .attr('class', 'range__handle-line')
-    //   .attr('stroke-width', 1)
-    //   .attr('stroke', 'white')
-    //   .attr('y1', handleY + handleLineOffset)
-    //   .attr('y2', (handleY + handleHeight) - handleLineOffset);
   }
 
   drawRightHandle() {
@@ -250,6 +254,13 @@ class D3Slider {
       .attr('rx', handleCornerRadius)
       .attr('x', 10)
       .attr('y', handleY)
+
+    this.components.rightHandleLine = svg.append('line')
+      .attr('class', 'timeline__handle-line')
+      .attr('stroke-width', 1)
+      .attr('stroke', 'white')
+      .attr('y1', handleY + handleLineOffset)
+      .attr('y2', (handleY + handleHeight) - handleLineOffset);
   }
 
   setHandlePosition() {
@@ -262,6 +273,8 @@ class D3Slider {
       leftHandle,
       rightHandle,
       xScale,
+      leftHandleLine,
+      rightHandleLine
     } = this.components;
 
 
@@ -269,13 +282,20 @@ class D3Slider {
     if (!currentValue) return;
 
     const leftHandlePos = xScale.invert(currentValue[0]);
+    const leftHandleLinePos = leftHandlePos + handleWidth / 2
 
     const rightHandlePos = xScale.invert(currentValue[1]);
+    const rightHandleLinePos = rightHandlePos + handleWidth / 2
 
     if (rightHandlePos > leftHandlePos) {
+      leftHandleLine
+        .attr('x1', leftHandleLinePos)
+        .attr('x2', leftHandleLinePos)
+      rightHandleLine
+        .attr('x1', rightHandleLinePos)
+        .attr('x2', rightHandleLinePos)
 
       leftHandle.attr('x', leftHandlePos);
-
       rightHandle.attr('x', rightHandlePos);
     }
 
@@ -285,10 +305,9 @@ class D3Slider {
   setDrag() {
     const {
       setRange,
-
+      handleWidth
     } = this.props;
     const {
-
       leftHandle,
       rightHandle
     } = this.components;
@@ -299,14 +318,17 @@ class D3Slider {
 
       const rightHandlePos = xScale(rightHandle['_groups'][0][0].getAttribute('x'))
 
-      setRange([xScale(d3.event.x), rightHandlePos]);
+      setRange([xScale(d3.event.x - handleWidth / 2), rightHandlePos]);
 
     }
 
     const setRightHandle = () => {
       const { xScale } = this.components;
+
       const leftHandlePos = xScale(leftHandle['_groups'][0][0].getAttribute('x'))
-      setRange([leftHandlePos, xScale(d3.event.x)]);
+
+      setRange([leftHandlePos, xScale(d3.event.x - handleWidth / 2)]);
+
     }
 
     leftHandle.call(d3.drag()
