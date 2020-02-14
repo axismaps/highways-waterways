@@ -7,7 +7,7 @@ class D3Slider {
       trackCornerRadius: 10,
       colorRamp: null,
       handleLineOffset: 8,
-      tooltip: false,
+      tooltip: false
     };
     this.props = Object.assign(defaultProps, props);
     this.dragging = false;
@@ -52,57 +52,43 @@ class D3Slider {
   }
 
   drawSVG() {
-    const {
-      timelineNode,
-      height,
-    } = this.props;
-    this.components.svg = d3.select(timelineNode)
+    const { timelineNode, height } = this.props;
+    this.components.svg = d3
+      .select(timelineNode)
       .append('svg')
       .attr('class', 'timeline__slider-svg')
       .style('height', `${height}px`);
   }
 
   setSVGWidth() {
-    const {
-      width,
-    } = this.props;
+    const { width } = this.props;
 
-    this.components.svg
-      .style('width', `${width}px`);
+    this.components.svg.style('width', `${width}px`);
   }
 
   drawTrack() {
-    const {
-      padding,
-      height,
-      trackHeight,
-      trackCornerRadius,
-    } = this.props;
+    const { padding, height, trackHeight, trackCornerRadius } = this.props;
     const { svg } = this.components;
 
-    this.components.track = svg.append('rect')
+    this.components.track = svg
+      .append('rect')
       .attr('class', 'range__track')
       .attr('x', padding.left)
-      .attr('y', (height / 2) - (trackHeight / 2))
+      .attr('y', height / 2 - trackHeight / 2)
       .attr('rx', trackCornerRadius)
       .attr('height', trackHeight);
   }
 
   drawColorRamp() {
-    const {
-      colorRamp,
-      padding,
-      width,
-      height,
-      trackHeight,
-    } = this.props;
+    const { colorRamp, padding, width, height, trackHeight } = this.props;
 
     if (colorRamp === null) return;
 
     const { svg } = this.components;
 
     const rectWidth = (width - padding.left - padding.right) / colorRamp.length;
-    this.components.ramp = svg.selectAll('.timeline__ramp-rect')
+    this.components.ramp = svg
+      .selectAll('.timeline__ramp-rect')
       .data(colorRamp)
       .enter()
       .append('rect')
@@ -110,35 +96,26 @@ class D3Slider {
       .attr('pointer-events', 'none')
       .attr('width', rectWidth)
       .attr('height', trackHeight)
-      .attr('y', (height / 2) - (trackHeight / 2))
-      .attr('x', (d, i) => padding.left + (i * rectWidth))
+      .attr('y', height / 2 - trackHeight / 2)
+      .attr('x', (d, i) => padding.left + i * rectWidth)
       .attr('fill', d => d);
   }
 
   setTrackWidth() {
-    const {
-      width,
-      padding,
-    } = this.props;
+    const { width, padding } = this.props;
 
-    this.components.track
-      .attr('width', width - padding.left - padding.right);
+    this.components.track.attr('width', width - padding.left - padding.right);
   }
 
   drawAxis() {
-    const {
-      height,
-      trackHeight,
-      axisOn,
-    } = this.props;
-    const {
-      svg,
-    } = this.components;
+    const { height, trackHeight, axisOn } = this.props;
+    const { svg } = this.components;
 
     if (!axisOn) return;
 
-    this.axisGroup = svg.append('g')
-      .attr('transform', `translate(0, ${((height / 2) - (trackHeight / 2))})`)
+    this.axisGroup = svg
+      .append('g')
+      .attr('transform', `translate(0, ${height / 2 - trackHeight / 2})`)
       .attr('class', 'timeline__axis');
   }
 
@@ -157,9 +134,10 @@ class D3Slider {
     }
     ticks.push(domain[1]);
 
-    this.axis = d3.axisBottom(axisScale)
+    this.axis = d3
+      .axisBottom(axisScale)
       .tickValues(ticks)
-      .tickFormat((d) => {
+      .tickFormat(d => {
         if (mobile) {
           return '';
         }
@@ -173,21 +151,15 @@ class D3Slider {
   }
 
   setScale() {
-    const {
-      padding,
-      width,
-      handleWidth,
-      valueRange,
-    } = this.props;
-    const xScale = d3.scaleLinear()
-      .domain([
-        padding.left,
-        width - padding.right - (handleWidth / 2),
-      ])
+    const { padding, width, handleWidth, valueRange } = this.props;
+    const xScale = d3
+      .scaleLinear()
+      .domain([padding.left, width - padding.right - handleWidth / 2])
       .range(valueRange)
       .clamp(true);
 
-    const axisScale = d3.scaleLinear()
+    const axisScale = d3
+      .scaleLinear()
       .domain(xScale.range())
       .range(xScale.domain());
 
@@ -205,20 +177,18 @@ class D3Slider {
       handleCornerRadius,
       height,
       handleLineOffset,
-      slider,
+      slider
     } = this.props;
     const { svg } = this.components;
-    const handleY = (height / 2) - (handleHeight / 2);
+    const handleY = height / 2 - handleHeight / 2;
 
     if (slider === 'single') {
-      this.components.leftHandle = svg.append('rect')
-        .attr('x', 0)
+      this.components.leftHandle = svg.append('rect').attr('x', 0);
 
-      this.components.leftHandleLine = svg.append('line')
-
+      this.components.leftHandleLine = svg.append('line');
     } else {
-
-      this.components.leftHandle = svg.append('rect')
+      this.components.leftHandle = svg
+        .append('rect')
         .attr('class', 'range__handle')
         .attr('width', handleWidth)
         .attr('height', handleHeight)
@@ -226,12 +196,13 @@ class D3Slider {
         .attr('x', 0)
         .attr('y', handleY);
 
-      this.components.leftHandleLine = svg.append('line')
+      this.components.leftHandleLine = svg
+        .append('line')
         .attr('class', 'timeline__handle-line')
         .attr('stroke-width', 1)
         .attr('stroke', 'white')
         .attr('y1', handleY + handleLineOffset)
-        .attr('y2', (handleY + handleHeight) - handleLineOffset);
+        .attr('y2', handleY + handleHeight - handleLineOffset);
     }
   }
 
@@ -241,33 +212,33 @@ class D3Slider {
       handleHeight,
       handleCornerRadius,
       height,
-      handleLineOffset } = this.props;
+      handleLineOffset
+    } = this.props;
 
     const { svg } = this.components;
 
-    const handleY = (height / 2) - (handleHeight / 2);
+    const handleY = height / 2 - handleHeight / 2;
 
-    this.components.rightHandle = svg.append('rect')
+    this.components.rightHandle = svg
+      .append('rect')
       .attr('class', 'range__handle')
       .attr('width', handleWidth)
       .attr('height', handleHeight)
       .attr('rx', handleCornerRadius)
       .attr('x', 10)
-      .attr('y', handleY)
+      .attr('y', handleY);
 
-    this.components.rightHandleLine = svg.append('line')
+    this.components.rightHandleLine = svg
+      .append('line')
       .attr('class', 'timeline__handle-line')
       .attr('stroke-width', 1)
       .attr('stroke', 'white')
       .attr('y1', handleY + handleLineOffset)
-      .attr('y2', (handleY + handleHeight) - handleLineOffset);
+      .attr('y2', handleY + handleHeight - handleLineOffset);
   }
 
   setHandlePosition() {
-    const {
-      currentValue,
-      handleWidth,
-    } = this.props;
+    const { currentValue, handleWidth } = this.props;
 
     const {
       leftHandle,
@@ -277,108 +248,94 @@ class D3Slider {
       rightHandleLine
     } = this.components;
 
-
-
     if (!currentValue) return;
 
     const leftHandlePos = xScale.invert(currentValue[0]);
-    const leftHandleLinePos = leftHandlePos + handleWidth / 2
+    const leftHandleLinePos = leftHandlePos + handleWidth / 2;
 
     const rightHandlePos = xScale.invert(currentValue[1]);
-    const rightHandleLinePos = rightHandlePos + handleWidth / 2
+    const rightHandleLinePos = rightHandlePos + handleWidth / 2;
 
     if (rightHandlePos > leftHandlePos) {
       leftHandleLine
         .attr('x1', leftHandleLinePos)
-        .attr('x2', leftHandleLinePos)
+        .attr('x2', leftHandleLinePos);
       rightHandleLine
         .attr('x1', rightHandleLinePos)
-        .attr('x2', rightHandleLinePos)
+        .attr('x2', rightHandleLinePos);
 
       leftHandle.attr('x', leftHandlePos);
       rightHandle.attr('x', rightHandlePos);
     }
-
-
   }
 
   setDrag() {
-    const {
-      setRange,
-      handleWidth
-    } = this.props;
-    const {
-      leftHandle,
-      rightHandle
-    } = this.components;
-
+    const { setRange, handleWidth } = this.props;
+    const { leftHandle, rightHandle } = this.components;
 
     const setLeftHandle = () => {
       const { xScale } = this.components;
 
-      const rightHandlePos = xScale(rightHandle['_groups'][0][0].getAttribute('x'))
+      const rightHandlePos = xScale(
+        rightHandle['_groups'][0][0].getAttribute('x')
+      );
 
       setRange([xScale(d3.event.x - handleWidth / 2), rightHandlePos]);
-
-    }
+    };
 
     const setRightHandle = () => {
       const { xScale } = this.components;
 
-      const leftHandlePos = xScale(leftHandle['_groups'][0][0].getAttribute('x'))
+      const leftHandlePos = xScale(
+        leftHandle['_groups'][0][0].getAttribute('x')
+      );
 
       setRange([leftHandlePos, xScale(d3.event.x - handleWidth / 2)]);
+    };
 
-    }
+    leftHandle.call(
+      d3
+        .drag()
+        .on('start', () => {
+          this.dragging = true;
+          this.hovering = true;
 
-    leftHandle.call(d3.drag()
-      .on('start', () => {
-        this.dragging = true;
-        this.hovering = true;
+          setLeftHandle();
+        })
+        .on('drag', () => {
+          setLeftHandle();
+        })
+        .on('end', () => {
+          this.dragging = false;
+        })
+    );
 
-        setLeftHandle()
-      })
-      .on('drag', () => {
-        setLeftHandle()
+    rightHandle.call(
+      d3
+        .drag()
+        .on('start', () => {
+          this.dragging = true;
+          this.hovering = true;
 
-      }).on('end', () => {
-        this.dragging = false;
-
-      }));
-
-    rightHandle.call(d3.drag()
-      .on('start', () => {
-        this.dragging = true;
-        this.hovering = true;
-
-        setRightHandle()
-      })
-      .on('drag', () => {
-        setRightHandle()
-
-      }).on('end', () => {
-        this.dragging = false;
-
-      }));
-
-
+          setRightHandle();
+        })
+        .on('drag', () => {
+          setRightHandle();
+        })
+        .on('end', () => {
+          this.dragging = false;
+        })
+    );
   }
 
   setTooltipListener() {
-    const {
-      tooltip,
-      setTooltip,
-      removeTooltip,
-    } = this.props;
-    const {
-      track,
-      svg,
-    } = this.components;
+    const { tooltip, setTooltip, removeTooltip } = this.props;
+    const { track, svg } = this.components;
     if (!tooltip) return;
     const svgRect = svg.node().getBoundingClientRect();
     const y = svgRect.top - svgRect.height;
     const width = 40;
-    const getX = eventX => eventX - (width / 2) - 20;
+    const getX = eventX => eventX - width / 2 - 20;
     track
       .on('mouseover', () => {
         this.hovering = true;
@@ -391,7 +348,7 @@ class D3Slider {
           x: getX(d3.event.x),
           y,
           value: Math.round(xScale(d3.event.x - svgRect.left)),
-          width,
+          width
         });
       })
       .on('mouseout', () => {
@@ -400,7 +357,6 @@ class D3Slider {
         removeTooltip();
       });
   }
-
 
   updateValue(newVal) {
     this.props.currentValue = newVal;
