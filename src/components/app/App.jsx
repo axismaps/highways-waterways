@@ -27,15 +27,13 @@ class App extends React.Component {
     return tileRanges.find(d => roundYear >= d[0] && roundYear <= d[1]);
   }
 
-  static getCleanSearchResults({
-    legendData,
-    results,
-  }) {
-    const getUniqueFeatures = (features) => {
-      const uniqueNames = [...new Set(features.map(d => d.name))]
-        .filter(d => d !== ' ');
+  static getCleanSearchResults({ legendData, results }) {
+    const getUniqueFeatures = features => {
+      const uniqueNames = [...new Set(features.map(d => d.name))].filter(
+        d => d !== ' '
+      );
 
-      return uniqueNames.map((name) => {
+      return uniqueNames.map(name => {
         const featuresOfName = features.filter(d => d.name === name);
         const allCoords = featuresOfName.reduce((accumulator, d) => {
           const { bbox } = d;
@@ -47,13 +45,16 @@ class App extends React.Component {
         return {
           name,
           ids: featuresOfName.map(d => d.id),
-          bbox: [[lngExtent[1], latExtent[1]], [lngExtent[0], latExtent[0]]],
+          bbox: [
+            [lngExtent[1], latExtent[1]],
+            [lngExtent[0], latExtent[0]]
+          ]
         };
       });
     };
     return Object.keys(results.response)
       .filter(d => d !== undefined)
-      .map((key) => {
+      .map(key => {
         const layer = legendData.find(d => d.id === key);
         if (layer === undefined) {
           return null;
@@ -63,7 +64,7 @@ class App extends React.Component {
         return {
           id: key,
           title: layer.title,
-          features: uniqueFeatures,
+          features: uniqueFeatures
         };
       })
       .filter(d => d !== null && d.features.length > 0);
@@ -72,14 +73,16 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     const year = 1950;
-    const mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
     this.state = {
       /** if area search button has been clicked but search has not yet been performed */
       areaSearching: false,
       areaBoxOn: false,
       areaBox: {
         start: [0, 0],
-        end: [0, 0],
+        end: [0, 0]
       },
       choroplethData: [],
       /**
@@ -115,7 +118,7 @@ class App extends React.Component {
       overlaysData: [
         { name: 'overlay1', id: 1 },
         { name: 'overlay2', id: 2 },
-        { name: 'overlay3', id: 3 },
+        { name: 'overlay3', id: 3 }
       ],
       screenWidth: window.innerWidth,
       searchFeatureGeojson: [],
@@ -131,10 +134,10 @@ class App extends React.Component {
         { name: 'placeholder2', id: 2 },
         { name: 'placeholder3', id: 3 },
         { name: 'placeholder4', id: 4 },
-        { name: 'placeholder5', id: 5 },
+        { name: 'placeholder5', id: 5 }
       ],
       year,
-      yearRange: null,
+      yearRange: null
     };
 
     this.searchTimer = null;
@@ -173,7 +176,7 @@ class App extends React.Component {
   setResizeListener() {
     window.addEventListener('resize', () => {
       this.setState({
-        screenWidth: window.innerWidth,
+        screenWidth: window.innerWidth
       });
     });
   }
@@ -190,7 +193,7 @@ class App extends React.Component {
       sidebarOpen,
       style,
       views,
-      year,
+      year
     } = this.state;
     if (style === null) return null;
 
@@ -219,26 +222,13 @@ class App extends React.Component {
   }
 
   getAreaSearchBox() {
-    const {
-      areaBoxOn,
-      areaBox,
-    } = this.state;
+    const { areaBoxOn, areaBox } = this.state;
     if (!areaBoxOn) return null;
-    return (
-      <AreaSearchBox
-        areaBox={areaBox}
-      />
-    );
+    return <AreaSearchBox areaBox={areaBox} />;
   }
 
   getHeader() {
-    const {
-      yearRange,
-      mobile,
-      year,
-      tileRanges,
-      screenWidth,
-    } = this.state;
+    const { yearRange, mobile, year, tileRanges, screenWidth } = this.state;
     if (yearRange === null) return null;
 
     return (
@@ -255,19 +245,15 @@ class App extends React.Component {
   }
 
   setYear(newYear) {
-    const {
-      searchFeatures,
-      choroplethValues
-    } = this.state;
+    const { searchFeatures, choroplethValues } = this.state;
 
     const changeState = {
       currentRaster: null,
       highlightedFeature: null,
       highlightedLayer: null,
       searchView: null,
-      year: newYear,
+      year: newYear
     };
-
 
     // some layers need to be hidden by default...
     // if (hiddenLayers.length > 0) {
@@ -284,9 +270,12 @@ class App extends React.Component {
       const choroplethData = await this.updateLegendThematicData(newYear);
       for (const choropleth of choroplethData) {
         if (choroplethValues.get(choropleth.id)) {
-          this.setLayerVisibilityByChoroplethId(choropleth.id)
+          this.setLayerVisibilityByChoroplethId(choropleth.id);
         } else {
-          this.setChoroplethValue(choropleth.id, [choropleth.minValue, choropleth.maxValue])
+          this.setChoroplethValue(choropleth.id, [
+            choropleth.minValue,
+            choropleth.maxValue
+          ]);
         }
       }
       this.dataTimer = null;
@@ -301,66 +290,74 @@ class App extends React.Component {
 
   setHighlightedLayer(layerId) {
     const { highlightedLayer } = this.state;
-    if (highlightedLayer === layerId
-      || layerId === null) {
+    if (highlightedLayer === layerId || layerId === null) {
       this.setState({
-        highlightedLayer: null,
+        highlightedLayer: null
       });
     } else {
       this.setState({
-        highlightedLayer: layerId,
+        highlightedLayer: layerId
       });
     }
   }
 
   setHighlightedFeature(newFeature) {
     const { highlightedFeature } = this.state;
-    if (highlightedFeature !== null
-      && highlightedFeature.feature.name === newFeature.feature.name) {
+    if (
+      highlightedFeature !== null &&
+      highlightedFeature.feature.name === newFeature.feature.name
+    ) {
       this.setState({
-        highlightedFeature: null,
+        highlightedFeature: null
       });
     } else {
       this.setState({
-        highlightedFeature: newFeature,
+        highlightedFeature: newFeature
       });
     }
   }
 
   // For [1,2,3] [2,3] it will yield [1]. On the other hand, for [1,2,3] [2,3,5] will return the same thing.
   diferenceBetweenAandB(arrayA, arrayB) {
-    return arrayA.filter(id => !arrayB.includes(id))
+    return arrayA.filter(id => !arrayB.includes(id));
   }
 
   setSelectedThematicLayer(thematicLayerId) {
-    const {
-      choroplethData,
-      hiddenLayers
-    } = this.state;
+    const { choroplethData, hiddenLayers } = this.state;
 
-    const choroplethDataIds = choroplethData.map(layer => layer.id)
-    const layersToHide = choroplethDataIds.filter(id => id !== thematicLayerId)
+    const isLayerAlreadySelected = !hiddenLayers.includes(thematicLayerId);
+
+    if (isLayerAlreadySelected) {
+      this.setState({
+        hiddenLayers: [...hiddenLayers, thematicLayerId]
+      });
+      return;
+    }
+
+    const choroplethDataIds = choroplethData.map(layer => layer.id);
+    const layersToHide = choroplethDataIds.filter(id => id !== thematicLayerId);
 
     this.setState({
       selectedThematicLayer: thematicLayerId,
-      hiddenLayers: [...this.diferenceBetweenAandB(hiddenLayers, choroplethDataIds), ...layersToHide]
-    })
+      hiddenLayers: [
+        ...this.diferenceBetweenAandB(hiddenLayers, choroplethDataIds),
+        ...layersToHide
+      ]
+    });
   }
 
   setChoroplethValue(key, value) {
-    const {
-      choroplethValues,
-    } = this.state;
+    const { choroplethValues } = this.state;
     const newChoroplethValues = new Map(choroplethValues);
     newChoroplethValues.set(key, value);
     this.setState({
-      choroplethValues: newChoroplethValues,
+      choroplethValues: newChoroplethValues
     });
 
     const setLayerVisibility = () => {
-      this.setLayerVisibilityByChoroplethId(key)
+      this.setLayerVisibilityByChoroplethId(key);
       this.choroplethTimer = null;
-    }
+    };
 
     if (this.choroplethTimer === null) {
       this.choroplethTimer = setTimeout(setLayerVisibility, 1);
@@ -376,44 +373,50 @@ class App extends React.Component {
       style: { layers }
     } = this.state;
 
+    const choroplethLayerIds = layers
+      .filter(layer => layer['source-layer'] === choroplethId)
+      .map(layer => layer.id);
+    const activeTypesIds = this.getChoroplethActiveTypesIds(choroplethId);
 
-    const choroplethLayerIds = layers.filter(layer => layer['source-layer'] === choroplethId).map(layer => layer.id)
-    const activeTypesIds = this.getChoroplethActiveTypesIds(choroplethId)
+    const layersIdToActive = activeTypesIds
+      .map(typeId => {
+        return this.getLayersIdByTypeId(typeId);
+      })
+      .flat();
 
-    const layersIdToActive = activeTypesIds.map(typeId => {
-      return this.getLayersIdByTypeId(typeId)
-    }).flat()
+    const layersIdToHide = this.diferenceBetweenAandB(
+      choroplethLayerIds,
+      layersIdToActive
+    );
+    let newHiddenLayers = this.diferenceBetweenAandB(
+      hiddenLayers,
+      choroplethLayerIds
+    );
 
-    const layersIdToHide = this.diferenceBetweenAandB(choroplethLayerIds, layersIdToActive)
-    let newHiddenLayers = this.diferenceBetweenAandB(hiddenLayers, choroplethLayerIds)
-
-    newHiddenLayers = [...newHiddenLayers, ...layersIdToHide]
+    newHiddenLayers = [...newHiddenLayers, ...layersIdToHide];
 
     this.setState({
       hiddenLayers: newHiddenLayers
-    })
+    });
   }
 
   getChoroplethActiveTypesIds(choroplethId) {
-    const {
-      choroplethValues,
-      choroplethData,
-    } = this.state;
+    const { choroplethValues, choroplethData } = this.state;
 
-    const choropleth = choroplethData.filter(item => { return item.id === choroplethId; })[0];
-    const choroplethValue = choroplethValues.get(choroplethId)
-    const start = Math.floor(choroplethValue[0])
-    const end = Math.floor(choroplethValue[1])
+    const choropleth = choroplethData.filter(item => {
+      return item.id === choroplethId;
+    })[0];
+    const choroplethValue = choroplethValues.get(choroplethId);
+    const start = Math.floor(choroplethValue[0]);
+    const end = Math.floor(choroplethValue[1]);
 
-
-    let ids = []
+    let ids = [];
     for (let i = start; i < end; i++) {
-      const layerId = choropleth.types[i].id
-      ids.push(layerId)
+      const layerId = choropleth.types[i].id;
+      ids.push(layerId);
     }
 
-    return ids
-
+    return ids;
   }
 
   getLayersIdByTypeId(typeId) {
@@ -432,31 +435,28 @@ class App extends React.Component {
     return layerIds;
   }
 
-
-
   getStylePromise() {
-    return d3.json(`http://138.197.102.252/api/v1/get/style?start=${this.currentTileRange[0]}&end=${this.currentTileRange[1]}`);
+    return d3.json(
+      `http://138.197.102.252/api/v1/get/style?start=${this.currentTileRange[0]}&end=${this.currentTileRange[1]}`
+    );
   }
 
   static getLegendPromise(year) {
-    return d3.json(`http://138.197.102.252/api/v1/get/legend?start=${year}&end=${year}`);
+    return d3.json(
+      `http://138.197.102.252/api/v1/get/legend?start=${year}&end=${year}`
+    );
   }
 
   static getLegendThematicPromise(year) {
-    return d3.json(`http://138.197.102.252/api/v1/get/legend/thematic?start=${year}&end=${year}`)
+    return d3.json(
+      `http://138.197.102.252/api/v1/get/legend/thematic?start=${year}&end=${year}`
+    );
   }
 
   getSidebarToggleButton() {
-    const {
-      mobile,
-      sidebarOpen,
-    } = this.state;
+    const { mobile, sidebarOpen } = this.state;
     if (sidebarOpen || mobile) return null;
-    return (
-      <SidebarToggleButton
-        toggleSidebar={this.toggleSidebar}
-      />
-    );
+    return <SidebarToggleButton toggleSidebar={this.toggleSidebar} />;
   }
 
   setAreaBoxStart(pos) {
@@ -465,7 +465,7 @@ class App extends React.Component {
 
     this.setState({
       areaBoxOn: true,
-      areaBox: newBox,
+      areaBox: newBox
     });
   }
 
@@ -473,14 +473,12 @@ class App extends React.Component {
     const { areaBox } = this.state;
     const newBox = Object.assign({}, areaBox, { end: pos });
     this.setState({
-      areaBox: newBox,
+      areaBox: newBox
     });
   }
 
   getRasterProbe() {
-    const {
-      currentRaster,
-    } = this.state;
+    const { currentRaster } = this.state;
     if (currentRaster === null) return null;
     return (
       <RasterProbe
@@ -494,53 +492,38 @@ class App extends React.Component {
   }
 
   getMobileMenu() {
-    const {
-      mobile,
-    } = this.state;
+    const { mobile } = this.state;
     if (!mobile) return null;
-    return (
-      <MobileMenu
-        toggleSidebar={this.toggleSidebar}
-      />
-    );
+    return <MobileMenu toggleSidebar={this.toggleSidebar} />;
   }
 
   setRaster(newRaster) {
     this.setState({
-      currentRaster: newRaster,
+      currentRaster: newRaster
     });
   }
 
   getRastersByCurrentType() {
-    const {
-      currentRaster,
-      viewsData,
-      overlaysData,
-    } = this.state;
+    const { currentRaster, viewsData, overlaysData } = this.state;
     const { type } = currentRaster;
     const allRasters = {
       view: viewsData,
-      overlay: overlaysData,
+      overlay: overlaysData
     };
     return allRasters[type];
   }
 
   setLightbox(raster) {
     this.setState({
-      lightbox: raster,
+      lightbox: raster
     });
   }
 
   getLightbox() {
-    const {
-      lightbox,
-    } = this.state;
+    const { lightbox } = this.state;
     if (lightbox === null) return null;
     return (
-      <Lightbox
-        clearLightbox={this.clearLightbox}
-        lightboxRaster={lightbox}
-      />
+      <Lightbox clearLightbox={this.clearLightbox} lightboxRaster={lightbox} />
     );
   }
 
@@ -573,8 +556,8 @@ class App extends React.Component {
     this.setState({
       currentRaster: {
         type,
-        raster: prevRaster,
-      },
+        raster: prevRaster
+      }
     });
   }
 
@@ -594,14 +577,14 @@ class App extends React.Component {
     this.setState({
       currentRaster: {
         type,
-        raster: nextRaster,
-      },
+        raster: nextRaster
+      }
     });
   }
 
   clearLightbox() {
     this.setState({
-      lightbox: null,
+      lightbox: null
     });
   }
 
@@ -610,16 +593,14 @@ class App extends React.Component {
   }
 
   toggleAreaBox(bool) {
-    const {
-      areaBoxOn,
-    } = this.state;
+    const { areaBoxOn } = this.state;
     if (bool !== undefined) {
       this.setState({
-        areaBoxOn: bool,
+        areaBoxOn: bool
       });
     } else {
       this.setState({
-        areaBoxOn: !areaBoxOn,
+        areaBoxOn: !areaBoxOn
       });
     }
   }
@@ -628,7 +609,7 @@ class App extends React.Component {
     this.setState({
       highlightedFeature: null,
       searchFeatures: [],
-      searchView: null,
+      searchView: null
     });
   }
 
@@ -636,7 +617,7 @@ class App extends React.Component {
     const legendData = await App.getLegendPromise(newYear);
 
     this.setState({
-      legendData: legendData.response.legend,
+      legendData: legendData.response.legend
     });
   }
 
@@ -651,18 +632,16 @@ class App extends React.Component {
         minValue: 0,
         maxValue: choropleth.Types.length,
         colorRamp: choropleth.Types.map(type => {
-          return type.swatch
-        }),
-      }
-    })
+          return type.swatch;
+        })
+      };
+    });
 
     this.setState({
       choroplethData: choroplethData
-    })
-    return choroplethData
+    });
+    return choroplethData;
   }
-
-
 
   async updateStyle(newYear) {
     if (this.currentTileRange === null) return;
@@ -670,7 +649,7 @@ class App extends React.Component {
 
     const newTileRange = App.getCurrentTileRange({
       year: newYear,
-      tileRanges,
+      tileRanges
     });
 
     if (this.currentTileRange[0] !== newTileRange[0]) {
@@ -678,48 +657,43 @@ class App extends React.Component {
 
       const style = await this.getStylePromise(newYear);
       this.setState({
-        style,
+        style
       });
     }
   }
 
   async loadInitialData() {
     const { year } = this.state;
-    const [
-      tileRangesData,
-      legendData,
-      choroplethData
-    ] = await Promise.all([
+    const [tileRangesData, legendData, choroplethData] = await Promise.all([
       d3.json('http://138.197.102.252/api/v1/get/timeline'),
       App.getLegendPromise(year),
       this.updateLegendThematicData(year)
     ]);
 
-
     const tileRanges = tileRangesData.response;
 
-    const yearRange = d3.extent(tileRanges
-      .reduce((accumulator, d) => [...accumulator, ...d], []));
+    const yearRange = d3.extent(
+      tileRanges.reduce((accumulator, d) => [...accumulator, ...d], [])
+    );
     this.currentTileRange = App.getCurrentTileRange({
       tileRanges,
-      year,
+      year
     });
 
     const stylePromise = this.getStylePromise();
     const style = await stylePromise;
 
-
-    const hiddenLayers = style.layers.filter(layer => {
-      if (layer.layout && layer.layout.visibility === 'none') {
-        return layer
-      }
-    }).map(layer => layer.source)
-
+    const hiddenLayers = style.layers
+      .filter(layer => {
+        if (layer.layout && layer.layout.visibility === 'none') {
+          return layer;
+        }
+      })
+      .map(layer => layer.source);
 
     for (const chropleth of choroplethData) {
-      this.setChoroplethValue(chropleth.id, [0, chropleth.maxValue])
+      this.setChoroplethValue(chropleth.id, [0, chropleth.maxValue]);
     }
-
 
     this.setState({
       loading: false,
@@ -728,7 +702,7 @@ class App extends React.Component {
       yearRange,
       choroplethData,
       hiddenLayers,
-      legendData: legendData.response.legend,
+      legendData: legendData.response.legend
     });
   }
 
@@ -737,11 +711,11 @@ class App extends React.Component {
 
     if (!hiddenLayers.includes(layerId)) {
       this.setState({
-        hiddenLayers: [...hiddenLayers, layerId],
+        hiddenLayers: [...hiddenLayers, layerId]
       });
     } else {
       this.setState({
-        hiddenLayers: hiddenLayers.filter(d => d !== layerId),
+        hiddenLayers: hiddenLayers.filter(d => d !== layerId)
       });
     }
   }
@@ -749,42 +723,37 @@ class App extends React.Component {
   toggleSidebar() {
     const { sidebarOpen } = this.state;
     this.setState({
-      sidebarOpen: !sidebarOpen,
+      sidebarOpen: !sidebarOpen
     });
   }
 
   toggleAreaSearching() {
     const { areaSearching } = this.state;
     this.setState({
-      areaSearching: !areaSearching,
+      areaSearching: !areaSearching
     });
   }
 
   searchByText(e) {
-    const {
-      searchView,
-      year,
-      legendData,
-
-    } = this.state;
+    const { searchView, year, legendData } = this.state;
     const { value } = e.target;
 
     const doSearch = () => {
       this.setState({ loading: true });
       d3.json(`http://138.197.102.252/api/v1/search/${value}?start=${year}`)
-        .then((results) => {
+        .then(results => {
           const searchResults = App.getCleanSearchResults({
             results,
-            legendData,
+            legendData
           });
           this.setState({
             loading: false,
             highlightedFeature: null,
             searchView: 'text',
-            searchFeatures: searchResults,
+            searchFeatures: searchResults
           });
         })
-        .catch((err) => {
+        .catch(err => {
           this.setState({ loading: false });
           console.log(err);
         });
@@ -799,7 +768,7 @@ class App extends React.Component {
         this.setState({
           loading: false,
           searchView: null,
-          searchFeatures: [],
+          searchFeatures: []
         });
       }
     } else if (this.searchTimer === null) {
@@ -819,21 +788,23 @@ class App extends React.Component {
     const yMax = d3.max([area[0].lat, area[1].lat]);
 
     this.setState({ loading: true });
-    d3.json(`http://138.197.102.252/api/v1/probe/[${xMin},${yMin},${xMax},${yMax}]`)
-      .then((results) => {
+    d3.json(
+      `http://138.197.102.252/api/v1/probe/[${xMin},${yMin},${xMax},${yMax}]`
+    )
+      .then(results => {
         const searchResults = App.getCleanSearchResults({
           results,
-          legendData,
+          legendData
         });
 
         this.setState({
           loading: false,
           highlightedFeature: null,
           searchView: 'atlas',
-          searchFeatures: searchResults,
+          searchFeatures: searchResults
         });
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
         this.setState({ loading: false });
       });
@@ -843,10 +814,10 @@ class App extends React.Component {
     const { legendData } = this.state;
     this.setState({ loading: true });
     d3.json(`http://138.197.102.252/api/v1/probe/[${point.lng},${point.lat}]`)
-      .then((results) => {
+      .then(results => {
         const searchResults = App.getCleanSearchResults({
           results,
-          legendData,
+          legendData
         });
 
         this.setState({
@@ -854,10 +825,10 @@ class App extends React.Component {
           loading: false,
           highlightedFeature: null,
           searchView: 'atlas',
-          searchFeatures: searchResults,
+          searchFeatures: searchResults
         });
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
         this.setState({ loading: false });
       });
@@ -887,7 +858,7 @@ class App extends React.Component {
       searchView,
       sidebarOpen,
       views,
-      viewsData,
+      viewsData
     } = this.state;
 
     return (
