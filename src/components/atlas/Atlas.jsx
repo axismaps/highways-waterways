@@ -6,7 +6,6 @@ import searchMethods from './AtlasSearchMethods';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './Atlas.scss';
 
-
 /**
  * Map component
  *
@@ -34,7 +33,7 @@ class Atlas extends React.PureComponent {
       style: null,
       year: null,
       highlightedLayer: null,
-      layerOpacityProps: {},
+      layerOpacityProps: {}
     };
 
     this.highlightLayerIds = [];
@@ -46,12 +45,13 @@ class Atlas extends React.PureComponent {
   }
 
   componentDidMount() {
-    mapboxgl.accessToken = 'pk.eyJ1IjoiYXhpc21hcHMiLCJhIjoieUlmVFRmRSJ9.CpIxovz1TUWe_ecNLFuHNg';
+    mapboxgl.accessToken =
+      'pk.eyJ1IjoiYXhpc21hcHMiLCJhIjoieUlmVFRmRSJ9.CpIxovz1TUWe_ecNLFuHNg';
     const mbMap = new mapboxgl.Map({
       container: this.atlasRef.current,
       style: this.getFilteredStyle(),
-      minZoom: 8,
-      maxZoom: 17,
+      minZoom: 10,
+      maxZoom: 17
     }).addControl(new mapboxgl.NavigationControl(), 'top-left');
 
     this.mbMap = mbMap;
@@ -77,7 +77,7 @@ class Atlas extends React.PureComponent {
       highlightedFeature,
       highlightedLayer,
       hiddenLayers,
-      sidebarOpen,
+      sidebarOpen
     } = this.props;
 
     const updateYear = () => {
@@ -95,14 +95,22 @@ class Atlas extends React.PureComponent {
       }
     };
 
-    if (style.sources.composite.url !== this.logged.style.sources.composite.url) {
+    if (
+      style.sources.composite.url !== this.logged.style.sources.composite.url
+    ) {
       this.logStyle();
       this.logLayerOpacityProps();
       updateYearDebounced();
     } else if (year !== this.logged.year) {
       const { url } = style.sources.composite;
-      const tileStart = url.slice(url.indexOf('start=') + 6, url.indexOf('start=') + 10);
-      const tileEnd = url.slice(url.indexOf('end=') + 4, url.indexOf('end=') + 8);
+      const tileStart = url.slice(
+        url.indexOf('start=') + 6,
+        url.indexOf('start=') + 10
+      );
+      const tileEnd = url.slice(
+        url.indexOf('end=') + 4,
+        url.indexOf('end=') + 8
+      );
       /**
        * do not update style year filters if style object is not update
        * instead, wait for style object to update (above)
@@ -141,7 +149,7 @@ class Atlas extends React.PureComponent {
     if (!('filter' in layer)) return layer;
 
     const newLayer = Object.assign({}, layer);
-    newLayer.filter = layer.filter.map((f) => {
+    newLayer.filter = layer.filter.map(f => {
       if (f[0] === 'all') {
         return f.map((d, i) => {
           if (i === 0) return d;
@@ -168,22 +176,23 @@ class Atlas extends React.PureComponent {
   }
 
   getFilteredStyle() {
-    const {
-      style,
-    } = this.props;
+    const { style } = this.props;
     const styleCopy = JSON.parse(JSON.stringify(style));
-    styleCopy.layers = styleCopy.layers.map(layer => this.getFilteredLayer(layer));
+    styleCopy.layers = styleCopy.layers.map(layer =>
+      this.getFilteredLayer(layer)
+    );
 
+    console.log(styleCopy);
     return styleCopy;
   }
 
   setClickSearchListener() {
-    const {
-      searchByPoint,
-    } = this.props;
+    const { searchByPoint } = this.props;
 
-    this.mbMap.on('click', (e) => {
-      searchByPoint(this.mbMap.unproject(new mapboxgl.Point(e.point.x, e.point.y)));
+    this.mbMap.on('click', e => {
+      searchByPoint(
+        this.mbMap.unproject(new mapboxgl.Point(e.point.x, e.point.y))
+      );
     });
   }
 
@@ -207,15 +216,23 @@ class Atlas extends React.PureComponent {
     const { layers } = this.mbMap.getStyle();
     const { layerOpacityProps } = this.logged;
 
-    layers.forEach((layer) => {
+    layers.forEach(layer => {
       const originalPaint = layerOpacityProps[layer.id];
       if (originalPaint !== null) {
         if (highlightedLayer === null) {
-          this.mbMap.setPaintProperty(layer.id, originalPaint.field, originalPaint.value);
+          this.mbMap.setPaintProperty(
+            layer.id,
+            originalPaint.field,
+            originalPaint.value
+          );
         } else if (!layer.id.includes(highlightedLayer)) {
           this.mbMap.setPaintProperty(layer.id, originalPaint.field, 0.1);
         } else if (layer.id.includes(highlightedLayer)) {
-          this.mbMap.setPaintProperty(layer.id, originalPaint.field, originalPaint.value);
+          this.mbMap.setPaintProperty(
+            layer.id,
+            originalPaint.field,
+            originalPaint.value
+          );
         }
       }
     });
@@ -225,12 +242,13 @@ class Atlas extends React.PureComponent {
     const { hiddenLayers } = this.props;
     const { layers } = this.mbMap.getStyle();
 
+    layers.forEach(layer => {
+      const visible =
+        this.mbMap.getLayoutProperty(layer.id, 'visibility') === 'visible';
 
-    layers.forEach((layer) => {
-      const visible = this.mbMap.getLayoutProperty(layer.id, 'visibility') === 'visible';
-
-      const shouldBeHidden = hiddenLayers
-        .includes(layer.id) || hiddenLayers.includes(layer['source-layer']);
+      const shouldBeHidden =
+        hiddenLayers.includes(layer.id) ||
+        hiddenLayers.includes(layer['source-layer']);
 
       if (visible && shouldBeHidden) {
         this.mbMap.setLayoutProperty(layer.id, 'visibility', 'none');
@@ -241,9 +259,7 @@ class Atlas extends React.PureComponent {
   }
 
   setHighlightedFeature() {
-    const {
-      highlightedFeature,
-    } = this.props;
+    const { highlightedFeature } = this.props;
 
     if (highlightedFeature === null) return;
 
@@ -252,19 +268,16 @@ class Atlas extends React.PureComponent {
     const fillHighlightBaseId = 'highlighted-feature-fill';
 
     const idsFilter = ['any'];
-    highlightedFeature.feature.ids.forEach((id) => {
+    highlightedFeature.feature.ids.forEach(id => {
       idsFilter.push(['==', 'id', id]);
     });
 
-    this.mbMap.getStyle().layers
-      .filter(d => d['source-layer'] === highlightedFeature.source)
+    this.mbMap
+      .getStyle()
+      .layers.filter(d => d['source-layer'] === highlightedFeature.source)
       .forEach((layer, i) => {
         const yearFilter = layer.filter;
-        const newFilter = [
-          'all',
-          yearFilter,
-          idsFilter,
-        ];
+        const newFilter = ['all', yearFilter, idsFilter];
         const highlightColor = 'rgb(50, 50, 50)';
         if (layer.type === 'fill') {
           const id = `${fillHighlightBaseId}--${i}`;
@@ -278,8 +291,8 @@ class Atlas extends React.PureComponent {
             layout: {},
             paint: {
               'fill-color': highlightColor,
-              'fill-opacity': 0.2,
-            },
+              'fill-opacity': 0.2
+            }
           };
           this.mbMap.addLayer(fillLayer);
         } else if (layer.type === 'line') {
@@ -294,13 +307,13 @@ class Atlas extends React.PureComponent {
             source: 'composite',
             'source-layer': layer['source-layer'],
             layout: {
-              'line-join': 'round',
+              'line-join': 'round'
             },
             paint: {
               'line-width': 8,
               'line-color': highlightColor,
-              'line-opacity': 0.5,
-            },
+              'line-opacity': 0.5
+            }
           };
           const outlineLayerTop = {
             id: topId,
@@ -309,12 +322,12 @@ class Atlas extends React.PureComponent {
             source: 'composite',
             'source-layer': layer['source-layer'],
             layout: {
-              'line-join': 'round',
+              'line-join': 'round'
             },
             paint: {
               'line-width': 2,
-              'line-color': '#000',
-            },
+              'line-color': '#000'
+            }
           };
           this.mbMap.addLayer(outlineLayerBottom);
           this.mbMap.addLayer(outlineLayerTop);
@@ -323,50 +336,47 @@ class Atlas extends React.PureComponent {
   }
 
   clearHighlightedFeature() {
-    this.highlightLayerIds.forEach((id) => {
+    this.highlightLayerIds.forEach(id => {
       this.mbMap.removeLayer(id);
     });
     this.highlightLayerIds = [];
   }
 
   zoomToHighlightedFeature() {
-    const {
-      highlightedFeature,
-    } = this.props;
+    const { highlightedFeature } = this.props;
     if (highlightedFeature === null) return;
 
     this.mbMap.fitBounds(highlightedFeature.feature.bbox);
   }
 
   logLayerOpacityProps() {
-    const {
-      layerOpacityFields,
-    } = this.props;
-    const {
-      style,
-    } = this.logged;
-    this.logged.layerOpacityProps = style.layers.reduce((accumulator, layer) => {
-      const field = layerOpacityFields.find(d => (d in layer.paint));
-      if (field === undefined) {
-        let record = { value: 1 };
-        if (layer.type === 'fill') {
-          record.field = 'fill-opacity';
-        } else if (layer.type === 'line') {
-          record.field = 'line-opacity';
-        } else if (layer.type === 'symbol') {
-          record.field = 'icon-opacity';
-        } else {
-          record = null;
+    const { layerOpacityFields } = this.props;
+    const { style } = this.logged;
+    this.logged.layerOpacityProps = style.layers.reduce(
+      (accumulator, layer) => {
+        const field = layerOpacityFields.find(d => d in layer.paint);
+        if (field === undefined) {
+          let record = { value: 1 };
+          if (layer.type === 'fill') {
+            record.field = 'fill-opacity';
+          } else if (layer.type === 'line') {
+            record.field = 'line-opacity';
+          } else if (layer.type === 'symbol') {
+            record.field = 'icon-opacity';
+          } else {
+            record = null;
+          }
+          accumulator[layer.id] = record;
+          return accumulator;
         }
-        accumulator[layer.id] = record;
+        accumulator[layer.id] = {
+          field,
+          value: layer.paint[field]
+        };
         return accumulator;
-      }
-      accumulator[layer.id] = {
-        field,
-        value: layer.paint[field],
-      };
-      return accumulator;
-    }, {});
+      },
+      {}
+    );
   }
 
   logAreaSearching() {
@@ -404,18 +414,13 @@ class Atlas extends React.PureComponent {
     this.logged.hiddenLayers = hiddenLayers;
   }
 
-
   render() {
-    const {
-      areaSearching,
-    } = this.props;
+    const { areaSearching } = this.props;
     let containerClass = 'atlas';
     if (areaSearching) {
       containerClass += ' atlas--area-searching';
     }
-    return (
-      <div className={containerClass} ref={this.atlasRef} />
-    );
+    return <div className={containerClass} ref={this.atlasRef} />;
   }
 }
 
@@ -430,22 +435,22 @@ Atlas.defaultProps = {
     'fill-opacity',
     'line-opacity',
     'text-opacity',
-    'icon-opacity',
-  ],
+    'icon-opacity'
+  ]
 };
 
 Atlas.propTypes = {
   /** pixel position of current area search box */
   areaBox: PropTypes.shape({
     end: PropTypes.arrayOf(PropTypes.number),
-    start: PropTypes.arrayOf(PropTypes.number),
+    start: PropTypes.arrayOf(PropTypes.number)
   }).isRequired,
   /** if area search is on */
   areaSearching: PropTypes.bool.isRequired,
   /** Current raster overlay/view/choropleth/hydroRaster */
   currentRaster: PropTypes.shape({
     type: PropTypes.string,
-    raster: PropTypes.object,
+    raster: PropTypes.object
   }),
   /** All map layers to hide (layer ids) */
   hiddenLayers: PropTypes.arrayOf(PropTypes.string),
@@ -455,9 +460,9 @@ Atlas.propTypes = {
     feature: PropTypes.shape({
       bbox: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
       ids: PropTypes.arrayOf(PropTypes.string),
-      name: PropTypes.string,
+      name: PropTypes.string
     }),
-    source: PropTypes.string,
+    source: PropTypes.string
   }),
   /** List of layer paint properties that affect opacity */
   layerOpacityFields: PropTypes.arrayOf(PropTypes.string),
@@ -476,10 +481,10 @@ Atlas.propTypes = {
     sources: PropTypes.object,
     sprite: PropTypes.string,
     version: PropTypes.number,
-    zoom: PropTypes.number,
+    zoom: PropTypes.number
   }).isRequired,
   /** Current year */
-  year: PropTypes.number.isRequired,
+  year: PropTypes.number.isRequired
 };
 
 export default Atlas;
