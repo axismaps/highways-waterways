@@ -148,6 +148,13 @@
   display: flex;
 }
 
+.sidebar__layer-swatch {
+  display: block;
+  width: 38px;
+  height: 31px;
+  border-radius: 4px;
+}
+
 .sidebar__layers-title-left {
   font-size: 13px;
 }

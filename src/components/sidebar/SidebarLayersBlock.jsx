@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faLevelUp,
   faToggleOff,
-  faToggleOn,
+  faToggleOn
 } from '@fortawesome/pro-regular-svg-icons';
 
 /**
@@ -21,15 +21,9 @@ import {
 
 class SidebarLayersBlock extends React.PureComponent {
   getTitleSwitch() {
-    const {
-      hidden,
-      toggleLayerVisibility,
-      groupId,
-    } = this.props;
+    const { hidden, toggleLayerVisibility, groupId } = this.props;
 
-    const icon = hidden
-      ? faToggleOff
-      : faToggleOn;
+    const icon = hidden ? faToggleOff : faToggleOn;
     return (
       <FontAwesomeIcon
         icon={icon}
@@ -39,10 +33,7 @@ class SidebarLayersBlock extends React.PureComponent {
   }
 
   drawLayerRow(layer) {
-    const {
-      setHighlightedLayer,
-      highlightedLayer,
-    } = this.props;
+    const { setHighlightedLayer, highlightedLayer } = this.props;
 
     let buttonClass = 'sidebar__layer-button';
     if (highlightedLayer === layer.id) {
@@ -50,38 +41,29 @@ class SidebarLayersBlock extends React.PureComponent {
     }
 
     return (
-      <div
-        className="sidebar__layer-row"
-        key={layer.id}
-      >
+      <div className="sidebar__layer-row" key={layer.id}>
         <div
           className={buttonClass}
           onClick={() => setHighlightedLayer(layer.id)}
         >
-          <div className="sidebar__layer-button-inner">
-            {layer.title}
-          </div>
+          <div className="sidebar__layer-button-inner">{layer.title}</div>
         </div>
-        <div className="sidebar__layer-swatch" />
+        <div
+          className="sidebar__layer-swatch"
+          style={{ backgroundColor: layer.swatch }}
+        />
       </div>
     );
   }
 
   drawTitleRow() {
-    const {
-      groupTitle,
-    } = this.props;
+    const { groupTitle } = this.props;
     return (
       <div className="sidebar__layers-title-row">
         <div className="sidebar__layers-title-left">
-          <FontAwesomeIcon
-            icon={faLevelUp}
-            rotation={90}
-          />
+          <FontAwesomeIcon icon={faLevelUp} rotation={90} />
           <div className="sidebar__layers-title">
-            <div className="sidebar__layers-title">
-              {groupTitle}
-            </div>
+            <div className="sidebar__layers-title">{groupTitle}</div>
           </div>
         </div>
         <div className="sidebar__layers-title-right">
@@ -92,9 +74,7 @@ class SidebarLayersBlock extends React.PureComponent {
   }
 
   drawLayerRows() {
-    const {
-      mapLayers,
-    } = this.props;
+    const { mapLayers } = this.props;
     return mapLayers.map(layer => this.drawLayerRow(layer));
   }
 
@@ -113,11 +93,10 @@ class SidebarLayersBlock extends React.PureComponent {
   }
 }
 
-
 SidebarLayersBlock.defaultProps = {
   mapLayers: [],
   highlightedLayer: null,
-  hidden: false,
+  hidden: false
 };
 
 SidebarLayersBlock.propTypes = {
@@ -136,7 +115,7 @@ SidebarLayersBlock.propTypes = {
   /** currently highlighted layer id */
   highlightedLayer: PropTypes.string,
   /** callback to set highlightedLayer (layer id/name) */
-  setHighlightedLayer: PropTypes.func.isRequired,
+  setHighlightedLayer: PropTypes.func.isRequired
 };
 
 export default SidebarLayersBlock;
