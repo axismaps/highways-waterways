@@ -50,10 +50,11 @@ class Atlas extends React.PureComponent {
     const mbMap = new mapboxgl.Map({
       container: this.atlasRef.current,
       style: this.getFilteredStyle(),
-    });
+      minZoom: 8,
+      maxZoom: 17,
+    }).addControl(new mapboxgl.NavigationControl(), 'top-left');
 
     this.mbMap = mbMap;
-
 
     this.canvas = mbMap.getCanvasContainer();
     this.logAreaSearching();
@@ -229,7 +230,7 @@ class Atlas extends React.PureComponent {
       const visible = this.mbMap.getLayoutProperty(layer.id, 'visibility') === 'visible';
 
       const shouldBeHidden = hiddenLayers
-        .includes(layer.id) || hiddenLayers.includes(layer['source-layer'])
+        .includes(layer.id) || hiddenLayers.includes(layer['source-layer']);
 
       if (visible && shouldBeHidden) {
         this.mbMap.setLayoutProperty(layer.id, 'visibility', 'none');
