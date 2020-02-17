@@ -6,6 +6,7 @@ import {
   faToggleOff,
   faToggleOn
 } from '@fortawesome/pro-regular-svg-icons';
+import SwatchIcon from './SidebarSwatchIcons';
 
 /**
  * This component renders a list of map layers
@@ -33,7 +34,7 @@ class SidebarLayersBlock extends React.PureComponent {
   }
 
   drawLayerRow(layer) {
-    const { setHighlightedLayer, highlightedLayer } = this.props;
+    const { setHighlightedLayer, highlightedLayer, geometry } = this.props;
 
     let buttonClass = 'sidebar__layer-button';
     if (highlightedLayer === layer.id) {
@@ -48,10 +49,7 @@ class SidebarLayersBlock extends React.PureComponent {
         >
           <div className="sidebar__layer-button-inner">{layer.title}</div>
         </div>
-        <div
-          className="sidebar__layer-swatch"
-          style={{ backgroundColor: layer.swatch }}
-        />
+        <SwatchIcon color={layer.swatch} geometry={geometry} />
       </div>
     );
   }
@@ -100,6 +98,7 @@ SidebarLayersBlock.defaultProps = {
 };
 
 SidebarLayersBlock.propTypes = {
+  geometry: PropTypes.string.isRequired,
   /** block is first in the list of layer blocks */
   firstBlock: PropTypes.bool.isRequired,
   /** layer group display name */
