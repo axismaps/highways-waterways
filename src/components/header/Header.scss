@@ -125,6 +125,8 @@ $header-padding: 20px;
 }
 
 .timeline__slider-svg {
+  background-color: lightgrey;
+  border-radius: 5px;
   path {
     opacity: 0;
   }
