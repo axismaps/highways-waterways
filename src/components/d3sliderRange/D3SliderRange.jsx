@@ -56,7 +56,7 @@ class D3Slider {
     this.components.svg = d3
       .select(timelineNode)
       .append('svg')
-      .attr('class', 'timeline__slider-svg')
+      .attr('class', 'sidebar__slider-svg')
       .style('height', `${height}px`);
   }
 

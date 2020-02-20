@@ -1,13 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faCamera,
-} from '@fortawesome/pro-solid-svg-icons';
+import { faCamera } from '@fortawesome/pro-solid-svg-icons';
 import SidebarLayersBlock from './SidebarLayersBlock';
 import SidebarBlock from './SidebarBlock';
 import SidebarVulnerabilityLayer from './SidebarVulnerabilityLayer';
-
 
 /**
  * This component displays the map legend--map layers,
@@ -18,10 +15,7 @@ import SidebarVulnerabilityLayer from './SidebarVulnerabilityLayer';
 
 class SidebarLegend extends React.PureComponent {
   drawViewFilmstrip() {
-    const {
-      viewsData,
-      setRaster,
-    } = this.props;
+    const { viewsData, setRaster } = this.props;
     if (viewsData.length === 0) return null;
 
     const thumbs = viewsData.map(view => (
@@ -31,20 +25,15 @@ class SidebarLegend extends React.PureComponent {
         onClick={() => {
           setRaster({
             type: 'view',
-            raster: view,
+            raster: view
           });
         }}
       />
     ));
 
     return (
-      <SidebarBlock
-        title="Views"
-        icon={<FontAwesomeIcon icon={faCamera} />}
-      >
-        <div className="sidebar__filmstrip">
-          {thumbs}
-        </div>
+      <SidebarBlock title="Views" icon={<FontAwesomeIcon icon={faCamera} />}>
+        <div className="sidebar__filmstrip">{thumbs}</div>
       </SidebarBlock>
     );
   }
@@ -55,13 +44,14 @@ class SidebarLegend extends React.PureComponent {
       legendData,
       toggleLayerVisibility,
       highlightedLayer,
-      setHighlightedLayer,
+      setHighlightedLayer
     } = this.props;
     if (legendData.length === 0) return null;
 
     const layerBlocks = legendData.map((legendGroup, i) => (
       <SidebarLayersBlock
         firstBlock={i === 0}
+        geometry={legendGroup.geometry}
         highlightedLayer={highlightedLayer}
         setHighlightedLayer={setHighlightedLayer}
         key={legendGroup.id}
@@ -73,13 +63,7 @@ class SidebarLegend extends React.PureComponent {
       />
     ));
 
-    return (
-      <SidebarBlock
-        title="Environment"
-      >
-        {layerBlocks}
-      </SidebarBlock>
-    );
+    return <SidebarBlock title="Environment">{layerBlocks}</SidebarBlock>;
   }
 
   drawVulnerability() {
@@ -94,16 +78,8 @@ class SidebarLegend extends React.PureComponent {
       setSelectedThematicLayer
     } = this.props;
 
-    const choroplethBlocks = choroplethData.map((d) => {
-      const {
-        name,
-        id,
-        minValue,
-        maxValue,
-        slider,
-        colorRamp,
-        types
-      } = d;
+    const choroplethBlocks = choroplethData.map(d => {
+      const { name, id, minValue, maxValue, slider, colorRamp, types } = d;
       return (
         <SidebarVulnerabilityLayer
           colorRamp={colorRamp}
@@ -125,11 +101,7 @@ class SidebarLegend extends React.PureComponent {
       );
     });
     return (
-      <SidebarBlock
-        title="Vulnerability"
-      >
-        {choroplethBlocks}
-      </SidebarBlock>
+      <SidebarBlock title="Vulnerability">{choroplethBlocks}</SidebarBlock>
     );
   }
 
@@ -145,7 +117,7 @@ class SidebarLegend extends React.PureComponent {
 }
 
 SidebarLegend.defaultProps = {
-  highlightedLayer: null,
+  highlightedLayer: null
 };
 
 SidebarLegend.propTypes = {
@@ -175,7 +147,7 @@ SidebarLegend.propTypes = {
   /** callback to set highlightedLayer (layer id/name) */
   setHighlightedLayer: PropTypes.func.isRequired,
   /** Callbak to set app `currentRaster` state field */
-  setRaster: PropTypes.func.isRequired,
+  setRaster: PropTypes.func.isRequired
 };
 
 export default SidebarLegend;
