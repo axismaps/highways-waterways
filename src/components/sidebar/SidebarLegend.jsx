@@ -19,7 +19,8 @@ class SidebarLegend extends React.PureComponent {
     if (viewsData.length === 0) return null;
 
     const thumbs = viewsData.map(view => (
-      <div
+      <img
+        src={view.thumb}
         key={view.id}
         className="sidebar__view-thumb"
         onClick={() => {
@@ -33,6 +34,42 @@ class SidebarLegend extends React.PureComponent {
 
     return (
       <SidebarBlock title="Views" icon={<FontAwesomeIcon icon={faCamera} />}>
+        <div className="sidebar__filmstrip">{thumbs}</div>
+      </SidebarBlock>
+    );
+  }
+
+  drawSidebarOverlayDataBlock() {
+    const { overlaysData, viewsData, setRaster } = this.props;
+
+    const overlayBlocks = overlaysData.map(overlayBlock => {
+      return this.drawOverlayFilmstrip(overlayBlock);
+    });
+    return overlayBlocks;
+  }
+
+  drawOverlayFilmstrip(overlayBlock) {
+    const { setRaster } = this.props;
+
+    const thumbs = overlayBlock.documents.map(view => (
+      <img
+        src={view.thumb}
+        key={view.id}
+        className="sidebar__view-thumb"
+        onClick={() => {
+          setRaster({
+            type: 'view',
+            raster: view
+          });
+        }}
+      />
+    ));
+
+    return (
+      <SidebarBlock
+        title={overlayBlock.title}
+        icon={<FontAwesomeIcon icon={faCamera} />}
+      >
         <div className="sidebar__filmstrip">{thumbs}</div>
       </SidebarBlock>
     );
@@ -110,6 +147,7 @@ class SidebarLegend extends React.PureComponent {
       <div className="sidebar__legend">
         {this.drawVulnerability()}
         {this.drawViewFilmstrip()}
+        {this.drawSidebarOverlayDataBlock()}
         {this.drawLayerBlocks()}
       </div>
     );
@@ -128,7 +166,7 @@ SidebarLegend.propTypes = {
   /** All views for selected year */
   viewsData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /** All overlays for selected year */
-  // overlaysData: PropTypes.arrayOf(PropTypes.object).isRequired,
+  overlaysData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /** all hydro rasters (SLR) for selected year */
   // hydroRasterData: PropTypes.arrayOf(PropTypes.object).isRequired,
   /** All choropleth layers for selected year */
@@ -137,7 +175,6 @@ SidebarLegend.propTypes = {
   // hydroRasterValues: PropTypes.instanceOf(Map).isRequired,
   /** all layers and swatches */
   legendData: PropTypes.arrayOf(PropTypes.object).isRequired,
-
   /** layers (ids) currently turned off */
   hiddenLayers: PropTypes.arrayOf(PropTypes.string).isRequired,
   /** toggles layer groups on/off */

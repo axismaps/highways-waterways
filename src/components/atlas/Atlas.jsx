@@ -182,7 +182,6 @@ class Atlas extends React.PureComponent {
       this.getFilteredLayer(layer)
     );
 
-    console.log(styleCopy);
     return styleCopy;
   }
 

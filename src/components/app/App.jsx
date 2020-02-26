@@ -412,8 +412,10 @@ class App extends React.Component {
 
     let ids = [];
     for (let i = start; i < end; i++) {
-      const layerId = choropleth.types[i].id;
-      ids.push(layerId);
+      try {
+        const layerId = choropleth.types[i].id;
+        ids.push(layerId);
+      } catch (error) {}
     }
 
     return ids;
@@ -451,6 +453,31 @@ class App extends React.Component {
     return d3.json(
       `http://highways.georio.axismaps.io/api/v1/get/legend/thematic?start=${year}&end=${year}`
     );
+  }
+
+  static getVisualPromise(year) {
+    return d3.json(
+      `http://highways.georio.axismaps.io/api/v1/get/visual?start=${year}`
+    );
+  }
+
+  async setRasterData(year) {
+    const { response } = await App.getVisualPromise(year);
+
+    let viewsData = [];
+    let overlaysData = [];
+
+    for (let i = 0; i < response.length; i++) {
+      const element = response[i];
+      if (element.viewcone) {
+        viewsData = element.documents;
+      } else {
+        overlaysData.push(element);
+      }
+    }
+    // console.log('viewsData', viewsData);
+    // console.log('overlaysData', overlaysData);
+    this.setState({ overlaysData });
   }
 
   getSidebarToggleButton() {
@@ -667,7 +694,8 @@ class App extends React.Component {
     const [tileRangesData, legendData, choroplethData] = await Promise.all([
       d3.json('http://highways.georio.axismaps.io/api/v1/get/timeline'),
       App.getLegendPromise(year),
-      this.updateLegendThematicData(year)
+      this.updateLegendThematicData(year),
+      this.setRasterData(year)
     ]);
 
     const tileRanges = tileRangesData.response;
@@ -740,7 +768,9 @@ class App extends React.Component {
 
     const doSearch = () => {
       this.setState({ loading: true });
-      d3.json(`http://highways.georio.axismaps.io/api/v1/search/${value}?start=${year}`)
+      d3.json(
+        `http://highways.georio.axismaps.io/api/v1/search/${value}?start=${year}`
+      )
         .then(results => {
           const searchResults = App.getCleanSearchResults({
             results,
@@ -813,7 +843,9 @@ class App extends React.Component {
   searchByPoint(point) {
     const { legendData } = this.state;
     this.setState({ loading: true });
-    d3.json(`http://highways.georio.axismaps.io/api/v1/probe/[${point.lng},${point.lat}]`)
+    d3.json(
+      `http://highways.georio.axismaps.io/api/v1/probe/[${point.lng},${point.lat}]`
+    )
       .then(results => {
         const searchResults = App.getCleanSearchResults({
           results,
