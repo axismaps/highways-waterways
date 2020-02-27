@@ -267,6 +267,7 @@ class App extends React.Component {
     const updateData = async () => {
       this.updateStyle(newYear);
       this.updateLegendData(newYear);
+      this.setRasterData(newYear);
       const choroplethData = await this.updateLegendThematicData(newYear);
       for (const choropleth of choroplethData) {
         if (choroplethValues.get(choropleth.id)) {
@@ -506,7 +507,7 @@ class App extends React.Component {
 
   getRasterProbe() {
     const { currentRaster } = this.state;
-    if (currentRaster === null) return null;
+    if (currentRaster === null || currentRaster.type !== 'view') return null;
     return (
       <RasterProbe
         clearRaster={this.clearRaster}

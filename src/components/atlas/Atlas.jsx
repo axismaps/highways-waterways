@@ -77,7 +77,8 @@ class Atlas extends React.PureComponent {
       highlightedFeature,
       highlightedLayer,
       hiddenLayers,
-      sidebarOpen
+      sidebarOpen,
+      currentRaster
     } = this.props;
 
     const updateYear = () => {
@@ -140,6 +141,9 @@ class Atlas extends React.PureComponent {
       this.clearHighlightedFeature();
       this.zoomToHighlightedFeature();
       this.setHighlightedFeature();
+    }
+    if (this.logged.currentRaster !== currentRaster) {
+      this.setRasterOverlayLayer();
     }
   }
 
@@ -348,6 +352,38 @@ class Atlas extends React.PureComponent {
     this.mbMap.fitBounds(highlightedFeature.feature.bbox);
   }
 
+  setRasterOverlayLayer() {
+    const { currentRaster } = this.props;
+    if (currentRaster === null) return;
+    if (currentRaster.type === 'view') return;
+
+    console.log('lol', currentRaster.raster.tiles);
+    console.log('lol', currentRaster);
+
+    const source = this.mbMap.getSource('raster-overlay');
+
+    if (source) {
+      console.log(source);
+      /**
+       * TODO: update source here
+       *
+       */
+    } else {
+      this.mbMap.addSource('raster-overlay', {
+        type: 'raster',
+        tiles: [currentRaster.raster.tiles]
+      });
+    }
+
+    this.mbMap.addLayer({
+      id: currentRaster.raster.title,
+      type: 'raster',
+      source: 'raster-overlay'
+    });
+
+    this.mbMap.fitBounds(currentRaster.raster.extent);
+  }
+
   logLayerOpacityProps() {
     const { layerOpacityFields } = this.props;
     const { style } = this.logged;
@@ -378,6 +414,10 @@ class Atlas extends React.PureComponent {
     );
   }
 
+  logCurrentRaster() {
+    const { currentRaster } = this.props;
+    this.logged.currentRaster = currentRaster;
+  }
   logAreaSearching() {
     const { areaSearching } = this.props;
     this.logged.areaSearching = areaSearching;
