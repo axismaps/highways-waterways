@@ -354,32 +354,25 @@ class Atlas extends React.PureComponent {
 
   setRasterOverlayLayer() {
     const { currentRaster } = this.props;
-    if (currentRaster === null) return;
-    if (currentRaster.type === 'view') return;
-
-    console.log('lol', currentRaster.raster.tiles);
-    console.log('lol', currentRaster);
 
     const source = this.mbMap.getSource('raster-overlay');
-
     if (source) {
-      console.log(source);
-      /**
-       * TODO: update source here
-       *
-       */
-    } else {
-      this.mbMap.addSource('raster-overlay', {
-        type: 'raster',
-        tiles: [currentRaster.raster.tiles],
-        scheme: 'tms',
-      });
+      this.mbMap.removeLayer('raster-overlay');
+      this.mbMap.removeSource('raster-overlay');
     }
 
-    this.mbMap.addLayer({
-      id: currentRaster.raster.title,
+    if (currentRaster === null || currentRaster.type === 'view') return;
+
+    this.mbMap.addSource('raster-overlay', {
       type: 'raster',
-      source: 'raster-overlay',
+      tiles: [currentRaster.raster.tiles],
+      scheme: 'tms'
+    });
+
+    this.mbMap.addLayer({
+      id: 'raster-overlay',
+      type: 'raster',
+      source: 'raster-overlay'
     });
 
     this.mbMap.fitBounds(currentRaster.raster.extent);
