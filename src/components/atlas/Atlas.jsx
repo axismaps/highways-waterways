@@ -371,14 +371,15 @@ class Atlas extends React.PureComponent {
     } else {
       this.mbMap.addSource('raster-overlay', {
         type: 'raster',
-        tiles: [currentRaster.raster.tiles]
+        tiles: [currentRaster.raster.tiles],
+        scheme: 'tms',
       });
     }
 
     this.mbMap.addLayer({
       id: currentRaster.raster.title,
       type: 'raster',
-      source: 'raster-overlay'
+      source: 'raster-overlay',
     });
 
     this.mbMap.fitBounds(currentRaster.raster.extent);
