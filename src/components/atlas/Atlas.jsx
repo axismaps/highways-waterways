@@ -144,6 +144,7 @@ class Atlas extends React.PureComponent {
     }
     if (this.logged.currentRaster !== currentRaster) {
       this.setRasterOverlayLayer();
+      this.setViewCone();
     }
   }
 
@@ -376,6 +377,35 @@ class Atlas extends React.PureComponent {
     });
 
     this.mbMap.fitBounds(currentRaster.raster.extent);
+  }
+
+  setViewCone() {
+    const { currentRaster } = this.props;
+    if (currentRaster === null || currentRaster.type !== 'view') return;
+
+    const {
+      raster: { point, viewcone }
+    } = currentRaster;
+
+    console.log(point, viewcone);
+
+    this.mbMap.addLayer({
+      id: 'raster-overlay',
+      type: 'fill',
+      source: {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          geometry: viewcone
+        }
+      },
+      paint: {
+        'fill-color': '#000000',
+        'fill-opacity': 0.4
+      }
+    });
+
+    this.mbMap.fitBounds([point, point]);
   }
 
   logLayerOpacityProps() {
