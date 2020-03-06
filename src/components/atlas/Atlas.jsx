@@ -5,6 +5,7 @@ import * as mapboxgl from 'mapbox-gl';
 import searchMethods from './AtlasSearchMethods';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './Atlas.scss';
+import viewIcon from './viewshed-new.png';
 
 /**
  * Map component
@@ -33,7 +34,8 @@ class Atlas extends React.PureComponent {
       style: null,
       year: null,
       highlightedLayer: null,
-      layerOpacityProps: {}
+      layerOpacityProps: {},
+      viewsData: null
     };
 
     this.highlightLayerIds = [];
@@ -64,9 +66,11 @@ class Atlas extends React.PureComponent {
     this.logHighlightedFeature();
     this.logHighlightedLayer();
     this.logHiddenLayers();
+    this.logViewsData();
     this.logSidebarOpen();
     this.setClickSearchListener();
     this.setAreaSearchListener();
+    this.loadIcon();
   }
 
   componentDidUpdate() {
@@ -78,7 +82,8 @@ class Atlas extends React.PureComponent {
       highlightedLayer,
       hiddenLayers,
       sidebarOpen,
-      currentRaster
+      currentRaster,
+      viewsData
     } = this.props;
 
     const updateYear = () => {
@@ -145,6 +150,10 @@ class Atlas extends React.PureComponent {
     if (this.logged.currentRaster !== currentRaster) {
       this.setRasterOverlayLayer();
       this.setViewCone();
+    }
+    if (this.logged.viewsData !== viewsData) {
+      this.setViewPoints();
+      this.logViewsData();
     }
   }
 
@@ -389,23 +398,70 @@ class Atlas extends React.PureComponent {
 
     console.log(point, viewcone);
 
+    this.mbMap.addLayer(
+      {
+        id: 'raster-overlay',
+        type: 'fill',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'Feature',
+            geometry: viewcone
+          }
+        },
+        paint: {
+          'fill-color': '#000000',
+          'fill-opacity': 0.4
+        }
+      },
+      'view-points'
+    );
+
+    this.mbMap.fitBounds([point, point]);
+  }
+
+  setViewPoints() {
+    const { viewsData } = this.props;
+
+    const pointsFeature = viewsData.map(view => {
+      return {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: view.point
+        },
+        properties: {
+          title: view.title,
+          credit: view.credit,
+          creator: view.creator,
+          thumb: view.thumb,
+          viewcone: view.viewcone
+        }
+      };
+    });
+
     this.mbMap.addLayer({
-      id: 'raster-overlay',
-      type: 'fill',
+      id: 'view-points',
       source: {
         type: 'geojson',
         data: {
-          type: 'Feature',
-          geometry: viewcone
+          type: 'FeatureCollection',
+          features: pointsFeature
         }
       },
-      paint: {
-        'fill-color': '#000000',
-        'fill-opacity': 0.4
+      type: 'symbol',
+      layout: {
+        'icon-image': 'view-icon',
+        'icon-size': 0.45
       }
     });
+  }
 
-    this.mbMap.fitBounds([point, point]);
+  loadIcon() {
+    this.mbMap.loadImage(viewIcon, (error, image) => {
+      if (error) throw error;
+      this.mbMap.addImage('view-icon', image);
+    });
   }
 
   logLayerOpacityProps() {
@@ -477,6 +533,11 @@ class Atlas extends React.PureComponent {
     this.logged.hiddenLayers = hiddenLayers;
   }
 
+  logViewsData() {
+    const { viewsData } = this.props;
+    this.logged.viewsData = viewsData;
+  }
+
   render() {
     const { areaSearching } = this.props;
     let containerClass = 'atlas';
@@ -515,6 +576,8 @@ Atlas.propTypes = {
     type: PropTypes.string,
     raster: PropTypes.object
   }),
+  /** List of view points */
+  viewsData: PropTypes.arrayOf(PropTypes.object),
   /** All map layers to hide (layer ids) */
   hiddenLayers: PropTypes.arrayOf(PropTypes.string),
   /** Currently highlighted layer id */

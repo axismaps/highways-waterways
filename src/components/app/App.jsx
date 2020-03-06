@@ -192,7 +192,7 @@ class App extends React.Component {
       searchFeatures,
       sidebarOpen,
       style,
-      views,
+      viewsData,
       year
     } = this.state;
     if (style === null) return null;
@@ -215,7 +215,7 @@ class App extends React.Component {
         toggleAreaBox={this.toggleAreaBox}
         toggleAreaSearching={this.toggleAreaSearching}
         toggleSidebar={this.toggleSidebar}
-        views={views}
+        viewsData={viewsData}
         year={year}
       />
     );
@@ -478,7 +478,7 @@ class App extends React.Component {
     }
     // console.log('viewsData', viewsData);
     // console.log('overlaysData', overlaysData);
-    this.setState({ overlaysData });
+    this.setState({ overlaysData, viewsData });
   }
 
   getSidebarToggleButton() {

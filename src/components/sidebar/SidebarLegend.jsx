@@ -51,7 +51,6 @@ class SidebarLegend extends React.PureComponent {
   drawOverlayFilmstrip(overlayBlock) {
     const { setRaster } = this.props;
 
-    /**TODO set raster tem que mudar... ou ser atualizada para mostrar o mapa */
     const thumbs = overlayBlock.documents.map(view => (
       <img
         src={view.thumb}
