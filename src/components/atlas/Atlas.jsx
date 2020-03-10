@@ -436,8 +436,6 @@ class Atlas extends React.PureComponent {
       raster: { point, viewcone }
     } = currentRaster;
 
-    console.log(point, viewcone);
-
     this.mbMap.addLayer(
       {
         id: 'raster-overlay',

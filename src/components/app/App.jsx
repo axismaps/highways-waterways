@@ -471,7 +471,12 @@ class App extends React.Component {
     for (let i = 0; i < response.length; i++) {
       const element = response[i];
       if (element.viewcone) {
-        viewsData = element.documents;
+        viewsData = element.documents.map(d => {
+          return {
+            ...d,
+            id: Math.random()
+          };
+        });
       } else {
         overlaysData.push(element);
       }
