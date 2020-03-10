@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import {
-  faTimes,
-} from '@fortawesome/pro-regular-svg-icons';
+import { faTimes } from '@fortawesome/pro-regular-svg-icons';
 import './RasterProbe.scss';
 
 /**
@@ -20,19 +18,11 @@ import './RasterProbe.scss';
 
 class RasterProbe extends React.PureComponent {
   getProbeHeader() {
-    const {
-      currentRaster,
-      clearRaster,
-    } = this.props;
+    const { currentRaster, clearRaster } = this.props;
     return (
       <div className="raster-probe__header">
-        <div className="raster-probe__title">
-          {currentRaster.raster.name}
-        </div>
-        <div
-          className="raster-probe__close-icon"
-          onClick={clearRaster}
-        >
+        <div className="raster-probe__title">{currentRaster.raster.name}</div>
+        <div className="raster-probe__close-icon" onClick={clearRaster}>
           <FontAwesomeIcon icon={faTimes} />
         </div>
       </div>
@@ -40,12 +30,7 @@ class RasterProbe extends React.PureComponent {
   }
 
   getProbeFooter() {
-    const {
-      currentRaster,
-      clearRaster,
-      prevRaster,
-      nextRaster,
-    } = this.props;
+    const { currentRaster, clearRaster, prevRaster, nextRaster } = this.props;
     if (currentRaster.type === 'view') {
       return (
         <div className="raster-probe__nav-buttons">
@@ -75,13 +60,11 @@ class RasterProbe extends React.PureComponent {
   }
 
   getImage() {
-    const {
-      currentRaster,
-      setLightbox,
-    } = this.props;
+    const { currentRaster, setLightbox } = this.props;
 
     return (
-      <div
+      <img
+        src={currentRaster.raster.thumb}
         className="raster-probe__image"
         onClick={() => setLightbox(currentRaster)}
       />
@@ -89,13 +72,14 @@ class RasterProbe extends React.PureComponent {
   }
 
   render() {
+    const { currentRaster } = this.props;
     return (
       <div className="raster-probe">
         <div className="raster-probe__inner">
           {this.getProbeHeader()}
           {this.getImage()}
           <div className="raster-probe__caption">
-            Caption
+            {currentRaster.raster.title}
           </div>
           {this.getProbeFooter()}
         </div>
@@ -108,7 +92,7 @@ RasterProbe.propTypes = {
   /** Current raster probe layer data */
   currentRaster: PropTypes.shape({
     type: PropTypes.string,
-    raster: PropTypes.object,
+    raster: PropTypes.object
   }).isRequired,
   /** Sets map rasterProbe and overlay/view to next available raster */
   nextRaster: PropTypes.func.isRequired,
@@ -117,7 +101,7 @@ RasterProbe.propTypes = {
   /** Callback to set app currentRaster state field to `null` */
   clearRaster: PropTypes.func.isRequired,
   /** Callback to launch lightbox of current raster */
-  setLightbox: PropTypes.func.isRequired,
+  setLightbox: PropTypes.func.isRequired
 };
 
 export default RasterProbe;
