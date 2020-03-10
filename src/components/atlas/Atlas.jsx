@@ -190,11 +190,51 @@ class Atlas extends React.PureComponent {
   }
 
   getFilteredStyle() {
-    const { style } = this.props;
+    const { style, viewsData } = this.props;
     const styleCopy = JSON.parse(JSON.stringify(style));
     styleCopy.layers = styleCopy.layers.map(layer =>
       this.getFilteredLayer(layer)
     );
+
+    const pointsFeature = viewsData.map(view => {
+      return {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: view.point
+        },
+        properties: {
+          title: view.title,
+          credit: view.credit,
+          creator: view.creator,
+          thumb: view.thumb,
+          viewcone: view.viewcone
+        }
+      };
+    });
+
+    const viewPointsSource = {
+      'view-points': {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: pointsFeature
+        }
+      }
+    };
+
+    const viewPointsLayer = {
+      id: 'view-points',
+      source: 'view-points',
+      type: 'symbol',
+      layout: {
+        'icon-image': 'view-icon',
+        'icon-size': 0.45
+      }
+    };
+
+    styleCopy.sources = { ...styleCopy.sources, ...viewPointsSource };
+    styleCopy.layers.push(viewPointsLayer);
 
     return styleCopy;
   }
@@ -440,21 +480,21 @@ class Atlas extends React.PureComponent {
       };
     });
 
-    this.mbMap.addLayer({
-      id: 'view-points',
-      source: {
-        type: 'geojson',
-        data: {
-          type: 'FeatureCollection',
-          features: pointsFeature
-        }
-      },
-      type: 'symbol',
-      layout: {
-        'icon-image': 'view-icon',
-        'icon-size': 0.45
-      }
-    });
+    //   this.mbMap.addLayer({
+    //     id: 'view-points',
+    //     source: {
+    //       type: 'geojson',
+    //       data: {
+    //         type: 'FeatureCollection',
+    //         features: pointsFeature
+    //       }
+    //     },
+    //     type: 'symbol',
+    //     layout: {
+    //       'icon-image': 'view-icon',
+    //       'icon-size': 0.45
+    //     }
+    //   });
   }
 
   loadIcon() {
