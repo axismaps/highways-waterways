@@ -150,15 +150,17 @@ class Atlas extends React.PureComponent {
       this.setHighlightedFeature();
     }
     if (this.logged.currentRaster !== currentRaster) {
+      this.logCurrentRaster();
       this.setRasterOverlayLayer();
       this.setViewCone();
     }
     if (this.logged.rasterOpacity !== rasterOpacity) {
+      this.logRasterOpacity();
       this.setRasterOpacity();
     }
     if (this.logged.viewsData !== viewsData) {
-      this.setViewPoints();
       this.logViewsData();
+      this.setViewPoints();
     }
   }
 
