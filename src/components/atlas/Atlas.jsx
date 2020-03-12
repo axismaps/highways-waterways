@@ -434,7 +434,8 @@ class Atlas extends React.PureComponent {
   }
 
   setRasterOpacity() {
-    const { rasterOpacity } = this.props;
+    const { rasterOpacity, currentRaster } = this.props;
+    if (currentRaster === null || currentRaster.type === 'view') return;
 
     this.mbMap.setPaintProperty(
       'raster-overlay',
