@@ -67,7 +67,6 @@ class Atlas extends React.PureComponent {
     this.logHighlightedLayer();
     this.logHiddenLayers();
     this.logRasterOpacity();
-    this.logViewsData();
     this.logSidebarOpen();
     this.setClickSearchListener();
     this.setAreaSearchListener();
@@ -84,8 +83,7 @@ class Atlas extends React.PureComponent {
       hiddenLayers,
       sidebarOpen,
       currentRaster,
-      rasterOpacity,
-      viewsData
+      rasterOpacity
     } = this.props;
 
     const updateYear = () => {
@@ -157,10 +155,6 @@ class Atlas extends React.PureComponent {
     if (this.logged.rasterOpacity !== rasterOpacity) {
       this.logRasterOpacity();
       this.setRasterOpacity();
-    }
-    if (this.logged.viewsData !== viewsData) {
-      this.logViewsData();
-      this.setViewPoints();
     }
   }
 
@@ -476,43 +470,6 @@ class Atlas extends React.PureComponent {
     this.mbMap.fitBounds([point, point]);
   }
 
-  setViewPoints() {
-    const { viewsData } = this.props;
-
-    const pointsFeature = viewsData.map(view => {
-      return {
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: view.point
-        },
-        properties: {
-          title: view.title,
-          credit: view.credit,
-          creator: view.creator,
-          thumb: view.thumb,
-          viewcone: view.viewcone
-        }
-      };
-    });
-
-    //   this.mbMap.addLayer({
-    //     id: 'view-points',
-    //     source: {
-    //       type: 'geojson',
-    //       data: {
-    //         type: 'FeatureCollection',
-    //         features: pointsFeature
-    //       }
-    //     },
-    //     type: 'symbol',
-    //     layout: {
-    //       'icon-image': 'view-icon',
-    //       'icon-size': 0.45
-    //     }
-    //   });
-  }
-
   loadIcon() {
     this.mbMap.loadImage(viewIcon, (error, image) => {
       if (error) throw error;
@@ -592,11 +549,6 @@ class Atlas extends React.PureComponent {
   logHiddenLayers() {
     const { hiddenLayers } = this.props;
     this.logged.hiddenLayers = hiddenLayers;
-  }
-
-  logViewsData() {
-    const { viewsData } = this.props;
-    this.logged.viewsData = viewsData;
   }
 
   render() {
