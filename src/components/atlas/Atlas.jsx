@@ -66,6 +66,7 @@ class Atlas extends React.PureComponent {
     this.logHighlightedFeature();
     this.logHighlightedLayer();
     this.logHiddenLayers();
+    this.logRasterOpacity();
     this.logViewsData();
     this.logSidebarOpen();
     this.setClickSearchListener();
@@ -83,6 +84,7 @@ class Atlas extends React.PureComponent {
       hiddenLayers,
       sidebarOpen,
       currentRaster,
+      rasterOpacity,
       viewsData
     } = this.props;
 
@@ -150,6 +152,9 @@ class Atlas extends React.PureComponent {
     if (this.logged.currentRaster !== currentRaster) {
       this.setRasterOverlayLayer();
       this.setViewCone();
+    }
+    if (this.logged.rasterOpacity !== rasterOpacity) {
+      this.setRasterOpacity();
     }
     if (this.logged.viewsData !== viewsData) {
       this.setViewPoints();
@@ -428,6 +433,16 @@ class Atlas extends React.PureComponent {
     this.mbMap.fitBounds(currentRaster.raster.extent);
   }
 
+  setRasterOpacity() {
+    const { rasterOpacity } = this.props;
+
+    this.mbMap.setPaintProperty(
+      'raster-overlay',
+      'raster-opacity',
+      rasterOpacity / 100
+    );
+  }
+
   setViewCone() {
     const { currentRaster } = this.props;
     if (currentRaster === null || currentRaster.type !== 'view') return;
@@ -530,6 +545,11 @@ class Atlas extends React.PureComponent {
       },
       {}
     );
+  }
+
+  logRasterOpacity() {
+    const { rasterOpacity } = this.props;
+    this.logged.rasterOpacity = rasterOpacity;
   }
 
   logCurrentRaster() {

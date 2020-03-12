@@ -21,7 +21,7 @@ class RasterProbe extends React.PureComponent {
     const { currentRaster, clearRaster } = this.props;
     return (
       <div className="raster-probe__header">
-        <div className="raster-probe__title">{currentRaster.raster.name}</div>
+        <div className="raster-probe__title">{currentRaster.raster.title}</div>
         <div className="raster-probe__close-icon" onClick={clearRaster}>
           <FontAwesomeIcon icon={faTimes} />
         </div>
@@ -30,7 +30,14 @@ class RasterProbe extends React.PureComponent {
   }
 
   getProbeFooter() {
-    const { currentRaster, clearRaster, prevRaster, nextRaster } = this.props;
+    const {
+      currentRaster,
+      clearRaster,
+      prevRaster,
+      nextRaster,
+      rasterOpacity,
+      setRasterOpacity
+    } = this.props;
     if (currentRaster.type === 'view') {
       return (
         <div className="raster-probe__nav-buttons">
@@ -50,11 +57,18 @@ class RasterProbe extends React.PureComponent {
       );
     }
     return (
-      <div
-        className="raster-probe__clear-button raster-probe__footer-button"
-        onClick={clearRaster}
-      >
-        Remove from map
+      <div>
+        <input
+          value={rasterOpacity}
+          onChange={e => setRasterOpacity(e.target.value)}
+          type="range"
+        />
+        <div
+          className="raster-probe__clear-button raster-probe__footer-button"
+          onClick={clearRaster}
+        >
+          Remove from map
+        </div>
       </div>
     );
   }

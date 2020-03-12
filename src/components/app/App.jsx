@@ -95,6 +95,8 @@ class App extends React.Component {
        * view or overlay
        */
       currentRaster: null,
+      /** current raster opacity */
+      rasterOpacity: 100,
       /** List of layer ids for layers to be hidden */
       hiddenLayers: [],
       /** layer id for isolated layer */
@@ -111,7 +113,6 @@ class App extends React.Component {
 
       /** if app is running on mobile device */
       mobile,
-      rasterOpacity: 1,
       /** if sidebar is open */
       sidebarOpen: !mobile,
       /** overlay data for given year */
@@ -143,7 +144,6 @@ class App extends React.Component {
     this.searchTimer = null;
     this.dataTimer = null;
     this.choroplethTimer = null;
-
     this.clearLightbox = this.clearLightbox.bind(this);
     this.clearRaster = this.clearRaster.bind(this);
     this.clearSearch = this.clearSearch.bind(this);
@@ -160,12 +160,13 @@ class App extends React.Component {
     this.setHighlightedLayer = this.setHighlightedLayer.bind(this);
     this.setLightbox = this.setLightbox.bind(this);
     this.setRaster = this.setRaster.bind(this);
+    this.setRasterOpacity = this.setRasterOpacity.bind(this);
+    this.setSelectedThematicLayer = this.setSelectedThematicLayer.bind(this);
     this.setYear = this.setYear.bind(this);
     this.toggleAreaBox = this.toggleAreaBox.bind(this);
     this.toggleAreaSearching = this.toggleAreaSearching.bind(this);
     this.toggleLayerVisibility = this.toggleLayerVisibility.bind(this);
     this.toggleSidebar = this.toggleSidebar.bind(this);
-    this.setSelectedThematicLayer = this.setSelectedThematicLayer.bind(this);
   }
 
   componentDidMount() {
@@ -193,7 +194,8 @@ class App extends React.Component {
       sidebarOpen,
       style,
       viewsData,
-      year
+      year,
+      rasterOpacity
     } = this.state;
     if (style === null) return null;
 
@@ -205,6 +207,7 @@ class App extends React.Component {
         hiddenLayers={hiddenLayers}
         highlightedFeature={highlightedFeature}
         highlightedLayer={highlightedLayer}
+        rasterOpacity={rasterOpacity}
         searchByArea={this.searchByArea}
         searchByPoint={this.searchByPoint}
         searchFeatures={searchFeatures}
@@ -510,12 +513,21 @@ class App extends React.Component {
     });
   }
 
+  setRasterOpacity(rasterOpacity) {
+    this.setState({
+      rasterOpacity: parseInt(rasterOpacity)
+    });
+  }
+
   getRasterProbe() {
-    const { currentRaster } = this.state;
-    if (currentRaster === null || currentRaster.type !== 'view') return null;
+    const { currentRaster, rasterOpacity, setRasterOpacity } = this.state;
+    if (currentRaster === null) return null;
+
     return (
       <RasterProbe
         clearRaster={this.clearRaster}
+        setRasterOpacity={this.setRasterOpacity}
+        rasterOpacity={rasterOpacity}
         currentRaster={currentRaster}
         nextRaster={this.nextRaster}
         prevRaster={this.prevRaster}
