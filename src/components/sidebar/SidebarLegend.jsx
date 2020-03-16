@@ -5,6 +5,9 @@ import { faCamera } from '@fortawesome/pro-solid-svg-icons';
 import SidebarLayersBlock from './SidebarLayersBlock';
 import SidebarBlock from './SidebarBlock';
 import SidebarVulnerabilityLayer from './SidebarVulnerabilityLayer';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
+import 'tippy.js/themes/translucent.css';
 
 /**
  * This component displays the map legend--map layers,
@@ -19,17 +22,32 @@ class SidebarLegend extends React.PureComponent {
     if (viewsData.length === 0) return null;
 
     const thumbs = viewsData.map(view => (
-      <img
-        src={view.thumb}
-        key={view.id}
-        className="sidebar__view-thumb"
-        onClick={() => {
-          setRaster({
-            type: 'view',
-            raster: view
-          });
-        }}
-      />
+      <Tippy
+        allowHTML={true}
+        maxWidth={190}
+        content={
+          <div style={{ textAlign: 'center' }}>
+            <p style={{ fontWeight: 'bold', fontSize: '12px' }}>{view.title}</p>
+            <p style={{ fontStyle: 'italic', fontSize: '10px' }}>
+              Click to view on map
+            </p>
+          </div>
+        }
+        placement="right"
+        theme="translucent"
+      >
+        <img
+          src={view.thumb}
+          key={view.id}
+          className="sidebar__view-thumb"
+          onClick={() => {
+            setRaster({
+              type: 'view',
+              raster: view
+            });
+          }}
+        />
+      </Tippy>
     ));
 
     return (
@@ -52,17 +70,32 @@ class SidebarLegend extends React.PureComponent {
     const { setRaster } = this.props;
 
     const thumbs = overlayBlock.documents.map(view => (
-      <img
-        src={view.thumb}
-        key={view.id}
-        className="sidebar__view-thumb"
-        onClick={() => {
-          setRaster({
-            type: overlayBlock.title,
-            raster: view
-          });
-        }}
-      />
+      <Tippy
+        allowHTML={true}
+        maxWidth={190}
+        content={
+          <div style={{ textAlign: 'center' }}>
+            <p style={{ fontWeight: 'bold', fontSize: '12px' }}>{view.title}</p>
+            <p style={{ fontStyle: 'italic', fontSize: '10px' }}>
+              Click to view on map
+            </p>
+          </div>
+        }
+        placement="right"
+        theme="translucent"
+      >
+        <img
+          src={view.thumb}
+          key={view.id}
+          className="sidebar__view-thumb"
+          onClick={() => {
+            setRaster({
+              type: overlayBlock.title,
+              raster: view
+            });
+          }}
+        />
+      </Tippy>
     ));
 
     return (
