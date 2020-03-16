@@ -4,20 +4,13 @@ import './Lightbox.scss';
 
 class Lightbox extends React.PureComponent {
   render() {
-    const {
-      clearLightbox,
-      lightboxRaster,
-    } = this.props;
-
+    const { clearLightbox, lightboxRaster } = this.props;
     return (
-      <div
-        className="lightbox"
-        onClick={clearLightbox}
-      >
+      <div className="lightbox" onClick={clearLightbox}>
         <div className="lightbox__container">
           <div className="lightbox__inner">
-            lightbox :
-            {lightboxRaster.raster.name}
+            <img className="lightbox__img" src={lightboxRaster.raster.thumb} />
+            <p>lightbox: {lightboxRaster.raster.title}</p>
           </div>
         </div>
       </div>
@@ -30,8 +23,8 @@ Lightbox.propTypes = {
   clearLightbox: PropTypes.func.isRequired,
   lightboxRaster: PropTypes.shape({
     type: PropTypes.string,
-    raster: PropTypes.object,
-  }).isRequired,
+    raster: PropTypes.object
+  }).isRequired
 };
 
 export default Lightbox;
