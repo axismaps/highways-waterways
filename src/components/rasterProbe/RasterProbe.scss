@@ -36,7 +36,8 @@
 }
 
 .raster-probe__image {
-  height: 180px;
+  width: 100%;
+  height: auto;
   background: lightgrey;
   cursor: pointer;
 }
