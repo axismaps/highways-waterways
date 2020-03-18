@@ -271,7 +271,9 @@ class Atlas extends React.PureComponent {
     const { layerOpacityProps } = this.logged;
 
     layers.forEach(layer => {
+      if (layer.id === 'view-points' || layer.id === 'raster-overlay') return;
       const originalPaint = layerOpacityProps[layer.id];
+
       if (originalPaint !== null) {
         if (highlightedLayer === null) {
           this.mbMap.setPaintProperty(
