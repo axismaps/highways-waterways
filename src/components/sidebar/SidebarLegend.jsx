@@ -87,7 +87,7 @@ class SidebarLegend extends React.PureComponent {
         <img
           src={view.thumb}
           key={view.id}
-          className="sidebar__view-thumb"
+          className="sidebar__overlay-thumb"
           onClick={() => {
             setRaster({
               type: overlayBlock.title,
