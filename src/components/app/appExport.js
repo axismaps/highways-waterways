@@ -7,8 +7,16 @@ const exportMethods = {
     return props;
   },
   download(props) {
-    return props;
-  },
+    const mapboxInstance = props.state.atlas;
+    Object.defineProperty(window, 'devicePixelRatio', {
+      get: function() {
+        return 120 / 96;
+      }
+    });
+    const img = mapboxInstance.getCanvas().toDataURL('image/png');
+
+    return img;
+  }
 };
 
 export default exportMethods;

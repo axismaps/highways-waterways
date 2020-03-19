@@ -77,6 +77,9 @@ class App extends React.Component {
       navigator.userAgent
     );
     this.state = {
+      mapImage: null,
+      /** mapbox-gl map instance */
+      atlas: null,
       /** if area search button has been clicked but search has not yet been performed */
       areaSearching: false,
       areaBoxOn: false,
@@ -167,6 +170,8 @@ class App extends React.Component {
     this.toggleAreaSearching = this.toggleAreaSearching.bind(this);
     this.toggleLayerVisibility = this.toggleLayerVisibility.bind(this);
     this.toggleSidebar = this.toggleSidebar.bind(this);
+    this.setAtlas = this.setAtlas.bind(this);
+    this.download = this.download.bind(this);
   }
 
   componentDidMount() {
@@ -211,6 +216,7 @@ class App extends React.Component {
         searchByArea={this.searchByArea}
         searchByPoint={this.searchByPoint}
         searchFeatures={searchFeatures}
+        setAtlas={this.setAtlas}
         setAreaBoxEnd={this.setAreaBoxEnd}
         setAreaBoxStart={this.setAreaBoxStart}
         sidebarOpen={sidebarOpen}
@@ -231,11 +237,20 @@ class App extends React.Component {
   }
 
   getHeader() {
-    const { yearRange, mobile, year, tileRanges, screenWidth } = this.state;
+    const {
+      yearRange,
+      mobile,
+      year,
+      tileRanges,
+      screenWidth,
+      mapImage
+    } = this.state;
     if (yearRange === null) return null;
 
     return (
       <Header
+        mapImage={mapImage}
+        download={this.download}
         mobile={mobile}
         yearRange={yearRange}
         year={year}
@@ -290,6 +305,10 @@ class App extends React.Component {
       clearTimeout(this.dataTimer);
       this.dataTimer = setTimeout(updateData, 500);
     }
+  }
+
+  setAtlas(atlas) {
+    this.setState({ atlas });
   }
 
   setHighlightedLayer(layerId) {
@@ -889,7 +908,8 @@ class App extends React.Component {
   }
 
   download() {
-    exportMethods.download(this);
+    const mapImage = exportMethods.download(this);
+    this.setState({ mapImage: mapImage });
   }
 
   render() {

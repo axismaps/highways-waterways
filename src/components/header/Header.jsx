@@ -5,7 +5,7 @@ import {
   faDownload,
   faInfo,
   faSearch,
-  faShare,
+  faShare
 } from '@fortawesome/pro-solid-svg-icons';
 import HeaderStepper from './HeaderStepper';
 import HeaderTimeline from './HeaderTimeline';
@@ -26,7 +26,7 @@ class Header extends React.PureComponent {
 
     this.state = {
       dropdownOpen: false,
-      dropdownPos: null,
+      dropdownPos: null
     };
 
     this.shareButtonRef = React.createRef();
@@ -39,11 +39,10 @@ class Header extends React.PureComponent {
   }
 
   getHeaderTop() {
+    const { download, mapImage } = this.props;
     return (
       <div className="header__top">
-        <div className="header__top-title">
-          Highways + Waterways
-        </div>
+        <div className="header__top-title">Highways + Waterways</div>
         <div className="header__top-right">
           <div
             className="header__top-button"
@@ -55,36 +54,27 @@ class Header extends React.PureComponent {
           <div className="header__top-button">
             <FontAwesomeIcon icon={faInfo} />
           </div>
-          <div className="header__top-button">
+          <a
+            download="map.png"
+            className="header__top-button"
+            href={mapImage}
+            onClick={() => download()}
+          >
             <FontAwesomeIcon icon={faDownload} />
-          </div>
+          </a>
         </div>
       </div>
     );
   }
 
   getStepper() {
-    const {
-      year,
-      setYear,
-    } = this.props;
+    const { year, setYear } = this.props;
 
-    return (
-      <HeaderStepper
-        year={year}
-        setYear={setYear}
-      />
-    );
+    return <HeaderStepper year={year} setYear={setYear} />;
   }
 
   getTimeline() {
-    const {
-      year,
-      setYear,
-      mobile,
-      yearRange,
-      screenWidth,
-    } = this.props;
+    const { year, setYear, mobile, yearRange, screenWidth } = this.props;
 
     return (
       <HeaderTimeline
@@ -98,10 +88,7 @@ class Header extends React.PureComponent {
   }
 
   getSidebarButton() {
-    const {
-      toggleSidebar,
-      mobile,
-    } = this.props;
+    const { toggleSidebar, mobile } = this.props;
     if (!mobile) return null;
     return (
       <div className="header__sidebar-toggle" onClick={toggleSidebar}>
@@ -111,10 +98,7 @@ class Header extends React.PureComponent {
   }
 
   getDropdown() {
-    const {
-      dropdownPos,
-      dropdownOpen,
-    } = this.state;
+    const { dropdownPos, dropdownOpen } = this.state;
 
     if (!dropdownOpen || dropdownPos === null) return null;
 
@@ -128,10 +112,7 @@ class Header extends React.PureComponent {
     );
 
     return (
-      <Dropdown
-        pos={dropdownPos}
-        toggleDropdown={this.toggleDropdown}
-      >
+      <Dropdown pos={dropdownPos} toggleDropdown={this.toggleDropdown}>
         {content}
       </Dropdown>
     );
@@ -140,16 +121,13 @@ class Header extends React.PureComponent {
   setDropdownPos() {
     const node = this.shareButtonRef.current;
     if (node === undefined) return;
-    const {
-      top,
-      height,
-    } = node.getBoundingClientRect();
+    const { top, height } = node.getBoundingClientRect();
 
     this.setState({
       dropdownPos: {
         right: 15,
-        top: top + height + 20,
-      },
+        top: top + height + 20
+      }
     });
   }
 
@@ -157,11 +135,11 @@ class Header extends React.PureComponent {
     const { dropdownOpen } = this.state;
     if (typeof status === 'boolean') {
       this.setState({
-        dropdownOpen: status,
+        dropdownOpen: status
       });
     } else {
       this.setState({
-        dropdownOpen: !dropdownOpen,
+        dropdownOpen: !dropdownOpen
       });
     }
   }
@@ -191,6 +169,7 @@ class Header extends React.PureComponent {
 }
 
 Header.propTypes = {
+  download: PropTypes.func.isRequired,
   toggleSidebar: PropTypes.func.isRequired,
   /** if app is in mobile view or not */
   mobile: PropTypes.bool.isRequired,
@@ -203,7 +182,7 @@ Header.propTypes = {
   /**
    * current app screen width, used to trigger re-render on screen resize
    */
-  screenWidth: PropTypes.number.isRequired,
+  screenWidth: PropTypes.number.isRequired
 };
 
 export default Header;

@@ -47,13 +47,16 @@ class Atlas extends React.PureComponent {
   }
 
   componentDidMount() {
+    const { setAtlas } = this.props;
+
     mapboxgl.accessToken =
       'pk.eyJ1IjoiYXhpc21hcHMiLCJhIjoieUlmVFRmRSJ9.CpIxovz1TUWe_ecNLFuHNg';
     const mbMap = new mapboxgl.Map({
       container: this.atlasRef.current,
       style: this.getFilteredStyle(),
       minZoom: 10,
-      maxZoom: 17
+      maxZoom: 17,
+      preserveDrawingBuffer: true
     }).addControl(new mapboxgl.NavigationControl(), 'top-left');
 
     this.mbMap = mbMap;
@@ -71,6 +74,7 @@ class Atlas extends React.PureComponent {
     this.setClickSearchListener();
     this.setAreaSearchListener();
     this.loadIcon();
+    setAtlas(mbMap);
   }
 
   componentDidUpdate() {
