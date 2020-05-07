@@ -24,6 +24,7 @@
 
 .raster-probe__title {
   font-weight: bold;
+  padding-right: 10px;
 }
 
 .raster-probe__close-icon {
@@ -43,7 +44,9 @@
 }
 
 .raster-probe__caption {
+  font-size: 14px;
   margin-top: 10px;
+  color: #666;
   margin-bottom: 10px;
   font-size: 13px;
 }
