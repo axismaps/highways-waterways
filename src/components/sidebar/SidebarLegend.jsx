@@ -21,34 +21,43 @@ class SidebarLegend extends React.PureComponent {
     const { viewsData, setRaster } = this.props;
     if (viewsData.length === 0) return null;
 
-    const thumbs = viewsData.map(view => (
-      <Tippy
-        allowHTML={true}
-        maxWidth={190}
-        content={
-          <div style={{ textAlign: 'center' }}>
-            <p style={{ fontWeight: 'bold', fontSize: '12px' }}>{view.title}</p>
-            <p style={{ fontStyle: 'italic', fontSize: '10px' }}>
-              Click to view on map
-            </p>
-          </div>
-        }
-        placement="right"
-        theme="translucent"
-      >
-        <img
-          src={view.thumb}
-          key={view.id}
-          className="sidebar__view-thumb"
-          onClick={() => {
-            setRaster({
-              type: 'view',
-              raster: view
-            });
-          }}
-        />
-      </Tippy>
-    ));
+    const thumbs = viewsData.map((view) => {
+      const viewThumbStyle = {
+        backgroundImage: `url(${view.thumb})`,
+      };
+
+      return (
+        <Tippy
+          allowHTML={true}
+          maxWidth={190}
+          content={
+            <div style={{ textAlign: 'center' }}>
+              <p style={{ fontWeight: 'bold', fontSize: '12px' }}>
+                {view.title}
+              </p>
+              <p style={{ fontStyle: 'italic', fontSize: '10px' }}>
+                Click to view on map
+              </p>
+            </div>
+          }
+          placement="right"
+          theme="translucent"
+        >
+          <div
+            // src={view.thumb}
+            style={viewThumbStyle}
+            key={view.id}
+            className="sidebar__view-thumb"
+            onClick={() => {
+              setRaster({
+                type: 'view',
+                raster: view,
+              });
+            }}
+          />
+        </Tippy>
+      );
+    });
 
     return (
       <SidebarBlock title="Views" icon={<FontAwesomeIcon icon={faCamera} />}>
@@ -60,7 +69,7 @@ class SidebarLegend extends React.PureComponent {
   drawSidebarOverlayDataBlock() {
     const { overlaysData, viewsData, setRaster } = this.props;
 
-    const overlayBlocks = overlaysData.map(overlayBlock => {
+    const overlayBlocks = overlaysData.map((overlayBlock) => {
       return this.drawOverlayFilmstrip(overlayBlock);
     });
     return overlayBlocks;
@@ -69,34 +78,42 @@ class SidebarLegend extends React.PureComponent {
   drawOverlayFilmstrip(overlayBlock) {
     const { setRaster } = this.props;
 
-    const thumbs = overlayBlock.documents.map(view => (
-      <Tippy
-        allowHTML={true}
-        maxWidth={190}
-        content={
-          <div style={{ textAlign: 'center' }}>
-            <p style={{ fontWeight: 'bold', fontSize: '12px' }}>{view.title}</p>
-            <p style={{ fontStyle: 'italic', fontSize: '10px' }}>
-              Click to view on map
-            </p>
-          </div>
-        }
-        placement="right"
-        theme="translucent"
-      >
-        <img
-          src={view.thumb}
-          key={view.id}
-          className="sidebar__overlay-thumb"
-          onClick={() => {
-            setRaster({
-              type: overlayBlock.title,
-              raster: view
-            });
-          }}
-        />
-      </Tippy>
-    ));
+    const thumbs = overlayBlock.documents.map((view) => {
+      const overlayThumbStyle = {
+        backgroundImage: `url(${view.thumb})`,
+      };
+
+      return (
+        <Tippy
+          allowHTML={true}
+          maxWidth={190}
+          content={
+            <div style={{ textAlign: 'center' }}>
+              <p style={{ fontWeight: 'bold', fontSize: '12px' }}>
+                {view.title}
+              </p>
+              <p style={{ fontStyle: 'italic', fontSize: '10px' }}>
+                Click to view on map
+              </p>
+            </div>
+          }
+          placement="right"
+          theme="translucent"
+        >
+          <div
+            style={overlayThumbStyle}
+            key={view.id}
+            className="sidebar__overlay-thumb"
+            onClick={() => {
+              setRaster({
+                type: overlayBlock.title,
+                raster: view,
+              });
+            }}
+          />
+        </Tippy>
+      );
+    });
 
     return (
       <SidebarBlock
@@ -114,7 +131,7 @@ class SidebarLegend extends React.PureComponent {
       legendData,
       toggleLayerVisibility,
       highlightedLayer,
-      setHighlightedLayer
+      setHighlightedLayer,
     } = this.props;
     if (legendData.length === 0) return null;
 
@@ -145,10 +162,10 @@ class SidebarLegend extends React.PureComponent {
       toggleLayerVisibility,
       highlightedLayer,
       setHighlightedLayer,
-      setSelectedThematicLayer
+      setSelectedThematicLayer,
     } = this.props;
 
-    const choroplethBlocks = choroplethData.map(d => {
+    const choroplethBlocks = choroplethData.map((d) => {
       const { name, id, minValue, maxValue, slider, colorRamp, types } = d;
       return (
         <SidebarVulnerabilityLayer
@@ -188,7 +205,7 @@ class SidebarLegend extends React.PureComponent {
 }
 
 SidebarLegend.defaultProps = {
-  highlightedLayer: null
+  highlightedLayer: null,
 };
 
 SidebarLegend.propTypes = {
@@ -217,7 +234,7 @@ SidebarLegend.propTypes = {
   /** callback to set highlightedLayer (layer id/name) */
   setHighlightedLayer: PropTypes.func.isRequired,
   /** Callbak to set app `currentRaster` state field */
-  setRaster: PropTypes.func.isRequired
+  setRaster: PropTypes.func.isRequired,
 };
 
 export default SidebarLegend;

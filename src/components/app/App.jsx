@@ -24,38 +24,38 @@ import './App.scss';
 class App extends React.Component {
   static getCurrentTileRange({ tileRanges, year }) {
     const roundYear = Math.round(year);
-    return tileRanges.find(d => roundYear >= d[0] && roundYear <= d[1]);
+    return tileRanges.find((d) => roundYear >= d[0] && roundYear <= d[1]);
   }
 
   static getCleanSearchResults({ legendData, results }) {
-    const getUniqueFeatures = features => {
-      const uniqueNames = [...new Set(features.map(d => d.name))].filter(
-        d => d !== ' '
+    const getUniqueFeatures = (features) => {
+      const uniqueNames = [...new Set(features.map((d) => d.name))].filter(
+        (d) => d !== ' '
       );
 
-      return uniqueNames.map(name => {
-        const featuresOfName = features.filter(d => d.name === name);
+      return uniqueNames.map((name) => {
+        const featuresOfName = features.filter((d) => d.name === name);
         const allCoords = featuresOfName.reduce((accumulator, d) => {
           const { bbox } = d;
           return [...accumulator, ...bbox];
         }, []);
-        const lngExtent = d3.extent(allCoords.map(d => d[0]));
-        const latExtent = d3.extent(allCoords.map(d => d[1]));
+        const lngExtent = d3.extent(allCoords.map((d) => d[0]));
+        const latExtent = d3.extent(allCoords.map((d) => d[1]));
 
         return {
           name,
-          ids: featuresOfName.map(d => d.id),
+          ids: featuresOfName.map((d) => d.id),
           bbox: [
             [lngExtent[1], latExtent[1]],
-            [lngExtent[0], latExtent[0]]
-          ]
+            [lngExtent[0], latExtent[0]],
+          ],
         };
       });
     };
     return Object.keys(results.response)
-      .filter(d => d !== undefined)
-      .map(key => {
-        const layer = legendData.find(d => d.id === key);
+      .filter((d) => d !== undefined)
+      .map((key) => {
+        const layer = legendData.find((d) => d.id === key);
         if (layer === undefined) {
           return null;
         }
@@ -64,10 +64,10 @@ class App extends React.Component {
         return {
           id: key,
           title: layer.title,
-          features: uniqueFeatures
+          features: uniqueFeatures,
         };
       })
-      .filter(d => d !== null && d.features.length > 0);
+      .filter((d) => d !== null && d.features.length > 0);
   }
 
   constructor(props) {
@@ -85,7 +85,7 @@ class App extends React.Component {
       areaBoxOn: false,
       areaBox: {
         start: [0, 0],
-        end: [0, 0]
+        end: [0, 0],
       },
       choroplethData: [],
       /**
@@ -122,7 +122,7 @@ class App extends React.Component {
       overlaysData: [
         { name: 'overlay1', id: 1 },
         { name: 'overlay2', id: 2 },
-        { name: 'overlay3', id: 3 }
+        { name: 'overlay3', id: 3 },
       ],
       screenWidth: window.innerWidth,
       searchFeatureGeojson: [],
@@ -138,10 +138,10 @@ class App extends React.Component {
         { name: 'placeholder2', id: 2 },
         { name: 'placeholder3', id: 3 },
         { name: 'placeholder4', id: 4 },
-        { name: 'placeholder5', id: 5 }
+        { name: 'placeholder5', id: 5 },
       ],
       year,
-      yearRange: null
+      yearRange: null,
     };
 
     this.searchTimer = null;
@@ -182,7 +182,7 @@ class App extends React.Component {
   setResizeListener() {
     window.addEventListener('resize', () => {
       this.setState({
-        screenWidth: window.innerWidth
+        screenWidth: window.innerWidth,
       });
     });
   }
@@ -200,7 +200,7 @@ class App extends React.Component {
       style,
       viewsData,
       year,
-      rasterOpacity
+      rasterOpacity,
     } = this.state;
     if (style === null) return null;
 
@@ -243,7 +243,7 @@ class App extends React.Component {
       year,
       tileRanges,
       screenWidth,
-      mapImage
+      mapImage,
     } = this.state;
     if (yearRange === null) return null;
 
@@ -270,7 +270,7 @@ class App extends React.Component {
       highlightedFeature: null,
       highlightedLayer: null,
       searchView: null,
-      year: newYear
+      year: newYear,
     };
 
     // some layers need to be hidden by default...
@@ -293,7 +293,7 @@ class App extends React.Component {
         } else {
           this.setChoroplethValue(choropleth.id, [
             choropleth.minValue,
-            choropleth.maxValue
+            choropleth.maxValue,
           ]);
         }
       }
@@ -315,11 +315,11 @@ class App extends React.Component {
     const { highlightedLayer } = this.state;
     if (highlightedLayer === layerId || layerId === null) {
       this.setState({
-        highlightedLayer: null
+        highlightedLayer: null,
       });
     } else {
       this.setState({
-        highlightedLayer: layerId
+        highlightedLayer: layerId,
       });
     }
   }
@@ -331,18 +331,18 @@ class App extends React.Component {
       highlightedFeature.feature.name === newFeature.feature.name
     ) {
       this.setState({
-        highlightedFeature: null
+        highlightedFeature: null,
       });
     } else {
       this.setState({
-        highlightedFeature: newFeature
+        highlightedFeature: newFeature,
       });
     }
   }
 
   // For [1,2,3] [2,3] it will yield [1]. On the other hand, for [1,2,3] [2,3,5] will return the same thing.
   diferenceBetweenAandB(arrayA, arrayB) {
-    return arrayA.filter(id => !arrayB.includes(id));
+    return arrayA.filter((id) => !arrayB.includes(id));
   }
 
   setSelectedThematicLayer(thematicLayerId) {
@@ -352,20 +352,22 @@ class App extends React.Component {
 
     if (isLayerAlreadySelected) {
       this.setState({
-        hiddenLayers: [...hiddenLayers, thematicLayerId]
+        hiddenLayers: [...hiddenLayers, thematicLayerId],
       });
       return;
     }
 
-    const choroplethDataIds = choroplethData.map(layer => layer.id);
-    const layersToHide = choroplethDataIds.filter(id => id !== thematicLayerId);
+    const choroplethDataIds = choroplethData.map((layer) => layer.id);
+    const layersToHide = choroplethDataIds.filter(
+      (id) => id !== thematicLayerId
+    );
 
     this.setState({
       selectedThematicLayer: thematicLayerId,
       hiddenLayers: [
         ...this.diferenceBetweenAandB(hiddenLayers, choroplethDataIds),
-        ...layersToHide
-      ]
+        ...layersToHide,
+      ],
     });
   }
 
@@ -374,7 +376,7 @@ class App extends React.Component {
     const newChoroplethValues = new Map(choroplethValues);
     newChoroplethValues.set(key, value);
     this.setState({
-      choroplethValues: newChoroplethValues
+      choroplethValues: newChoroplethValues,
     });
 
     const setLayerVisibility = () => {
@@ -393,16 +395,16 @@ class App extends React.Component {
   setLayerVisibilityByChoroplethId(choroplethId) {
     const {
       hiddenLayers,
-      style: { layers }
+      style: { layers },
     } = this.state;
 
     const choroplethLayerIds = layers
-      .filter(layer => layer['source-layer'] === choroplethId)
-      .map(layer => layer.id);
+      .filter((layer) => layer['source-layer'] === choroplethId)
+      .map((layer) => layer.id);
     const activeTypesIds = this.getChoroplethActiveTypesIds(choroplethId);
 
     const layersIdToActive = activeTypesIds
-      .map(typeId => {
+      .map((typeId) => {
         return this.getLayersIdByTypeId(typeId);
       })
       .flat();
@@ -419,14 +421,14 @@ class App extends React.Component {
     newHiddenLayers = [...newHiddenLayers, ...layersIdToHide];
 
     this.setState({
-      hiddenLayers: newHiddenLayers
+      hiddenLayers: newHiddenLayers,
     });
   }
 
   getChoroplethActiveTypesIds(choroplethId) {
     const { choroplethValues, choroplethData } = this.state;
 
-    const choropleth = choroplethData.filter(item => {
+    const choropleth = choroplethData.filter((item) => {
       return item.id === choroplethId;
     })[0];
     const choroplethValue = choroplethValues.get(choroplethId);
@@ -446,7 +448,7 @@ class App extends React.Component {
 
   getLayersIdByTypeId(typeId) {
     const {
-      style: { layers }
+      style: { layers },
     } = this.state;
 
     let layerIds = [];
@@ -493,10 +495,10 @@ class App extends React.Component {
     for (let i = 0; i < response.length; i++) {
       const element = response[i];
       if (element.viewcone) {
-        viewsData = element.documents.map(d => {
+        viewsData = element.documents.map((d) => {
           return {
             ...d,
-            id: Math.random()
+            id: Math.random(),
           };
         });
       } else {
@@ -520,7 +522,7 @@ class App extends React.Component {
 
     this.setState({
       areaBoxOn: true,
-      areaBox: newBox
+      areaBox: newBox,
     });
   }
 
@@ -528,13 +530,13 @@ class App extends React.Component {
     const { areaBox } = this.state;
     const newBox = Object.assign({}, areaBox, { end: pos });
     this.setState({
-      areaBox: newBox
+      areaBox: newBox,
     });
   }
 
   setRasterOpacity(rasterOpacity) {
     this.setState({
-      rasterOpacity: parseInt(rasterOpacity)
+      rasterOpacity: parseInt(rasterOpacity),
     });
   }
 
@@ -563,7 +565,7 @@ class App extends React.Component {
 
   setRaster(newRaster) {
     this.setState({
-      currentRaster: newRaster
+      currentRaster: newRaster,
     });
   }
 
@@ -572,14 +574,14 @@ class App extends React.Component {
     const { type } = currentRaster;
     const allRasters = {
       view: viewsData,
-      overlay: overlaysData
+      overlay: overlaysData,
     };
     return allRasters[type];
   }
 
   setLightbox(raster) {
     this.setState({
-      lightbox: raster
+      lightbox: raster,
     });
   }
 
@@ -600,7 +602,7 @@ class App extends React.Component {
   getCurrentRasterIndex() {
     const { currentRaster } = this.state;
     const rasters = this.getRastersByCurrentType();
-    const rasterIds = rasters.map(d => d.id);
+    const rasterIds = rasters.map((d) => d.id);
     return rasterIds.indexOf(currentRaster.raster.id);
   }
 
@@ -620,8 +622,8 @@ class App extends React.Component {
     this.setState({
       currentRaster: {
         type,
-        raster: prevRaster
-      }
+        raster: prevRaster,
+      },
     });
   }
 
@@ -641,14 +643,14 @@ class App extends React.Component {
     this.setState({
       currentRaster: {
         type,
-        raster: nextRaster
-      }
+        raster: nextRaster,
+      },
     });
   }
 
   clearLightbox() {
     this.setState({
-      lightbox: null
+      lightbox: null,
     });
   }
 
@@ -660,11 +662,11 @@ class App extends React.Component {
     const { areaBoxOn } = this.state;
     if (bool !== undefined) {
       this.setState({
-        areaBoxOn: bool
+        areaBoxOn: bool,
       });
     } else {
       this.setState({
-        areaBoxOn: !areaBoxOn
+        areaBoxOn: !areaBoxOn,
       });
     }
   }
@@ -673,7 +675,7 @@ class App extends React.Component {
     this.setState({
       highlightedFeature: null,
       searchFeatures: [],
-      searchView: null
+      searchView: null,
     });
   }
 
@@ -681,13 +683,13 @@ class App extends React.Component {
     const legendData = await App.getLegendPromise(newYear);
 
     this.setState({
-      legendData: legendData.response.legend
+      legendData: legendData.response.legend,
     });
   }
 
   async updateLegendThematicData(newYear) {
     const thematicData = await App.getLegendThematicPromise(newYear);
-    const choroplethData = thematicData.response.legend.map(choropleth => {
+    const choroplethData = thematicData.response.legend.map((choropleth) => {
       return {
         name: choropleth.title,
         id: choropleth.id,
@@ -695,14 +697,14 @@ class App extends React.Component {
         slider: choropleth.slider,
         minValue: 0,
         maxValue: choropleth.Types.length,
-        colorRamp: choropleth.Types.map(type => {
+        colorRamp: choropleth.Types.map((type) => {
           return type.swatch;
-        })
+        }),
       };
     });
 
     this.setState({
-      choroplethData: choroplethData
+      choroplethData: choroplethData,
     });
     return choroplethData;
   }
@@ -713,7 +715,7 @@ class App extends React.Component {
 
     const newTileRange = App.getCurrentTileRange({
       year: newYear,
-      tileRanges
+      tileRanges,
     });
 
     if (this.currentTileRange[0] !== newTileRange[0]) {
@@ -721,7 +723,7 @@ class App extends React.Component {
 
       const style = await this.getStylePromise(newYear);
       this.setState({
-        style
+        style,
       });
     }
   }
@@ -732,7 +734,7 @@ class App extends React.Component {
       d3.json('http://highways.georio.axismaps.io/api/v1/get/timeline'),
       App.getLegendPromise(year),
       this.updateLegendThematicData(year),
-      this.setRasterData(year)
+      this.setRasterData(year),
     ]);
 
     const tileRanges = tileRangesData.response;
@@ -742,19 +744,19 @@ class App extends React.Component {
     );
     this.currentTileRange = App.getCurrentTileRange({
       tileRanges,
-      year
+      year,
     });
 
     const stylePromise = this.getStylePromise();
     const style = await stylePromise;
 
     const hiddenLayers = style.layers
-      .filter(layer => {
+      .filter((layer) => {
         if (layer.layout && layer.layout.visibility === 'none') {
           return layer;
         }
       })
-      .map(layer => layer.source);
+      .map((layer) => layer.source);
 
     for (const chropleth of choroplethData) {
       this.setChoroplethValue(chropleth.id, [0, chropleth.maxValue]);
@@ -767,7 +769,7 @@ class App extends React.Component {
       yearRange,
       choroplethData,
       hiddenLayers,
-      legendData: legendData.response.legend
+      legendData: legendData.response.legend,
     });
   }
 
@@ -776,11 +778,11 @@ class App extends React.Component {
 
     if (!hiddenLayers.includes(layerId)) {
       this.setState({
-        hiddenLayers: [...hiddenLayers, layerId]
+        hiddenLayers: [...hiddenLayers, layerId],
       });
     } else {
       this.setState({
-        hiddenLayers: hiddenLayers.filter(d => d !== layerId)
+        hiddenLayers: hiddenLayers.filter((d) => d !== layerId),
       });
     }
   }
@@ -788,14 +790,14 @@ class App extends React.Component {
   toggleSidebar() {
     const { sidebarOpen } = this.state;
     this.setState({
-      sidebarOpen: !sidebarOpen
+      sidebarOpen: !sidebarOpen,
     });
   }
 
   toggleAreaSearching() {
     const { areaSearching } = this.state;
     this.setState({
-      areaSearching: !areaSearching
+      areaSearching: !areaSearching,
     });
   }
 
@@ -808,19 +810,19 @@ class App extends React.Component {
       d3.json(
         `http://highways.georio.axismaps.io/api/v1/search/${value}?start=${year}`
       )
-        .then(results => {
+        .then((results) => {
           const searchResults = App.getCleanSearchResults({
             results,
-            legendData
+            legendData,
           });
           this.setState({
             loading: false,
             highlightedFeature: null,
             searchView: 'text',
-            searchFeatures: searchResults
+            searchFeatures: searchResults,
           });
         })
-        .catch(err => {
+        .catch((err) => {
           this.setState({ loading: false });
           console.log(err);
         });
@@ -835,7 +837,7 @@ class App extends React.Component {
         this.setState({
           loading: false,
           searchView: null,
-          searchFeatures: []
+          searchFeatures: [],
         });
       }
     } else if (this.searchTimer === null) {
@@ -858,20 +860,20 @@ class App extends React.Component {
     d3.json(
       `http://highways.georio.axismaps.io/api/v1/probe/[${xMin},${yMin},${xMax},${yMax}]`
     )
-      .then(results => {
+      .then((results) => {
         const searchResults = App.getCleanSearchResults({
           results,
-          legendData
+          legendData,
         });
 
         this.setState({
           loading: false,
           highlightedFeature: null,
           searchView: 'atlas',
-          searchFeatures: searchResults
+          searchFeatures: searchResults,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         this.setState({ loading: false });
       });
@@ -883,10 +885,10 @@ class App extends React.Component {
     d3.json(
       `http://highways.georio.axismaps.io/api/v1/probe/[${point.lng},${point.lat}]`
     )
-      .then(results => {
+      .then((results) => {
         const searchResults = App.getCleanSearchResults({
           results,
-          legendData
+          legendData,
         });
 
         this.setState({
@@ -894,10 +896,10 @@ class App extends React.Component {
           loading: false,
           highlightedFeature: null,
           searchView: 'atlas',
-          searchFeatures: searchResults
+          searchFeatures: searchResults,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         this.setState({ loading: false });
       });
@@ -928,7 +930,7 @@ class App extends React.Component {
       searchView,
       sidebarOpen,
       views,
-      viewsData
+      viewsData,
     } = this.state;
 
     return (
