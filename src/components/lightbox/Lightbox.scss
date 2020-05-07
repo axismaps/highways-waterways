@@ -30,3 +30,35 @@
   width: 100%;
   height: auto;
 }
+
+.lightbox__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font: 13px/17px Helvetica Neue, Helvetica, Arial, sans-serif;
+  color: #666;
+}
+.lightbox__footer-imgName {
+  font-weight: bold;
+}
+.lightbox__footer-imgCredit {
+  font-style: italic;
+}
+.lightbox__footer-button {
+  background-color: #eee;
+  color: #666;
+  border-radius: 5px;
+  margin: auto;
+  text-align: center;
+  text-decoration: none;
+  width: 160px;
+  padding: 5px;
+  float: right;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.lightbox__footer-button:hover {
+  background-color: #ccc;
+  color: #333;
+}
