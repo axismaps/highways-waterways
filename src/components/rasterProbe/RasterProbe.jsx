@@ -36,7 +36,7 @@ class RasterProbe extends React.PureComponent {
       prevRaster,
       nextRaster,
       rasterOpacity,
-      setRasterOpacity
+      setRasterOpacity,
     } = this.props;
     if (currentRaster.type === 'view') {
       return (
@@ -60,7 +60,7 @@ class RasterProbe extends React.PureComponent {
       <div>
         <input
           value={rasterOpacity}
-          onChange={e => setRasterOpacity(e.target.value)}
+          onChange={(e) => setRasterOpacity(e.target.value)}
           type="range"
         />
         <div
@@ -87,14 +87,16 @@ class RasterProbe extends React.PureComponent {
 
   render() {
     const { currentRaster } = this.props;
+    console.log(currentRaster);
+    const author = currentRaster.raster.creator
+      ? currentRaster.raster.creator
+      : 'Author is not defined';
     return (
       <div className="raster-probe">
         <div className="raster-probe__inner">
           {this.getProbeHeader()}
           {this.getImage()}
-          <div className="raster-probe__caption">
-            {currentRaster.raster.title}
-          </div>
+          <div className="raster-probe__caption">{author}</div>
           {this.getProbeFooter()}
         </div>
       </div>
@@ -106,7 +108,7 @@ RasterProbe.propTypes = {
   /** Current raster probe layer data */
   currentRaster: PropTypes.shape({
     type: PropTypes.string,
-    raster: PropTypes.object
+    raster: PropTypes.object,
   }).isRequired,
   /** Sets map rasterProbe and overlay/view to next available raster */
   nextRaster: PropTypes.func.isRequired,
@@ -115,7 +117,7 @@ RasterProbe.propTypes = {
   /** Callback to set app currentRaster state field to `null` */
   clearRaster: PropTypes.func.isRequired,
   /** Callback to launch lightbox of current raster */
-  setLightbox: PropTypes.func.isRequired
+  setLightbox: PropTypes.func.isRequired,
 };
 
 export default RasterProbe;

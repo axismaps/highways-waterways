@@ -6,6 +6,12 @@ class Lightbox extends React.PureComponent {
   render() {
     const { clearLightbox, lightboxRaster } = this.props;
     console.log(lightboxRaster);
+    const author = lightboxRaster.raster.creator
+      ? lightboxRaster.raster.creator
+      : 'Author is not defined';
+    const credit = lightboxRaster.raster.credit
+      ? lightboxRaster.raster.credit
+      : 'Credit is not defined';
     return (
       <div className="lightbox" onClick={clearLightbox}>
         <div className="lightbox__container">
@@ -13,16 +19,13 @@ class Lightbox extends React.PureComponent {
             <img className="lightbox__img" src={lightboxRaster.raster.thumb} />
             <div className="lightbox__footer">
               <div>
-                <span>{lightboxRaster.raster.creator} Malta, Algusto</span>
+                <span>{author}</span>
                 <br />
                 <span className="lightbox__footer-imgName">
                   {lightboxRaster.raster.title}
                 </span>
                 <br />
-                <span className="lightbox__footer-imgCredit">
-                  1912 [Instituto Moreira Salles]
-                  {lightboxRaster.raster.credit}
-                </span>
+                <span className="lightbox__footer-imgCredit">{credit}</span>
                 <br />
               </div>
               <div>
