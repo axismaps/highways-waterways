@@ -35,7 +35,7 @@ class Atlas extends React.PureComponent {
       year: null,
       highlightedLayer: null,
       layerOpacityProps: {},
-      viewsData: null
+      viewsData: null,
     };
 
     this.highlightLayerIds = [];
@@ -56,7 +56,7 @@ class Atlas extends React.PureComponent {
       style: this.getFilteredStyle(),
       minZoom: 10,
       maxZoom: 17,
-      preserveDrawingBuffer: true
+      preserveDrawingBuffer: true,
     }).addControl(new mapboxgl.NavigationControl(), 'top-left');
 
     this.mbMap = mbMap;
@@ -72,6 +72,7 @@ class Atlas extends React.PureComponent {
     this.logRasterOpacity();
     this.logSidebarOpen();
     this.setClickSearchListener();
+    this.setClickViewPointsListener();
     this.setAreaSearchListener();
     this.loadIcon();
     setAtlas(mbMap);
@@ -87,7 +88,7 @@ class Atlas extends React.PureComponent {
       hiddenLayers,
       sidebarOpen,
       currentRaster,
-      rasterOpacity
+      rasterOpacity,
     } = this.props;
 
     const updateYear = () => {
@@ -168,7 +169,7 @@ class Atlas extends React.PureComponent {
     if (!('filter' in layer)) return layer;
 
     const newLayer = Object.assign({}, layer);
-    newLayer.filter = layer.filter.map(f => {
+    newLayer.filter = layer.filter.map((f) => {
       if (f[0] === 'all') {
         return f.map((d, i) => {
           if (i === 0) return d;
@@ -197,24 +198,25 @@ class Atlas extends React.PureComponent {
   getFilteredStyle() {
     const { style, viewsData } = this.props;
     const styleCopy = JSON.parse(JSON.stringify(style));
-    styleCopy.layers = styleCopy.layers.map(layer =>
+    styleCopy.layers = styleCopy.layers.map((layer) =>
       this.getFilteredLayer(layer)
     );
 
-    const pointsFeature = viewsData.map(view => {
+    const pointsFeature = viewsData.map((view) => {
       return {
         type: 'Feature',
         geometry: {
           type: 'Point',
-          coordinates: view.point
+          coordinates: view.point,
         },
         properties: {
           title: view.title,
           credit: view.credit,
           creator: view.creator,
           thumb: view.thumb,
-          viewcone: view.viewcone
-        }
+          viewcone: view.viewcone,
+          raster: view,
+        },
       };
     });
 
@@ -223,9 +225,9 @@ class Atlas extends React.PureComponent {
         type: 'geojson',
         data: {
           type: 'FeatureCollection',
-          features: pointsFeature
-        }
-      }
+          features: pointsFeature,
+        },
+      },
     };
 
     const viewPointsLayer = {
@@ -234,8 +236,8 @@ class Atlas extends React.PureComponent {
       type: 'symbol',
       layout: {
         'icon-image': 'view-icon',
-        'icon-size': 0.45
-      }
+        'icon-size': 0.45,
+      },
     };
 
     styleCopy.sources = { ...styleCopy.sources, ...viewPointsSource };
@@ -247,10 +249,31 @@ class Atlas extends React.PureComponent {
   setClickSearchListener() {
     const { searchByPoint } = this.props;
 
-    this.mbMap.on('click', e => {
+    this.mbMap.on('click', (e) => {
+      if (this.mbMap.getCanvas().style.cursor === 'pointer') return;
       searchByPoint(
         this.mbMap.unproject(new mapboxgl.Point(e.point.x, e.point.y))
       );
+    });
+  }
+
+  setClickViewPointsListener() {
+    const { setRaster } = this.props;
+    this.mbMap.on('mouseenter', 'view-points', (e) => {
+      this.mbMap.getCanvas().style.cursor = 'pointer';
+      console.log(this.mbMap.getCanvas().style.cursor);
+    });
+
+    this.mbMap.on('mouseleave', 'view-points', (e) => {
+      this.mbMap.getCanvas().style.cursor = '';
+    });
+
+    this.mbMap.on('click', 'view-points', (e) => {
+      const raster = {
+        type: 'view',
+        raster: JSON.parse(e.features[0].properties.raster),
+      };
+      setRaster(raster);
     });
   }
 
@@ -274,7 +297,7 @@ class Atlas extends React.PureComponent {
     const { layers } = this.mbMap.getStyle();
     const { layerOpacityProps } = this.logged;
 
-    layers.forEach(layer => {
+    layers.forEach((layer) => {
       if (layer.id === 'view-points' || layer.id === 'raster-overlay') return;
       const originalPaint = layerOpacityProps[layer.id];
 
@@ -302,7 +325,7 @@ class Atlas extends React.PureComponent {
     const { hiddenLayers } = this.props;
     const { layers } = this.mbMap.getStyle();
 
-    layers.forEach(layer => {
+    layers.forEach((layer) => {
       const visible =
         this.mbMap.getLayoutProperty(layer.id, 'visibility') === 'visible';
 
@@ -328,13 +351,13 @@ class Atlas extends React.PureComponent {
     const fillHighlightBaseId = 'highlighted-feature-fill';
 
     const idsFilter = ['any'];
-    highlightedFeature.feature.ids.forEach(id => {
+    highlightedFeature.feature.ids.forEach((id) => {
       idsFilter.push(['==', 'id', id]);
     });
 
     this.mbMap
       .getStyle()
-      .layers.filter(d => d['source-layer'] === highlightedFeature.source)
+      .layers.filter((d) => d['source-layer'] === highlightedFeature.source)
       .forEach((layer, i) => {
         const yearFilter = layer.filter;
         const newFilter = ['all', yearFilter, idsFilter];
@@ -351,8 +374,8 @@ class Atlas extends React.PureComponent {
             layout: {},
             paint: {
               'fill-color': highlightColor,
-              'fill-opacity': 0.2
-            }
+              'fill-opacity': 0.2,
+            },
           };
           this.mbMap.addLayer(fillLayer);
         } else if (layer.type === 'line') {
@@ -367,13 +390,13 @@ class Atlas extends React.PureComponent {
             source: 'composite',
             'source-layer': layer['source-layer'],
             layout: {
-              'line-join': 'round'
+              'line-join': 'round',
             },
             paint: {
               'line-width': 8,
               'line-color': highlightColor,
-              'line-opacity': 0.5
-            }
+              'line-opacity': 0.5,
+            },
           };
           const outlineLayerTop = {
             id: topId,
@@ -382,12 +405,12 @@ class Atlas extends React.PureComponent {
             source: 'composite',
             'source-layer': layer['source-layer'],
             layout: {
-              'line-join': 'round'
+              'line-join': 'round',
             },
             paint: {
               'line-width': 2,
-              'line-color': '#000'
-            }
+              'line-color': '#000',
+            },
           };
           this.mbMap.addLayer(outlineLayerBottom);
           this.mbMap.addLayer(outlineLayerTop);
@@ -396,7 +419,7 @@ class Atlas extends React.PureComponent {
   }
 
   clearHighlightedFeature() {
-    this.highlightLayerIds.forEach(id => {
+    this.highlightLayerIds.forEach((id) => {
       this.mbMap.removeLayer(id);
     });
     this.highlightLayerIds = [];
@@ -423,13 +446,13 @@ class Atlas extends React.PureComponent {
     this.mbMap.addSource('raster-overlay', {
       type: 'raster',
       tiles: [currentRaster.raster.tiles],
-      scheme: 'tms'
+      scheme: 'tms',
     });
 
     this.mbMap.addLayer({
       id: 'raster-overlay',
       type: 'raster',
-      source: 'raster-overlay'
+      source: 'raster-overlay',
     });
 
     this.mbMap.fitBounds(currentRaster.raster.extent);
@@ -451,7 +474,7 @@ class Atlas extends React.PureComponent {
     if (currentRaster === null || currentRaster.type !== 'view') return;
 
     const {
-      raster: { point, viewcone }
+      raster: { point, viewcone },
     } = currentRaster;
 
     this.mbMap.addLayer(
@@ -462,13 +485,13 @@ class Atlas extends React.PureComponent {
           type: 'geojson',
           data: {
             type: 'Feature',
-            geometry: viewcone
-          }
+            geometry: viewcone,
+          },
         },
         paint: {
           'fill-color': '#000000',
-          'fill-opacity': 0.4
-        }
+          'fill-opacity': 0.4,
+        },
       },
       'view-points'
     );
@@ -488,7 +511,7 @@ class Atlas extends React.PureComponent {
     const { style } = this.logged;
     this.logged.layerOpacityProps = style.layers.reduce(
       (accumulator, layer) => {
-        const field = layerOpacityFields.find(d => d in layer.paint);
+        const field = layerOpacityFields.find((d) => d in layer.paint);
         if (field === undefined) {
           let record = { value: 1 };
           if (layer.type === 'fill') {
@@ -505,7 +528,7 @@ class Atlas extends React.PureComponent {
         }
         accumulator[layer.id] = {
           field,
-          value: layer.paint[field]
+          value: layer.paint[field],
         };
         return accumulator;
       },
@@ -578,22 +601,23 @@ Atlas.defaultProps = {
     'fill-opacity',
     'line-opacity',
     'text-opacity',
-    'icon-opacity'
-  ]
+    'icon-opacity',
+  ],
 };
 
 Atlas.propTypes = {
   /** pixel position of current area search box */
   areaBox: PropTypes.shape({
     end: PropTypes.arrayOf(PropTypes.number),
-    start: PropTypes.arrayOf(PropTypes.number)
+    start: PropTypes.arrayOf(PropTypes.number),
   }).isRequired,
+  setRaster: PropTypes.func.isRequired,
   /** if area search is on */
   areaSearching: PropTypes.bool.isRequired,
   /** Current raster overlay/view/choropleth/hydroRaster */
   currentRaster: PropTypes.shape({
     type: PropTypes.string,
-    raster: PropTypes.object
+    raster: PropTypes.object,
   }),
   /** List of view points */
   viewsData: PropTypes.arrayOf(PropTypes.object),
@@ -605,9 +629,9 @@ Atlas.propTypes = {
     feature: PropTypes.shape({
       bbox: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
       ids: PropTypes.arrayOf(PropTypes.string),
-      name: PropTypes.string
+      name: PropTypes.string,
     }),
-    source: PropTypes.string
+    source: PropTypes.string,
   }),
   /** List of layer paint properties that affect opacity */
   layerOpacityFields: PropTypes.arrayOf(PropTypes.string),
@@ -626,10 +650,10 @@ Atlas.propTypes = {
     sources: PropTypes.object,
     sprite: PropTypes.string,
     version: PropTypes.number,
-    zoom: PropTypes.number
+    zoom: PropTypes.number,
   }).isRequired,
   /** Current year */
-  year: PropTypes.number.isRequired
+  year: PropTypes.number.isRequired,
 };
 
 export default Atlas;

@@ -219,6 +219,7 @@ class App extends React.Component {
         setAtlas={this.setAtlas}
         setAreaBoxEnd={this.setAreaBoxEnd}
         setAreaBoxStart={this.setAreaBoxStart}
+        setRaster={this.setRaster}
         sidebarOpen={sidebarOpen}
         style={style}
         toggleAreaBox={this.toggleAreaBox}
