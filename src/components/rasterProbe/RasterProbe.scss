@@ -1,6 +1,7 @@
 @import '../../config';
 
 .raster-probe {
+  z-index: 2;
   width: 330px;
   background: white;
   position: absolute;
