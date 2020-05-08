@@ -5,7 +5,7 @@ import {
   faDownload,
   faInfo,
   faSearch,
-  faShare
+  faShare,
 } from '@fortawesome/pro-solid-svg-icons';
 import HeaderStepper from './HeaderStepper';
 import HeaderTimeline from './HeaderTimeline';
@@ -26,7 +26,7 @@ class Header extends React.PureComponent {
 
     this.state = {
       dropdownOpen: false,
-      dropdownPos: null
+      dropdownPos: null,
     };
 
     this.shareButtonRef = React.createRef();
@@ -39,7 +39,13 @@ class Header extends React.PureComponent {
   }
 
   getHeaderTop() {
-    const { download, mapImage } = this.props;
+    const { download, mapImage, toggleSidebar, mobile } = this.props;
+    const sidebarButton = mobile ? (
+      <div className="header__top-button" onClick={toggleSidebar}>
+        <FontAwesomeIcon icon={faSearch} />
+      </div>
+    ) : null;
+
     return (
       <div className="header__top">
         <div className="header__top-title">Highways + Waterways</div>
@@ -62,6 +68,7 @@ class Header extends React.PureComponent {
           >
             <FontAwesomeIcon icon={faDownload} />
           </a>
+          {sidebarButton}
         </div>
       </div>
     );
@@ -84,16 +91,6 @@ class Header extends React.PureComponent {
         yearRange={yearRange}
         screenWidth={screenWidth}
       />
-    );
-  }
-
-  getSidebarButton() {
-    const { toggleSidebar, mobile } = this.props;
-    if (!mobile) return null;
-    return (
-      <div className="header__sidebar-toggle" onClick={toggleSidebar}>
-        <FontAwesomeIcon icon={faSearch} />
-      </div>
     );
   }
 
@@ -126,8 +123,8 @@ class Header extends React.PureComponent {
     this.setState({
       dropdownPos: {
         right: 15,
-        top: top + height + 20
-      }
+        top: top + height + 20,
+      },
     });
   }
 
@@ -135,11 +132,11 @@ class Header extends React.PureComponent {
     const { dropdownOpen } = this.state;
     if (typeof status === 'boolean') {
       this.setState({
-        dropdownOpen: status
+        dropdownOpen: status,
       });
     } else {
       this.setState({
-        dropdownOpen: !dropdownOpen
+        dropdownOpen: !dropdownOpen,
       });
     }
   }
@@ -160,7 +157,6 @@ class Header extends React.PureComponent {
             {this.getStepper()}
             {this.getTimeline()}
           </div>
-          {this.getSidebarButton()}
         </div>
         {this.getDropdown()}
       </div>
@@ -182,7 +178,7 @@ Header.propTypes = {
   /**
    * current app screen width, used to trigger re-render on screen resize
    */
-  screenWidth: PropTypes.number.isRequired
+  screenWidth: PropTypes.number.isRequired,
 };
 
 export default Header;
