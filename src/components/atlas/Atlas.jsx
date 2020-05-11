@@ -236,7 +236,8 @@ class Atlas extends React.PureComponent {
       type: 'symbol',
       layout: {
         'icon-image': 'view-icon',
-        'icon-size': 0.45,
+        'icon-size': 0.4,
+        'icon-allow-overlap': true,
       },
     };
 
