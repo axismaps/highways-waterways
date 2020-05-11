@@ -10,6 +10,7 @@ import MobileMenu from '../mobileMenu/MobileMenu';
 import exportMethods from './appExport';
 import AreaSearchBox from '../areaSearchBox/AreaSearchBox';
 import Loader from '../loader/Loader';
+import { urlState } from '../../libs/urlState.js';
 
 import './App.scss';
 
@@ -72,7 +73,9 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    const year = 1950;
+    const year = urlState.getQueryPar('year')
+      ? Number(urlState.getQueryPar('year'))
+      : 1950;
     const mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
     );
@@ -266,6 +269,10 @@ class App extends React.Component {
   setYear(newYear) {
     const { searchFeatures, choroplethValues } = this.state;
 
+    urlState.setQuery('year', Math.round(newYear));
+
+    let a = urlState.getQueryPar('year');
+    console.log(a);
     const changeState = {
       currentRaster: null,
       highlightedFeature: null,
