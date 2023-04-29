@@ -18,7 +18,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1",
+    "react-scripts": "5.0.1",
     "tippy.js": "^6.1.0"
   },
   "scripts": {
@@ -49,6 +49,6 @@
     "eslint-plugin-import": "^2.18.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.14.2",
-    "react-styleguidist": "^9.1.11"
+    "react-styleguidist": "^13.1.1"
   }
 }
